@@ -37,7 +37,7 @@ namespace AdRotator.AdDescriptorCreator
             {
                 using (var xw = XmlTextWriter.Create(stream, settings))
                 {
-                    new XmlSerializer(typeof(AdSettings), new System.Type[] { typeof(AdSettingsBase)}).Serialize(xw, defaultsettings);
+                    new XmlSerializer(typeof(AdSettings), new System.Type[] { typeof(AdSettingsBase), typeof(bool), typeof(double), typeof(int) }).Serialize(xw, defaultsettings);
                 }
                 stream.Close();
             }

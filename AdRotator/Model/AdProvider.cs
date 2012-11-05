@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -16,6 +17,8 @@ namespace AdRotator.Model
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(AdProviderPubCenter))]
     public abstract partial class AdProvider : AdSettingsBase
     {
+        private AdType adProviderTypeField;
+
         private string appIdField;
 
         private string secondaryIDField;
@@ -31,6 +34,19 @@ namespace AdRotator.Model
         private int adOrderField;
 
         private bool adOrderFieldSpecified;
+
+        [System.Xml.Serialization.XmlIgnore]
+        public AdType AdProviderType
+        {
+            get
+            {
+                return this.adProviderTypeField;
+            }
+            set
+            {
+                this.adProviderTypeField = value;
+            }
+        }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -143,29 +159,70 @@ namespace AdRotator.Model
                 this.adOrderFieldSpecified = value;
             }
         }
+
     }
 
     public class AdProviderPubCenter : AdProvider
-    { }
+    {
+        public AdProviderPubCenter()
+        {
+            this.AdProviderType = AdType.PubCenter;
+        }
+    }
 
     public class AdProviderAdMob : AdProvider
-    {}
+    {
+        public AdProviderAdMob()
+        {
+            this.AdProviderType = AdType.AdMob;
+        }    
+    }
 
     public class AdProviderAdDuplex : AdProvider
-    { }
+    {
+        public AdProviderAdDuplex()
+        {
+            this.AdProviderType = AdType.AdDuplex;
+        }    
+    }
 
     public class AdProviderInnerActive : AdProvider
-    {}
+    {
+        public AdProviderInnerActive()
+        {
+            this.AdProviderType = AdType.InnerActive;
+        }    
+    }
 
     public class AdProviderMobFox : AdProvider
-    {}
+    {
+        public AdProviderMobFox()
+        {
+            this.AdProviderType = AdType.MobFox;
+        }    
+    }
 
     public class AdProviderSmaato : AdProvider
-    {}
+    {
+        public AdProviderSmaato()
+        {
+            this.AdProviderType = AdType.Smaato;
+        }    
+    }
 
     public class AdProviderDefaultHouseAd : AdProvider
-    {}
+    {
+        public AdProviderDefaultHouseAd()
+        {
+            this.AdProviderType = AdType.DefaultHouseAd;
+        }    
+    }
 
     public class AdProviderNone : AdProvider
-    {}
+    {
+        public AdProviderNone()
+        {
+            this.AdProviderType = AdType.None;
+        }    
+    }
 }
