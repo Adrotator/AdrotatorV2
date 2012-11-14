@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AdRotator.Interface;
 using AdRotator.Model;
+using System.Xml.Serialization;
+using System.IO;
+using System.Xml;
 
 namespace AdRotator
 {
@@ -33,6 +35,8 @@ namespace AdRotator
         /// </summary>
         private int OrderIndex = 0;
 
+        public static string SETTINGS_FILE_NAME = "AdRotatorSettings";
+
 
         #region Logging Event Code
         public delegate void LogHandler(string message);
@@ -53,10 +57,21 @@ namespace AdRotator
         private static AdSettings _settings;
 
 
-
-        public AdRotator(AdSettings adSettings, string Culture)
+        /// <summary>
+        /// AdRotator Initialiser
+        /// </summary>
+        /// <param name="adSettings">XML string of the AdSettings content</param>
+        /// <param name="Culture">Specified culture you want AdRotator initialised for</param>
+        public AdRotator(string adSettings, string Culture)
         {
-            _settings = adSettings;
+            if (_settings == null)
+            {
+                var s = new XmlSerializer(typeof(AdSettings));
+                //Deserialie from text?
+                _settings = (AdSettings)s.Deserialize(TextReader.Null);               
+            }
+
+
             if (_settings != null && _settings.CultureDescriptors.Count() > 0)
             {
                 //Set Current culture based on Culture Value

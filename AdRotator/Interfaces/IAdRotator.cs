@@ -1,6 +1,6 @@
 ﻿using AdRotator.Model;
 
-namespace AdRotator.Interface
+namespace AdRotator
 {
     interface IAdRotator
     {

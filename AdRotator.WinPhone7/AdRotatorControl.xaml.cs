@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AdRotator.Model;
+using Microsoft.Phone.Net.NetworkInformation;
+using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Net;
+using System.IO;
+using System.IO.IsolatedStorage;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
-using AdRotator.Interface;
-using AdRotator.Model;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Net.NetworkInformation;
-using Microsoft.Phone.Shell;
 
 namespace AdRotator.WinPhone7
 {
     public partial class AdRotatorControl : UserControl, IAdRotatorProvider
     {
         private AdRotator adRotatorControl;
+        private string adSettingsString = "";
         private AdProvider currentAdProvider;
 
         private bool isLoaded;
@@ -40,6 +38,9 @@ namespace AdRotator.WinPhone7
         {
             InitializeComponent();
             Loaded += AdRotatorControl_Loaded;
+
+            LoadAdSettings();
+            
         }
 
         void AdRotatorControl_Loaded(object sender, RoutedEventArgs e)
@@ -55,6 +56,10 @@ namespace AdRotator.WinPhone7
             }
 
             isLoaded = true;
+            if (!string.IsNullOrEmpty(adSettingsString))
+            {
+                adRotatorControl = new AdRotator(adSettingsString, Thread.CurrentThread.CurrentUICulture.ToString());
+            }
         }
 
         public bool IsInDesignMode
@@ -101,8 +106,6 @@ namespace AdRotator.WinPhone7
         public static readonly DependencyProperty IsAdRotatorEnabledProperty =
             DependencyProperty.Register("IsAdRotatorEnabled", typeof(bool), typeof(AdRotatorControl), new PropertyMetadata(true));
 
-        
-
 
         public object DefaultHouseAdBody
         {
@@ -113,8 +116,6 @@ namespace AdRotator.WinPhone7
         // Using a DependencyProperty as the backing store for DefaultHouseAdBody.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DefaultHouseAdBodyProperty =
             DependencyProperty.Register("DefaultHouseAdBody", typeof(object), typeof(AdRotatorControl), new PropertyMetadata(null));
-
-        
         
 
         public bool IsLoaded
@@ -145,25 +146,99 @@ namespace AdRotator.WinPhone7
             }
         }
 
-        public Model.AdSettings LoadSettingsFileLocal()
+        #region AdSettings File retrieval
+
+        /// <summary>
+        /// Loads the ad settings object either from isolated storage or from the resource path defined in DefaultSettingsFileUri.
+        /// </summary>
+        /// <returns></returns>
+        private async void LoadAdSettings()
         {
-            return null;
+
+            //If not checked remote && network available - get remote
+            if (!String.IsNullOrEmpty(RemoteSettingsLocation) && isNetworkEnabled)
+            {
+                adSettingsString = await LoadSettingsFileRemote(RemoteSettingsLocation);
+            }
+
+            if (string.IsNullOrEmpty(adSettingsString))
+            {
+                adSettingsString = LoadSettingsFileLocal();
+            }
+
+            if (string.IsNullOrEmpty(adSettingsString))
+            {
+                adSettingsString = LoadSettingsFileLocal();
+            }
+
+
+
+            if (IsLoaded)
+            {
+                adRotatorControl = new AdRotator(adSettingsString, Thread.CurrentThread.CurrentUICulture.ToString());
+            }
         }
 
-        public Model.AdSettings LoadSettingsFileRemote()
+        //not finished (SJ)
+        public string LoadSettingsFileLocal()
         {
-            return null;
+            // if successful set and invalidate
+            // If not loadSettings again
+            string AdSettingsString = "";
+
+            var SETTINGS_FILE_NAME = string.IsNullOrEmpty(LocalSettingsLocation) ? AdRotator.SETTINGS_FILE_NAME : LocalSettingsLocation;
+            try
+            {
+                var isfData = IsolatedStorageFile.GetUserStoreForApplication();
+                IsolatedStorageFileStream isfStream = null;
+                if (isfData.FileExists(SETTINGS_FILE_NAME))
+                {
+                    using (isfStream = new IsolatedStorageFileStream(SETTINGS_FILE_NAME, FileMode.Open, isfData))
+                    {
+                        try
+                        {
+                            //AdSettingsString = new TextReader().ReadAsync(isfStream);
+                        }
+                        catch { }
+                    }
+                }
+            }
+            catch (IsolatedStorageException)
+            {
+            }
+
+            return AdSettingsString;
+
         }
 
-        public Model.AdSettings LoadSettingsFileProject()
+        public async Task<string> LoadSettingsFileRemote(string RemoteSettingsLocation)
         {
-            return null;
+            return await Networking.Network.GetStringFromURL(RemoteSettingsLocation);
         }
 
+        //Not Finished (SJ)
+        public string LoadSettingsFileProject()
+        {
+            string AdSettingsString = "";
+            if (LocalSettingsLocation != null)
+            {
+                try
+                {
+                    var defaultSettingsFileInfo = Application.GetResourceStream(new Uri(LocalSettingsLocation,UriKind.RelativeOrAbsolute));
+                    //AdSettingsString = (AdSettings)xs.Deserialize(defaultSettingsFileInfo.Stream);
+                }
+                catch { }
+            }
+
+            return AdSettingsString;
+        }
+
+        #endregion
 
         public string Invalidate()
         {
             throw new NotImplementedException();
         }
+
     }
 }

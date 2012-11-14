@@ -69,6 +69,7 @@
     <Compile Include="AdRotatorControl.xaml.cs">
       <DependentUpon>AdRotatorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Network\NetworkWire.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

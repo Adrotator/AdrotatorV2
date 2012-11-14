@@ -11,7 +11,7 @@
     <RootNamespace>AdRotator</RootNamespace>
     <AssemblyName>AdRotator</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile2</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile95</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
@@ -34,8 +34,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AdRotator.cs" />
-    <Compile Include="Interface\IAdRotator.cs" />
-    <Compile Include="Interface\IAdRotatorProvider.cs" />
+    <Compile Include="Interfaces\INetworkWire.cs" />
+    <Compile Include="Interfaces\IAdRotator.cs" />
+    <Compile Include="Interfaces\IAdRotatorProvider.cs" />
     <Compile Include="Model\AdCultureDescriptor.cs" />
     <Compile Include="Model\AdGroup.cs" />
     <Compile Include="Model\AdProvider.cs" />
@@ -43,6 +44,10 @@
     <Compile Include="Model\AdSettingsBase.cs" />
     <Compile Include="Model\AdSlideDirection.cs" />
     <Compile Include="Model\AdType.cs" />
+    <Compile Include="Networking\AdWebRequest.cs" />
+    <Compile Include="Networking\AdWebResponse.cs" />
+    <Compile Include="Networking\NetworkExtensions.cs" />
+    <Compile Include="Networking\NetworkWire.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using AdRotator.Model;
 
-namespace AdRotator.Interface
+namespace AdRotator
 {
     public interface IAdRotatorProvider
     {
@@ -24,9 +24,9 @@ namespace AdRotator.Interface
 
         object DefaultHouseAdBody { get; set; }
 
-        AdSettings LoadSettingsFileLocal();
-        AdSettings LoadSettingsFileRemote();
-        AdSettings LoadSettingsFileProject();
+        string LoadSettingsFileLocal();
+        //string LoadSettingsFileRemote(string RemoteSettingsLocation);
+        string LoadSettingsFileProject();
 
         string Invalidate();
     }
