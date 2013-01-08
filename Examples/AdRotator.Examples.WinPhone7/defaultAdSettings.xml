@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AdSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<CultureDescriptors CultureName="en-US">
+		<AdDuplex AppId="1379" Probability="100"/>			
+	</CultureDescriptors>
+	<CultureDescriptors CultureName="Default">	
+    <AdDuplex AppId="1379" Probability="50"/>			
+		<AdGroup Probability="50">			
+			<AdDuplex AppId="1379" Probability="100"/>			
+		</AdGroup>
+	</CultureDescriptors>
+</AdSettings>

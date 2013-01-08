@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>AdDuplexWP7</id>
+    <version>2.7.0.3</version>
+    <title>AdDuplex for Windows Phone 7.1/7.5</title>
+    <authors>AdDuplex</authors>
+    <owners>AdDuplex</owners>
+    <projectUrl>http://www.adduplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>AdDuplex (cross-promotion network for Windows Phone and Windows 8 apps) SDK for Silverlight based Windows Phone 7.1 (Mango) apps</description>
+    <releaseNotes>- BUGFIX: ArgumentException was sometimes thrown by the control
+- BUGFIX: the control was loading ads even when Collapsed and then reporting the "obstructed" error</releaseNotes>
+    <copyright>AdDuplex</copyright>
+    <tags>wp7, windowsphone</tags>
+  </metadata>
+</package>

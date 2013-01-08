@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using AdRotator.Model;
+using AdRotator.AdProviders;
 
 namespace AdRotator.AdDescriptorCreator
 {
@@ -53,9 +54,9 @@ namespace AdRotator.AdDescriptorCreator
                     {
                         Items = new List<object>()
                         {
-                             new AdProviderPubCenter() { Probability=35, AppId = "test_client", SecondaryID="Image480_80" },
-                             new AdProviderPubCenter() { Probability=35, AppId = "test_client", SecondaryID="Image480_80" },
-                             new AdProviderPubCenter() { Probability=35, AppId = "test_client", SecondaryID="Image480_80" },
+                             new AdProviderPubCenter() { Probability=35, AppId = "test_client", SecondaryId="Image480_80" },
+                             new AdProviderPubCenter() { Probability=35, AppId = "test_client", SecondaryId="Image480_80" },
+                             new AdProviderPubCenter() { Probability=35, AppId = "test_client", SecondaryId="Image480_80" },
                              new AdGroup() 
                              { 
                                  AdOrder = 2,
@@ -96,11 +97,11 @@ namespace AdRotator.AdDescriptorCreator
                                  EnabledInTrialOnly = true,
                                  Items = new List<AdProvider>()
                                  {
-                                     new AdProviderPubCenter() { Probability=35, AppId = "test_client", SecondaryID="Image480_80" },
+                                     new AdProviderPubCenter() { Probability=35, AppId = "test_client", SecondaryId="Image480_80" },
                                      new AdProviderAdDuplex() { Probability=35, AppId = "0" },
                                      new AdProviderAdMob() { Probability=35, AppId = "0" },
                                      new AdProviderSmaato() { Probability=35, AppId = "0" },
-                                     new AdProviderPubCenter() { Probability=35, AppId = "test_client", SecondaryID="Image80_80" },
+                                     new AdProviderPubCenter() { Probability=35, AppId = "test_client", SecondaryId="Image80_80" },
                                  }.ToArray()
                              }
                    

@@ -28,6 +28,7 @@ namespace AdRotator
         //string LoadSettingsFileRemote(string RemoteSettingsLocation);
         string LoadSettingsFileProject();
 
+        //DISCUSS: should we return strings here? Maybe raising events when stuff is loaded would be more sensible (GO)
         string Invalidate();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdRotator.AdProviders;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -15,13 +16,13 @@ namespace AdRotator.Model
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(AdProviderAdDuplex))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(AdProviderAdMob))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(AdProviderPubCenter))]
-    public abstract partial class AdProvider : AdSettingsBase
+    public abstract partial class AdProvider : AdSettingsBase, IAdProvider
     {
         private AdType adProviderTypeField;
 
         private string appIdField;
 
-        private string secondaryIDField;
+        private string secondaryIdField;
 
         private int probabilityField;
 
@@ -64,15 +65,15 @@ namespace AdRotator.Model
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string SecondaryID
+        public string SecondaryId
         {
             get
             {
-                return this.secondaryIDField;
+                return this.secondaryIdField;
             }
             set
             {
-                this.secondaryIDField = value;
+                this.secondaryIdField = value;
             }
         }
 
@@ -160,69 +161,15 @@ namespace AdRotator.Model
             }
         }
 
-    }
-
-    public class AdProviderPubCenter : AdProvider
-    {
-        public AdProviderPubCenter()
+        protected void Populate(IAdProvider adProvider)
         {
-            this.AdProviderType = AdType.PubCenter;
+            this.AdProviderType = adProvider.AdProviderType;
+            this.AppId = adProvider.AppId;
+            this.SecondaryId = adProvider.SecondaryId;
+            this.Probability = adProvider.Probability;
+            this.IsTest = adProvider.IsTest;
+            this.AdOrder = adProvider.AdOrder;
         }
-    }
 
-    public class AdProviderAdMob : AdProvider
-    {
-        public AdProviderAdMob()
-        {
-            this.AdProviderType = AdType.AdMob;
-        }    
-    }
-
-    public class AdProviderAdDuplex : AdProvider
-    {
-        public AdProviderAdDuplex()
-        {
-            this.AdProviderType = AdType.AdDuplex;
-        }    
-    }
-
-    public class AdProviderInnerActive : AdProvider
-    {
-        public AdProviderInnerActive()
-        {
-            this.AdProviderType = AdType.InnerActive;
-        }    
-    }
-
-    public class AdProviderMobFox : AdProvider
-    {
-        public AdProviderMobFox()
-        {
-            this.AdProviderType = AdType.MobFox;
-        }    
-    }
-
-    public class AdProviderSmaato : AdProvider
-    {
-        public AdProviderSmaato()
-        {
-            this.AdProviderType = AdType.Smaato;
-        }    
-    }
-
-    public class AdProviderDefaultHouseAd : AdProvider
-    {
-        public AdProviderDefaultHouseAd()
-        {
-            this.AdProviderType = AdType.DefaultHouseAd;
-        }    
-    }
-
-    public class AdProviderNone : AdProvider
-    {
-        public AdProviderNone()
-        {
-            this.AdProviderType = AdType.None;
-        }    
     }
 }

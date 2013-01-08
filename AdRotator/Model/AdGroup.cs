@@ -1,4 +1,5 @@
 ﻿
+using AdRotator.AdProviders;
 namespace AdRotator.Model
 {
     public partial class AdGroup : AdSettingsBase

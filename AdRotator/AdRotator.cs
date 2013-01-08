@@ -13,7 +13,7 @@ namespace AdRotator
     /// *Notes (food for thought)
     ///     - Ad Validity checking?
     /// </summary>
-    public class AdRotator : IAdRotator
+    public partial class AdRotator : IAdRotator
     {
         /// <summary>
         /// Random generator
@@ -67,8 +67,8 @@ namespace AdRotator
             if (_settings == null)
             {
                 var s = new XmlSerializer(typeof(AdSettings));
-                //Deserialie from text?
-                _settings = (AdSettings)s.Deserialize(TextReader.Null);               
+                var stringReader = new StringReader(adSettings);
+                _settings = (AdSettings)s.Deserialize(stringReader);               
             }
 
 

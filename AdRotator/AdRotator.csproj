@@ -33,7 +33,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AdProviders\AdProviderAdDuplex.cs" />
+    <Compile Include="AdProviders\AdProviderAdMob.cs" />
+    <Compile Include="AdProviders\AdProviderDefaultHouseAd.cs" />
+    <Compile Include="AdProviders\AdProviderInnerActive.cs" />
+    <Compile Include="AdProviders\AdProviderMobFox.cs" />
+    <Compile Include="AdProviders\AdProviderNone.cs" />
+    <Compile Include="AdProviders\AdProviderPubCenter.cs" />
+    <Compile Include="AdProviders\AdProviderSmaato.cs" />
     <Compile Include="AdRotator.cs" />
+    <Compile Include="Interfaces\IAdProvider.cs" />
     <Compile Include="Interfaces\INetworkWire.cs" />
     <Compile Include="Interfaces\IAdRotator.cs" />
     <Compile Include="Interfaces\IAdRotatorProvider.cs" />
