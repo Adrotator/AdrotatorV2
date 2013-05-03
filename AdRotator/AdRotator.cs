@@ -57,6 +57,7 @@ namespace AdRotator
         private static AdSettings _settings;
 
 
+        //Discuss - can we use calling asembly to run functions in child projects?, that way we can force calling remote functions in the core project. This would controll project flow.
         /// <summary>
         /// AdRotator Initialiser
         /// </summary>

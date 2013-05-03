@@ -14,8 +14,6 @@ namespace AdRotator
 
         string LocalSettingsLocation { get; set; }
 
-        bool IsNetworkEnabled { get; set; }
-
         bool IsLoaded { get; }
 
         bool IsInitialised { get; }

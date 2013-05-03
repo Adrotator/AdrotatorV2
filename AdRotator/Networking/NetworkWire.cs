@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace AdRotator.Networking
 {
@@ -71,6 +72,53 @@ namespace AdRotator.Networking
                 }
             }, request);
 
+        }
+
+        public async static Task<string> GetStringFromURLAsync(string uri)
+        {
+            try
+            {
+                var httpResponse = await HttpWebRequest.Create(uri).GetResponseAsync();
+                using (StreamReader streamReader1 =
+                         new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    string resultString = streamReader1.ReadToEnd();
+                    return resultString;
+                }
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        internal async static Task<string> GetDeviceIPAsync()
+        {
+            if (CurrentIP != null && !string.IsNullOrEmpty(CurrentIP))
+            {
+                return CurrentIP;
+            }
+            try
+            {
+                var IP = await GetStringFromURLAsync(IPValidatorHost);
+                var value = IP.Split(new Char[] { '"' });
+                if (value.Length > 2)
+                {
+                    var iPValue = (value[3]).Split(new Char[] { '.' });
+                    if (iPValue.Length == 4)
+                    {
+                        CurrentIP = value[3];
+                        return CurrentIP;
+                    }
+                }
+                //IP Unresolved
+                return string.Empty;
+            }
+            catch
+            {
+                //error occured trying to resolve IP
+                return string.Empty;
+            }
         }
 
 
