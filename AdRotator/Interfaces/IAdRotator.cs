@@ -8,7 +8,7 @@ namespace AdRotator
         /// Return Current AsSettings object for saving locally in client
         /// </summary>
         /// <returns></returns>
-        AdSettings GetConfig();
+        void GetConfig();
 
         /// <summary>
         /// Get AdProvider from config

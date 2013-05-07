@@ -90,6 +90,12 @@
     <Resource Include="defaultAdSettings.xml" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AdRotator\AdRotator.WinPhone7.csproj">
+      <Project>{0804BD51-07FF-407B-8CDA-A92039509D1C}</Project>
+      <Name>AdRotator.WinPhone7</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

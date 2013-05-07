@@ -41,7 +41,9 @@
     <Compile Include="AdProviders\AdProviderNone.cs" />
     <Compile Include="AdProviders\AdProviderPubCenter.cs" />
     <Compile Include="AdProviders\AdProviderSmaato.cs" />
-    <Compile Include="AdRotator.cs" />
+    <Compile Include="AdRotatorComponent.cs" />
+    <Compile Include="Config\AdProviderConfig.cs" />
+    <Compile Include="Config\GlobalConfig.cs" />
     <Compile Include="Interfaces\IAdProvider.cs" />
     <Compile Include="Interfaces\INetworkWire.cs" />
     <Compile Include="Interfaces\IAdRotator.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Networking\NetworkExtensions.cs" />
     <Compile Include="Networking\NetworkWire.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\FileHelpersBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AdRotatorAdSettingsV2.xsd">

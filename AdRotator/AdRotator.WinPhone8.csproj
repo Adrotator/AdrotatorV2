@@ -84,15 +84,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\AdDuplex.cs" />
+    <Compile Include="Utilities\FileHelpers.cs" />
+    <Compile Include="Utilities\ReflectionHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="AdDuplex.WindowsPhone">
-      <HintPath>..\packages\AdDuplexWP8.2.8.0.3\lib\wp8\AdDuplex.WindowsPhone.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="AdRotator.csproj">
+      <Project>{170B13CC-30B9-405C-A032-CF1A6B5F8277}</Project>
+      <Name>AdRotator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
