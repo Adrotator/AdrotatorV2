@@ -76,7 +76,7 @@ namespace AdRotator
 
         internal bool isInitialised { get; set; }
 
-        internal AdProviderConfig.SupportedAdProviders[] PlatformSupportedAdProviders { get; set; }
+        internal AdType[] PlatformSupportedAdProviders { get; set; }
 
 
         #endregion

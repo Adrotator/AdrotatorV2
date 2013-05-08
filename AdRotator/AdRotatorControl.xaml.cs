@@ -1,5 +1,7 @@
 ﻿using AdRotator.Model;
+using System;
 using System.ComponentModel;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,11 +30,11 @@ namespace AdRotator
             Loaded += AdRotatorControl_Loaded;
 
             // List of AdProviders supportd on this platform
-            adRotatorControl.PlatformSupportedAdProviders = new AdProviderConfig.SupportedAdProviders[3] 
+            adRotatorControl.PlatformSupportedAdProviders = new AdType[3] 
                 { 
-                    AdProviderConfig.SupportedAdProviders.AdDuplex, 
-                    AdProviderConfig.SupportedAdProviders.PubCenter, 
-                    AdProviderConfig.SupportedAdProviders.Smaato 
+                    AdType.AdDuplex, 
+                    AdType.PubCenter, 
+                    AdType.Smaato 
                 };
 
 
@@ -68,12 +70,49 @@ namespace AdRotator
             {
                 adProvider = adRotatorControl.GetAd();
             }
+            var provider = AdProviderConfig.AdProviderConfigValues[adProvider.AdProviderType];
+            Type providerType = TryGetType(provider.AssemblyName, provider.ElementName);
+            var instance = Activator.CreateInstance(providerType);
+            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AppId))
+            {
+                TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AppId], adProvider.AppId.ToString());
+            }
 
-            //var winPhone7AdProvider = AdProviderWinPhone7.CreateWinPhone7AdProvider(adProvider);
-            //var element = winPhone7AdProvider.GetVisualElement();
-            //LayoutRoot.Children.Clear();
-            //LayoutRoot.Children.Add(element);
+            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.SecondaryId))
+            {
+                TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.SecondaryId], adProvider.SecondaryId.ToString());
+            } 
+            
+            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.IsTest))
+            {
+                TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.IsTest], adProvider.IsTest.ToString());
+            }
+
+            LayoutRoot.Children.Clear();
+            LayoutRoot.Children.Add((FrameworkElement)instance);
             return adProvider.AdProviderType.ToString();
+        }
+
+        public static Type TryGetType(string assemblyName, string typeName)
+        {
+            try
+            {
+                var assem = Assembly.Load(assemblyName);
+                    Type t = assem.GetType(typeName, false);
+                    if (t != null) { return t; }
+            }
+            catch { }
+
+            return null;
+        }
+        public static void TrySetProperty(object instance, string PropertyName, string PropertyValue)
+        {
+            try
+            {
+                PropertyInfo propertyInfo = instance.GetType().GetProperty(PropertyName);
+                propertyInfo.SetValue(instance, Convert.ChangeType(PropertyValue, propertyInfo.PropertyType, Thread.CurrentThread.CurrentUICulture), null);
+            }
+            catch { }
         }
 
         #region RemoteSettingsLocation

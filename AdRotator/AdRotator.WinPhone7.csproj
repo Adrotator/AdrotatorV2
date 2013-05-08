@@ -41,10 +41,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AdDuplex.WindowsPhone, Version=2.7.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AdDuplexWP7.2.7.0.3\lib\sl4-windowsphone71\AdDuplex.WindowsPhone.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="System.Windows" />
@@ -57,9 +53,6 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdProviders\AdProviderWinPhone7.cs" />
-    <Compile Include="AdProviders\AdProviderWinPhone7AdDuplex.cs" />
-    <Compile Include="AdProviders\IAdProviderWinPhone7.cs" />
     <Compile Include="AdRotatorControl.xaml.cs">
       <DependentUpon>AdRotatorControl.xaml</DependentUpon>
     </Compile>
