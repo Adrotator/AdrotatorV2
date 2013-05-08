@@ -22,6 +22,6 @@ namespace AdRotator
         //string LoadSettingsFileProject();
 
         //DISCUSS: should we return strings here? Maybe raising events when stuff is loaded would be more sensible (GO)
-        string Invalidate();
+        string Invalidate(AdRotator.Model.AdProvider adProvider);
     }
 }

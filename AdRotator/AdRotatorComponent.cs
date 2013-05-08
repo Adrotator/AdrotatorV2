@@ -1,4 +1,5 @@
-﻿using AdRotator.Model;
+﻿using AdRotator.AdProviders;
+using AdRotator.Model;
 using AdRotator.Utilities;
 using System;
 using System.IO;
@@ -12,7 +13,7 @@ namespace AdRotator
     /// *Notes (food for thought)
     ///     - Ad Validity checking?
     /// </summary>
-    public partial class AdRotatorComponent : IAdRotator
+    public partial class AdRotatorComponent
     {
         #region Logging Event Code
         public delegate void LogHandler(string message);
@@ -26,6 +27,22 @@ namespace AdRotator
             }
         }
         #endregion        #endregion
+
+        #region AdAvailableEventCode
+
+        public delegate void AdAvailableHandler(AdProvider adProvider);
+
+        public event AdAvailableHandler AdAvailable;
+
+        protected void OnAdAvailable(AdProvider adProvider)
+        {
+            if (AdAvailable != null)
+            {
+                AdAvailable(adProvider);
+            }
+        }
+
+        #endregion
 
         #region Properties
         /// <summary>
@@ -60,7 +77,10 @@ namespace AdRotator
         internal bool isInitialised { get; set; }
 
         internal AdProviderConfig.SupportedAdProviders[] PlatformSupportedAdProviders { get; set; }
+
+
         #endregion
+
 
         //Discuss - can we use calling asembly to run functions in child projects?, that way we can force calling remote functions in the core project. This would controll project flow.
         /// <summary>
@@ -83,10 +103,16 @@ namespace AdRotator
                 //Set Current culture based on Culture Value
                _settings.GetAdDescriptorBasedOnUICulture(culture);
             }
+            OnAdAvailable(_settings.GetAd());
         }
 
         public AdProvider GetAd()
         {
+            if (_settings == null)
+            {
+                GetConfig();
+                return new AdProviderNone();
+            }
             return _settings.GetAd();
         }
 
@@ -116,7 +142,6 @@ namespace AdRotator
             }
         }
 
-        //not finished (SJ)
         public async Task LoadSettingsFileLocal()
         {
             // if successful set and invalidate

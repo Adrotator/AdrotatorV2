@@ -105,27 +105,39 @@ namespace AdRotator.Model
         {
             //Need to handle Groups and Order
 
+            if (adsettings.CurrentCulture == null)
+            {
+                return new AdRotator.AdProviders.AdProviderNone();
+            }
+
             var validDescriptors = adsettings.CurrentCulture.Items
             .Where(x => !adsettings._failedAdTypes.Contains(((AdProvider)x).AdProviderType)
-                        && ((AdProvider)x).Probability > 0)
-            .ToList();
+                        && ((AdProvider)x).Probability > 0);
 
-            var totalValueBetweenValidAds = validDescriptors.Sum(x => ((AdProvider)x).Probability);
-            var randomValue = AdRotator.AdRotatorComponent._rnd.NextDouble() * totalValueBetweenValidAds;
-            double totalCounter = 0;
-            foreach (AdProvider probabilityDescriptor in validDescriptors)
+            var defaultHouseAd = (AdProvider)adsettings.CurrentCulture.Items.FirstOrDefault(x => ((AdProvider)x).AdProviderType == AdType.DefaultHouseAd && !adsettings._failedAdTypes.Contains(AdType.DefaultHouseAd));
+
+            if (validDescriptors != null)
             {
-                totalCounter += probabilityDescriptor.Probability;
-                if (randomValue < totalCounter)
+                validDescriptors = validDescriptors.ToList();
+
+                var totalValueBetweenValidAds = validDescriptors.Sum(x => ((AdProvider)x).Probability);
+                var randomValue = AdRotator.AdRotatorComponent._rnd.NextDouble() * totalValueBetweenValidAds;
+                double totalCounter = 0;
+                foreach (AdProvider probabilityDescriptor in validDescriptors)
                 {
-                    return probabilityDescriptor;
+                    totalCounter += probabilityDescriptor.Probability;
+                    if (randomValue < totalCounter)
+                    {
+                        return probabilityDescriptor;
+                    }
                 }
             }
-            var defaultHouseAd = (AdProvider)validDescriptors.FirstOrDefault(x => ((AdProvider)x).AdProviderType == AdType.DefaultHouseAd && !adsettings._failedAdTypes.Contains(AdType.DefaultHouseAd));
+
             if (defaultHouseAd != null)
             {
                 return defaultHouseAd;
             }
+
             return null;
         }
 
