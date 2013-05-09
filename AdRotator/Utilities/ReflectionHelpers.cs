@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 
 namespace AdRotator
 {
@@ -133,6 +134,29 @@ namespace AdRotator
 				return true;
 #endif
             return false;
+        }
+
+
+        public static Type TryGetType(string assemblyName, string typeName)
+        {
+            try
+            {
+                var assem = Assembly.Load(assemblyName);
+                Type t = assem.GetType(typeName, false);
+                if (t != null) { return t; }
+            }
+            catch { }
+
+            return null;
+        }
+        public static void TrySetProperty(object instance, string PropertyName, string PropertyValue)
+        {
+            try
+            {
+                PropertyInfo propertyInfo = instance.GetType().GetProperty(PropertyName);
+                propertyInfo.SetValue(instance, Convert.ChangeType(PropertyValue, propertyInfo.PropertyType, Thread.CurrentThread.CurrentUICulture), null);
+            }
+            catch { }
         }
 
     }

@@ -36,8 +36,6 @@ namespace AdRotator
                     AdType.PubCenter, 
                     AdType.Smaato 
                 };
-
-
         }
 
         void adRotatorControl_AdAvailable(AdProvider adProvider)
@@ -70,50 +68,18 @@ namespace AdRotator
             {
                 adProvider = adRotatorControl.GetAd();
             }
-            var provider = AdProviderConfig.AdProviderConfigValues[adProvider.AdProviderType];
-            Type providerType = TryGetType(provider.AssemblyName, provider.ElementName);
-            var instance = Activator.CreateInstance(providerType);
-            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AppId))
-            {
-                TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AppId], adProvider.AppId.ToString());
-            }
 
-            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.SecondaryId))
-            {
-                TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.SecondaryId], adProvider.SecondaryId.ToString());
-            } 
-            
-            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.IsTest))
-            {
-                TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.IsTest], adProvider.IsTest.ToString());
-            }
+            //(SJ) should we make this call the GetAd function? or keep it seperate
+            //Isn't the aim of the GetAd function to return an ad to display or would this break other implementations?
+            FrameworkElement providerElement = (FrameworkElement)adRotatorControl.GetProviderFrameworkElement(adProvider);
 
             LayoutRoot.Children.Clear();
-            LayoutRoot.Children.Add((FrameworkElement)instance);
+            LayoutRoot.Children.Add(providerElement);
             return adProvider.AdProviderType.ToString();
         }
 
-        public static Type TryGetType(string assemblyName, string typeName)
-        {
-            try
-            {
-                var assem = Assembly.Load(assemblyName);
-                    Type t = assem.GetType(typeName, false);
-                    if (t != null) { return t; }
-            }
-            catch { }
 
-            return null;
-        }
-        public static void TrySetProperty(object instance, string PropertyName, string PropertyValue)
-        {
-            try
-            {
-                PropertyInfo propertyInfo = instance.GetType().GetProperty(PropertyName);
-                propertyInfo.SetValue(instance, Convert.ChangeType(PropertyValue, propertyInfo.PropertyType, Thread.CurrentThread.CurrentUICulture), null);
-            }
-            catch { }
-        }
+
 
         #region RemoteSettingsLocation
         public bool IsInDesignMode

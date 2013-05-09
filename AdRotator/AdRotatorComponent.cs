@@ -116,6 +116,28 @@ namespace AdRotator
             return _settings.GetAd();
         }
 
+        public object GetProviderFrameworkElement(AdProvider adProvider)
+        {
+            var provider = AdProviderConfig.AdProviderConfigValues[adProvider.AdProviderType];
+            Type providerType = ReflectionHelpers.TryGetType(provider.AssemblyName, provider.ElementName);
+            var instance = Activator.CreateInstance(providerType);
+            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AppId))
+            {
+                ReflectionHelpers.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AppId], adProvider.AppId.ToString());
+            }
+
+            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.SecondaryId))
+            {
+                ReflectionHelpers.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.SecondaryId], adProvider.SecondaryId.ToString());
+            }
+
+            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.IsTest))
+            {
+                ReflectionHelpers.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.IsTest], adProvider.IsTest.ToString());
+            }
+            return instance;
+        }
+
 
         #region AdSettings File retrieval
 
