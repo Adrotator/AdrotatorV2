@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace AdRotator.Utilities
 {
@@ -20,6 +21,8 @@ namespace AdRotator.Utilities
 
         public abstract Stream FileOpenRead(Uri Location, string safeName);
 
+        public abstract Task<Stream> OpenStreamAsync(string name);
+    
         public abstract string NormalizeFilePathSeperators(string name);
 
         public abstract bool FileExists(string fileName);

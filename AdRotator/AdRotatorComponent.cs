@@ -64,6 +64,10 @@ namespace AdRotator
 
         private FileHelpers fileHelper;
 
+        internal int AdWidth { get; set; }
+
+        internal int AdHeight { get; set; }
+
         internal bool IsAdRotatorEnabled { get; set; }
 
         internal string RemoteSettingsLocation { get; set; }
@@ -75,6 +79,8 @@ namespace AdRotator
         internal bool isLoaded { get; set; }
 
         internal bool isInitialised { get; set; }
+
+        internal bool isTest { get; set; }
 
         internal AdType[] PlatformSupportedAdProviders { get; set; }
 
@@ -116,10 +122,14 @@ namespace AdRotator
             return _settings.GetAd();
         }
 
-        public object GetProviderFrameworkElement(AdProvider adProvider)
+        public object GetProviderFrameworkElement(AdRotator.AdProviderConfig.SupportedPlatforms platform, AdProvider adProvider)
         {
-            var provider = AdProviderConfig.AdProviderConfigValues[adProvider.AdProviderType];
+            var provider = AdProviderConfig.AdProviderConfigValues[(int)platform][adProvider.AdProviderType];
             Type providerType = ReflectionHelpers.TryGetType(provider.AssemblyName, provider.ElementName);
+            if (providerType == null)
+            {
+                return null;
+            }
             var instance = Activator.CreateInstance(providerType);
             if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AppId))
             {

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 #if WINRT
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
 #endif
@@ -44,12 +44,17 @@ namespace AdRotator
 
         public override Stream FileOpen(string filePath, string fileMode, string fileAccess, string fileShare)
         {
+#if !WINRT
             return FileOpen(filePath, (FileMode)Enum.Parse(typeof(FileMode), fileMode, true), (FileAccess)Enum.Parse(typeof(FileAccess), fileAccess, false), (FileShare)Enum.Parse(typeof(FileShare), fileShare, false));
+#else
+            throw new NotImplementedException();
+#endif
         }
 
+#if !WINRT
         public Stream FileOpen(string filePath, FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
         {
-#if WINDOWS_STOREAPP
+#if WINDOWS_STORE_APP
             var folder = ApplicationData.Current.LocalFolder;
             if (fileMode == FileMode.Create || fileMode == FileMode.CreateNew)
             {
@@ -82,11 +87,11 @@ namespace AdRotator
             return File.Open(filePath, fileMode, fileAccess, fileShare);
 #endif
         }
-
+#endif
         public override Stream FileOpenRead(string Location, string safeName)
         {
 #if WINRT
-            var stream = Task.Run( () => FileHelpers.OpenStreamAsync(safeName).Result ).Result;
+            var stream = Task.Run( () => OpenStreamAsync(safeName).Result ).Result;
             if (stream == null)
                 throw new FileNotFoundException(safeName);
 
@@ -117,6 +122,7 @@ namespace AdRotator
         public override Stream FileOpenRead(Uri Location, string safeName)
         {
 #if WINDOWS_PHONE
+            //Needs Error Handling
             return Application.GetResourceStream(Location).Stream;
 #else
             throw new NotImplementedException();
@@ -177,6 +183,8 @@ namespace AdRotator
             return awaiter.GetResult();
 #elif WINDOWS_PHONE
             return storage.CreateFile(filePath);
+#elif WINRT
+            throw new NotImplementedException();
 #else
             // return A new file with read/write access.
             return File.Create(filePath);
@@ -191,6 +199,8 @@ namespace AdRotator
             deleteFile.DeleteAsync().AsTask().Wait();
 #elif WINDOWS_PHONE
             storage.DeleteFile(filePath);
+#elif WINRT
+            throw new NotImplementedException();
 #else
             // Now let's try to delete it
             File.Delete(filePath);
@@ -301,7 +311,7 @@ namespace AdRotator
 
         public override bool DirectoryExists(string dirPath)
         {
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP || WINRT
             var folder = ApplicationData.Current.LocalFolder;
 
             try
@@ -322,7 +332,7 @@ namespace AdRotator
 
         public override string[] DirectoryGetFiles(string storagePath)
         {
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP || WINRT
             var folder = ApplicationData.Current.LocalFolder;
             var results = folder.GetFilesAsync().AsTask().GetAwaiter().GetResult();
             return results.Select<StorageFile, string>(e => e.Name).ToArray();
@@ -346,7 +356,7 @@ namespace AdRotator
             if (string.IsNullOrEmpty(searchPattern))
                 throw new ArgumentNullException("Parameter searchPattern must contain a value.");
 
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP || WINRT
             var folder = ApplicationData.Current.LocalFolder;
             var options = new QueryOptions( CommonFileQuery.DefaultQuery, new [] { searchPattern } );
             var query = folder.CreateFileQueryWithOptions(options);
@@ -359,7 +369,7 @@ namespace AdRotator
 
         public override string[] DirectoryGetDirectories(string storagePath)
         {
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP || WINRT
             var folder = ApplicationData.Current.LocalFolder;
             var results = folder.GetFoldersAsync().AsTask().GetAwaiter().GetResult();
             return results.Select<StorageFolder, string>(e => e.Name).ToArray();
@@ -379,7 +389,7 @@ namespace AdRotator
                 throw new ArgumentNullException("Parameter directory must contain a value.");
 
             // Now let's try to create it
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP || WINRT
             var folder = ApplicationData.Current.LocalFolder;
             var task = folder.CreateFolderAsync(directory, CreationCollisionOption.OpenIfExists);
             task.AsTask().Wait();
@@ -405,7 +415,7 @@ namespace AdRotator
 
         public override void DirectoryDelete(string dirPath)
         {
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP || WINRT
             var folder = ApplicationData.Current.LocalFolder;
             var deleteFolder = folder.GetFolderAsync(dirPath).AsTask().GetAwaiter().GetResult();
             deleteFolder.DeleteAsync().AsTask().Wait();
@@ -469,7 +479,12 @@ namespace AdRotator
         #endregion
 
         #region Stream Handlers
-
+#if WINRT
+        public override Stream OpenStream(string rootDirectory, string assetName, string extension)
+        {
+            throw new NotImplementedException();
+        }
+#else
         public override Stream OpenStream(string rootDirectory, string assetName, string extension)
         {
             Stream stream;
@@ -500,10 +515,11 @@ namespace AdRotator
 #endif
             catch (Exception exception)
             {
-                throw new SystemException("Opening stream error.", exception);
+                throw new Exception("Opening stream error.", exception);
             }
             return stream;
         }
+#endif
 
         public override Stream SeekStreamtoStart(Stream stream, long StartPos, out long pos)
         {
@@ -531,10 +547,10 @@ namespace AdRotator
 #endif
         }
 
-#if WINRT
 
         public override async Task<Stream> OpenStreamAsync(string name)
         {
+#if WINRT
             var package = Windows.ApplicationModel.Package.Current;
 
             try
@@ -548,9 +564,12 @@ namespace AdRotator
                 // The file must not exist... return a null stream.
                 return null;
             }
+#else
+            throw new NotImplementedException();
+#endif
+
         }
 
-#endif
 
         #region Stream Handler reciprocal overloads
 

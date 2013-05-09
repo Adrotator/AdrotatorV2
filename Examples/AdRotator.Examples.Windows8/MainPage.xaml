@@ -1,0 +1,18 @@
+﻿<Page
+    x:Class="AdRotator.Examples.Windows8.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AdRotator.Examples.Windows8"
+    xmlns:adRotator="using:AdRotator"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <adRotator:AdRotatorControl
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+                LocalSettingsLocation="defaultAdSettings.xml">
+        </adRotator:AdRotatorControl>
+    </Grid>
+</Page>

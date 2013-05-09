@@ -54,12 +54,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\AdDuplexWP7.2.7.0.3\lib\sl4-windowsphone71\AdDuplex.WindowsPhone.dll</HintPath>
     </Reference>
+    <Reference Include="Inneractive.Ad">
+      <HintPath>..\..\AdProviderControls\WindowsPhone7\Inneractive.Ad.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Advertising.Mobile, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Advertising.Mobile.UI, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />
-    <Reference Include="SOMAWP7">
-      <HintPath>..\..\..\..\..\06-Flipped\src\Release\External Libraries\SOMAWP7.dll</HintPath>
+    <Reference Include="SOMAWP7.Location">
+      <HintPath>..\..\AdProviderControls\WindowsPhone7\SOMAWP7.Location.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
@@ -103,6 +106,10 @@
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AdRotator\AdRotator.csproj">
+      <Project>{170B13CC-30B9-405C-A032-CF1A6B5F8277}</Project>
+      <Name>AdRotator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\AdRotator\AdRotator.WinPhone7.csproj">
       <Project>{0804BD51-07FF-407B-8CDA-A92039509D1C}</Project>
       <Name>AdRotator.WinPhone7</Name>

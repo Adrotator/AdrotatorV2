@@ -1,42 +1,44 @@
 ﻿using AdRotator.Model;
 using System;
-using System.ComponentModel;
-using System.Reflection;
-using System.Threading;
-using System.Windows;
-using System.Windows.Controls;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Documents;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+
+// The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
 
 namespace AdRotator
 {
-    public partial class AdRotatorControl : UserControl, IAdRotatorProvider
+    public sealed class AdRotatorControl : Control, IAdRotatorProvider
     {
-        private AdRotatorComponent adRotatorControl = new AdRotatorComponent(Thread.CurrentThread.CurrentUICulture.ToString(), new FileHelpers());
-        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone;
-
-        #region LoggingEventCode
-        public delegate void LogHandler(string message);
-        public event LogHandler Log;
-        protected void OnLog(string message)
-        {
-            if (Log != null)
-            {
-                Log(message);
-            }
-        }
-        #endregion
+        private AdRotatorComponent adRotatorControl = new AdRotatorComponent(CultureInfo.CurrentUICulture.ToString(), new FileHelpers());
+        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.Windows8;
 
         public AdRotatorControl()
         {
-            InitializeComponent();
+            this.DefaultStyleKey = typeof(AdRotatorControl);
+
             Loaded += AdRotatorControl_Loaded;
 
             // List of AdProviders supportd on this platform
-            adRotatorControl.PlatformSupportedAdProviders = new AdType[3] 
+            adRotatorControl.PlatformSupportedAdProviders = new AdType[2] 
                 { 
                     AdType.AdDuplex, 
                     AdType.PubCenter, 
-                    AdType.Smaato 
                 };
+        }
+
+        private Grid LayoutRoot
+        {
+            get
+            {
+                return GetTemplateChild("LayoutRoot") as Grid;
+            }
         }
 
         void adRotatorControl_AdAvailable(AdProvider adProvider)
@@ -51,7 +53,7 @@ namespace AdRotator
 
             if (IsInDesignMode)
             {
-                LayoutRoot.Children.Add(new TextBlock() { Text = "AdRotator in design mode, No ads will be displayed", VerticalAlignment = System.Windows.VerticalAlignment.Center });
+                LayoutRoot.Children.Add(new TextBlock() { Text = "AdRotator in design mode, No ads will be displayed", VerticalAlignment = VerticalAlignment.Center });
             }
             else
             {
@@ -60,7 +62,6 @@ namespace AdRotator
             }
 
             adRotatorControl.isLoaded = true;
-
         }
 
         public string Invalidate(AdProvider adProvider)
@@ -72,12 +73,15 @@ namespace AdRotator
 
             //(SJ) should we make this call the GetAd function? or keep it seperate
             //Isn't the aim of the GetAd function to return an ad to display or would this break other implementations?
-            FrameworkElement providerElement = (FrameworkElement)adRotatorControl.GetProviderFrameworkElement(CurrentPlatform, adProvider);
+            FrameworkElement providerElement = (FrameworkElement)adRotatorControl.GetProviderFrameworkElement(CurrentPlatform,adProvider);
 
             LayoutRoot.Children.Clear();
             LayoutRoot.Children.Add(providerElement);
             return adProvider.AdProviderType.ToString();
         }
+
+
+        #region IAdRotatorProvider Members
 
 
         #region AdWidth
@@ -172,7 +176,7 @@ namespace AdRotator
         {
             get
             {
-                return DesignerProperties.GetIsInDesignMode(this);
+                return Windows.ApplicationModel.DesignMode.DesignModeEnabled;
             }
         }
         #endregion
@@ -186,7 +190,7 @@ namespace AdRotator
 
         // Using a DependencyProperty as the backing store for RemoteSettingsLocation.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty RemoteSettingsLocationProperty =
-            DependencyProperty.Register("RemoteSettingsLocation", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(string.Empty,RemoteSettingsLocationPropertyChanged));
+            DependencyProperty.Register("RemoteSettingsLocation", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(string.Empty, RemoteSettingsLocationPropertyChanged));
 
         private static void RemoteSettingsLocationPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -200,7 +204,7 @@ namespace AdRotator
         {
             adRotatorControl.RemoteSettingsLocation = (string)e.NewValue;
         }
-    #endregion
+        #endregion
 
         #region LocalSettingsLocation
 
@@ -212,7 +216,7 @@ namespace AdRotator
 
         // Using a DependencyProperty as the backing store for LocalSettingsLocation.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LocalSettingsLocationProperty =
-            DependencyProperty.Register("LocalSettingsLocation", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(string.Empty,LocalSettingsLocationPropertyChanged));
+            DependencyProperty.Register("LocalSettingsLocation", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(string.Empty, LocalSettingsLocationPropertyChanged));
 
         private static void LocalSettingsLocationPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -227,7 +231,7 @@ namespace AdRotator
         {
             adRotatorControl.LocalSettingsLocation = (string)e.NewValue;
         }
-    #endregion
+        #endregion
 
         #region IsAdRotatorEnabled
         public bool IsAdRotatorEnabled
@@ -238,7 +242,7 @@ namespace AdRotator
 
         // Using a DependencyProperty as the backing store for IsAdRotatorEnabled.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsAdRotatorEnabledProperty =
-            DependencyProperty.Register("IsAdRotatorEnabled", typeof(bool), typeof(AdRotatorControl), new PropertyMetadata(true,IsAdRotatorEnabledPropertyChanged));
+            DependencyProperty.Register("IsAdRotatorEnabled", typeof(bool), typeof(AdRotatorControl), new PropertyMetadata(true, IsAdRotatorEnabledPropertyChanged));
 
         private static void IsAdRotatorEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -253,7 +257,7 @@ namespace AdRotator
         {
             adRotatorControl.IsAdRotatorEnabled = (bool)e.NewValue;
         }
-    #endregion
+        #endregion
 
         #region DefaultHouseAdBody
         public object DefaultHouseAdBody
@@ -264,7 +268,7 @@ namespace AdRotator
 
         // Using a DependencyProperty as the backing store for DefaultHouseAdBody.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DefaultHouseAdBodyProperty =
-            DependencyProperty.Register("DefaultHouseAdBody", typeof(object), typeof(AdRotatorControl), new PropertyMetadata(null,AdRotatorEnabledPropertyChanged));
+            DependencyProperty.Register("DefaultHouseAdBody", typeof(object), typeof(AdRotatorControl), new PropertyMetadata(null, AdRotatorEnabledPropertyChanged));
 
         private static void AdRotatorEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -280,7 +284,7 @@ namespace AdRotator
             adRotatorControl.DefaultHouseAdBody = e.NewValue;
         }
 
-    #endregion
+        #endregion
 
         #region IsLoaded
         public bool IsLoaded
@@ -303,5 +307,7 @@ namespace AdRotator
         #endregion
 
 
+
+        #endregion
     }
 }

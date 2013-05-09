@@ -149,6 +149,7 @@ namespace AdRotator
 
             return null;
         }
+
         public static void TrySetProperty(object instance, string PropertyName, string PropertyValue)
         {
             try
