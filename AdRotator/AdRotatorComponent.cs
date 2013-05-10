@@ -63,6 +63,7 @@ namespace AdRotator
         private int OrderIndex = 0;
 
         private FileHelpers fileHelper;
+        private ReflectionHelpers reflectionHelper = new ReflectionHelpers();
 
         internal int AdWidth { get; set; }
 
@@ -98,7 +99,14 @@ namespace AdRotator
         {
             this.culture = Culture;
             this.fileHelper = FileHelper;
+            this.AdHeight = 80;
+            this.AdWidth = 480;
         }
+        public AdRotatorComponent(string Culture, FileHelpers FileHelper, ReflectionHelpers ReflectionHelper)
+            : this(Culture, FileHelper)
+        {
+        }
+            
 
         public async void GetConfig()
         {
@@ -112,20 +120,28 @@ namespace AdRotator
             OnAdAvailable(_settings.GetAd());
         }
 
-        public AdProvider GetAd()
+        public void GetAd()
         {
             if (_settings == null)
             {
                 GetConfig();
-                return new AdProviderNone();
             }
-            return _settings.GetAd();
+            OnAdAvailable(_settings.GetAd());
         }
 
         public object GetProviderFrameworkElement(AdRotator.AdProviderConfig.SupportedPlatforms platform, AdProvider adProvider)
         {
             var provider = AdProviderConfig.AdProviderConfigValues[(int)platform][adProvider.AdProviderType];
-            Type providerType = ReflectionHelpers.TryGetType(provider.AssemblyName, provider.ElementName);
+            Type providerType;
+            try
+            {
+                providerType = reflectionHelper.TryGetType(provider.AssemblyName, provider.ElementName);
+            }
+            catch (PlatformNotSupportedException e)
+            {
+                AdFailed(adProvider.AdProviderType);
+                throw e;
+            }
             if (providerType == null)
             {
                 return null;
@@ -133,18 +149,42 @@ namespace AdRotator
             var instance = Activator.CreateInstance(providerType);
             if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AppId))
             {
-                ReflectionHelpers.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AppId], adProvider.AppId.ToString());
+                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AppId], adProvider.AppId.ToString());
             }
 
             if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.SecondaryId))
             {
-                ReflectionHelpers.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.SecondaryId], adProvider.SecondaryId.ToString());
+                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.SecondaryId], adProvider.SecondaryId.ToString());
             }
 
             if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.IsTest))
             {
-                ReflectionHelpers.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.IsTest], adProvider.IsTest.ToString());
+                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.IsTest], adProvider.IsTest.ToString());
             }
+
+            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdWidth))
+            {
+                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdWidth], AdWidth.ToString());
+            }
+
+            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdHeight))
+            {
+                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdHeight], AdHeight.ToString());
+            }
+
+#if DEBUG
+            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.ShowErrors))
+            {
+                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.ShowErrors], "true");
+            }
+#endif
+
+            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.StartMethod))
+            {
+                reflectionHelper.TryInvokeMethod(providerType, instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.StartMethod]);
+            }
+
+
             return instance;
         }
 

@@ -38,6 +38,7 @@
     <Compile Include="AdProviders\AdProviderAdDuplex.cs" />
     <Compile Include="AdProviders\AdProviderAdMob.cs" />
     <Compile Include="AdProviders\AdProviderDefaultHouseAd.cs" />
+    <Compile Include="AdProviders\AdProviderInmobi.cs" />
     <Compile Include="AdProviders\AdProviderInnerActive.cs" />
     <Compile Include="AdProviders\AdProviderMobFox.cs" />
     <Compile Include="AdProviders\AdProviderNone.cs" />

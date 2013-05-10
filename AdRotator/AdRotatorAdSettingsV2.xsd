@@ -8,12 +8,13 @@
 	
 	<xs:complexType name="AdCultureDescriptor">
 	   <xs:choice minOccurs="0" maxOccurs="unbounded">
-		   <xs:element name="Pubcenter" type="AdProviderPubCenter" />
+		   <xs:element name="PubCenter" type="AdProviderPubCenter" />
 		   <xs:element name="AdMob" type="AdProviderAdMob" />
 		   <xs:element name="AdDuplex" type="AdProviderAdDuplex" />
 		   <xs:element name="InnerActive" type="AdProviderInnerActive" />
 		   <xs:element name="MobFox" type="AdProviderMobFox" />
-		   <xs:element name="Smaato" type="AdProviderSmaato" />
+       <xs:element name="Smaato" type="AdProviderSmaato" />
+       <xs:element name="Inmobi" type="AdProviderInmobi" />
 		   <xs:element name="DefaultHouseAd" type="AdProviderDefaultHouseAd" />
 		   <xs:element name="None" type="AdProviderNone" />
 		   <xs:element name="AdGroup" type="AdGroup" />
@@ -60,7 +61,12 @@
 				<xs:extension base="AdProvider"/>
 		</xs:complexContent>
    </xs:complexType>
-   <xs:complexType name="AdProviderDefaultHouseAd">
+  <xs:complexType name="AdProviderInmobi">
+    <xs:complexContent>
+      <xs:extension base="AdProvider"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AdProviderDefaultHouseAd">
 		<xs:complexContent>
 				<xs:extension base="AdProvider"/>
 		</xs:complexContent>

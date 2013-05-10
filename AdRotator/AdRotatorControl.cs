@@ -19,6 +19,19 @@ namespace AdRotator
         private AdRotatorComponent adRotatorControl = new AdRotatorComponent(CultureInfo.CurrentUICulture.ToString(), new FileHelpers());
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.Windows8;
 
+        #region LoggingEventCode
+        public delegate void LogHandler(string message);
+        public event LogHandler Log;
+        protected void OnLog(string message)
+        {
+            if (Log != null)
+            {
+                Log(message);
+            }
+        }
+        #endregion
+
+
         public AdRotatorControl()
         {
             this.DefaultStyleKey = typeof(AdRotatorControl);
@@ -68,12 +81,28 @@ namespace AdRotator
         {
             if (adProvider == null)
             {
-                adProvider = adRotatorControl.GetAd();
+                adRotatorControl.GetAd();
+                return "No Provider";
+            }
+            if (adProvider.AdProviderType == AdType.None)
+            {
+                this.IsAdRotatorEnabled = false;
+                return "All attempts failed to get ads, disabling";
             }
 
             //(SJ) should we make this call the GetAd function? or keep it seperate
             //Isn't the aim of the GetAd function to return an ad to display or would this break other implementations?
-            FrameworkElement providerElement = (FrameworkElement)adRotatorControl.GetProviderFrameworkElement(CurrentPlatform,adProvider);
+            FrameworkElement providerElement = null;
+            try
+            {
+                providerElement = (FrameworkElement)adRotatorControl.GetProviderFrameworkElement(CurrentPlatform, adProvider);
+            }
+            catch (PlatformNotSupportedException e)
+            {
+                OnLog(string.Format("Configured provider {0} not found in this installation", adProvider.AdProviderType.ToString()));
+                adRotatorControl.GetAd();
+                return "Provider not found, trying to get new ad";
+            }
 
             LayoutRoot.Children.Clear();
             LayoutRoot.Children.Add(providerElement);

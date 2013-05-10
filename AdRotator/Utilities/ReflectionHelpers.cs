@@ -1,14 +1,15 @@
 ﻿
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 
 namespace AdRotator
 {
-    internal static class ReflectionHelpers
+    public class ReflectionHelpers
     {
-        public static bool IsValueType(Type targetType)
+        public bool IsValueType(Type targetType)
         {
             if (targetType == null)
             {
@@ -23,7 +24,7 @@ namespace AdRotator
         }
 
         //GetBase Type
-        public static Type GetBaseTpye(Type targetType)
+        public Type GetBaseTpye(Type targetType)
         {
             if (targetType == null)
             {
@@ -38,7 +39,7 @@ namespace AdRotator
         }
 
 //Test isAbstract
-        public static bool IsAbstractClass(Type t)
+        public bool IsAbstractClass(Type t)
         {
             if (t == null)
             {
@@ -56,7 +57,7 @@ namespace AdRotator
             }
 
 //?? Reflective Methods
-        public static MethodInfo GetPropertyMethod(PropertyInfo property, string method)
+        public MethodInfo GetPropertyMethod(PropertyInfo property, string method)
         {
             if (property == null)
             {
@@ -80,7 +81,7 @@ namespace AdRotator
         }
 
 // Get custom type from member
-        public static Attribute GetCustomAttribute(MemberInfo member, Type memberType)
+        public Attribute GetCustomAttribute(MemberInfo member, Type memberType)
         {
             if (member == null)
             {
@@ -99,7 +100,7 @@ namespace AdRotator
         }
 
 //Check for public methods
-        public static bool HasPublicProperties(PropertyInfo property)
+        public bool HasPublicProperties(PropertyInfo property)
         {
             if (property == null)
             {
@@ -120,7 +121,7 @@ namespace AdRotator
             return false;
         }
 		
-        public static bool IsAssignableFrom(Type type, object provider)
+        public bool IsAssignableFrom(Type type, object provider)
         {
 			if (type == null)
                 throw new ArgumentNullException("type");
@@ -137,25 +138,67 @@ namespace AdRotator
         }
 
 
-        public static Type TryGetType(string assemblyName, string typeName)
+        public Type TryGetType(string assemblyName, string typeName)
         {
             try
             {
+#if WINRT
+                var assem = Assembly.Load(new AssemblyName("MSAdvertisingXaml, Version=6.1"));
+                Type t = assem.GetType(typeName);
+                if (t != null) { return t; }
+#else
                 var assem = Assembly.Load(assemblyName);
                 Type t = assem.GetType(typeName, false);
                 if (t != null) { return t; }
+#endif
             }
-            catch { }
+            catch
+            {
+                throw new PlatformNotSupportedException("Provider not located in this solution");
+            }
 
             return null;
         }
 
-        public static void TrySetProperty(object instance, string PropertyName, string PropertyValue)
+        public void TryInvokeMethod(Type type, object classInstance, string methodName)
         {
             try
             {
+                if (type != null)
+                {
+#if WINRT
+                    MethodInfo methodInfo = type.GetRuntimeMethod(methodName,null);
+#else
+                    MethodInfo methodInfo = type.GetMethod(methodName,new Type[0]);
+#endif
+                    if (methodInfo != null)
+                    {
+                        object result = null;
+                        ParameterInfo[] parameters = methodInfo.GetParameters();
+                        if (parameters.Length == 0)
+                        {
+                            //This works fine
+                            result = methodInfo.Invoke(classInstance, null);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(e.ToString());
+            }
+        }
+
+        public void TrySetProperty(object instance, string PropertyName, string PropertyValue)
+        {
+            try
+            {
+#if WINRT
+                PropertyInfo propertyInfo = instance.GetType().GetRuntimeProperty(PropertyName);
+#else
                 PropertyInfo propertyInfo = instance.GetType().GetProperty(PropertyName);
-                propertyInfo.SetValue(instance, Convert.ChangeType(PropertyValue, propertyInfo.PropertyType, Thread.CurrentThread.CurrentUICulture), null);
+#endif
+                propertyInfo.SetValue(instance, Convert.ChangeType(PropertyValue, propertyInfo.PropertyType, CultureInfo.InvariantCulture), null);
             }
             catch { }
         }

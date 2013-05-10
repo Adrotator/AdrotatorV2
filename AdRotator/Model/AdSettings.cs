@@ -93,7 +93,7 @@ namespace AdRotator.Model
                 adsettings.CurrentCulture = sameLanguageDescriptor;
                 return;
             }
-            var defaultDescriptor = adsettings.CultureDescriptors.Where(x => x.CultureName == GlobalConfig.DEFAULT_CULTURE).FirstOrDefault();
+            var defaultDescriptor = adsettings.CultureDescriptors.Where(x => x.CultureName.ToLower() == GlobalConfig.DEFAULT_CULTURE || string.IsNullOrEmpty(x.CultureName)).FirstOrDefault();
             if (defaultDescriptor != null)
             {
                 adsettings.CurrentCulture = defaultDescriptor;
@@ -138,7 +138,7 @@ namespace AdRotator.Model
                 return defaultHouseAd;
             }
 
-            return null;
+            return new AdProviders.AdProviderNone();
         }
 
 

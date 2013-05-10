@@ -1,42 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-
-  <Identity Name="47b36bec-4d4a-45f1-ad92-7bbe37bee549"
-            Publisher="CN=Simon-Darkside"
-            Version="1.0.0.0" />
-
+  <Identity Name="47b36bec-4d4a-45f1-ad92-7bbe37bee549" Publisher="CN=Simon-Darkside" Version="1.0.0.0" />
   <Properties>
     <DisplayName>AdRotator.Examples.Windows8</DisplayName>
     <PublisherDisplayName>Simon-Darkside</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Prerequisites>
     <OSMinVersion>6.2.1</OSMinVersion>
     <OSMaxVersionTested>6.2.1</OSMaxVersionTested>
   </Prerequisites>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-        Executable="$targetnametoken$.exe"
-        EntryPoint="AdRotator.Examples.Windows8.App">
-        <VisualElements
-            DisplayName="AdRotator.Examples.Windows8"
-            Logo="Assets\Logo.png"
-            SmallLogo="Assets\SmallLogo.png"
-            Description="AdRotator.Examples.Windows8"
-            ForegroundText="light"
-            BackgroundColor="#464646">
-            <DefaultTile ShowName="allLogos" />
-            <SplashScreen Image="Assets\SplashScreen.png" />
-        </VisualElements>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="AdRotator.Examples.Windows8.App">
+      <VisualElements DisplayName="AdRotator.Examples.Windows8" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="AdRotator.Examples.Windows8" ForegroundText="light" BackgroundColor="#464646">
+        <DefaultTile ShowName="allLogos" />
+        <SplashScreen Image="Assets\SplashScreen.png" />
+      </VisualElements>
     </Application>
   </Applications>
   <Capabilities>
+    <Capability Name="privateNetworkClientServer" />
+    <Capability Name="internetClientServer" />
     <Capability Name="internetClient" />
+    <DeviceCapability Name="location" />
+    <DeviceCapability Name="microphone" />
+    <DeviceCapability Name="proximity" />
   </Capabilities>
 </Package>

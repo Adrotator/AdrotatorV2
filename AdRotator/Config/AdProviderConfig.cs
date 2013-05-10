@@ -18,6 +18,12 @@ namespace AdRotator
             AppId,
             SecondaryId,
             IsTest,
+            AdType,
+            StartMethod,
+            AdWidth,
+            AdHeight,
+            RefreshRate,
+            ShowErrors
         }
 
         public enum SupportedPlatforms
@@ -27,6 +33,12 @@ namespace AdRotator
             Windows8 = 2
         }
 
+        /// <remarks/>
+        /// When adding a new provider ensure you set and test all values nessasary below
+        /// * Assembly names are case sensitive - right look at the defnition for the AdProviders DISPLAY control type for the assembly name, without the .DLL extension
+        /// * ElementName is the full class name (including namespace) of the display element for the AdProvider, !Note some providers use a hosting class and a display function
+        /// * Add any property values required by the provider
+        /// *WIP - (SJ)not yet added capability for provider only options ot events yet
         #region Platform Config
 
         #region Windows Phone 7
@@ -38,8 +50,8 @@ namespace AdRotator
                                                 ElementName = "AdDuplex.AdControl", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
-                                                        {AdProviderConfigOptions.AppId,""},
-                                                        {AdProviderConfigOptions.IsTest,""}
+                                                        {AdProviderConfigOptions.AppId,"AppId"},
+                                                        {AdProviderConfigOptions.IsTest,"IsTest"}
                                                     }
                                             }
             },
@@ -49,20 +61,75 @@ namespace AdRotator
                                                 ElementName = "Microsoft.Advertising.Mobile.UI.AdControl", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
-                                                        {AdProviderConfigOptions.AppId,""},
-                                                        {AdProviderConfigOptions.SecondaryId,""},
-                                                        {AdProviderConfigOptions.IsTest,""}
+                                                        {AdProviderConfigOptions.AppId,"ApplicationId"},
+                                                        {AdProviderConfigOptions.SecondaryId,"AdUnitId"},
+                                                        {AdProviderConfigOptions.AdWidth,"Width"},
+                                                        {AdProviderConfigOptions.AdHeight,"Height"}
                                                     }
                                             }
             },
             {AdType.Smaato, new AdProviderDetails() 
                                             { 
                                                 AssemblyName = "SOMAWP7", 
-                                                ElementName = "SOMAWP7.SomaAd", 
+                                                ElementName = "SOMAWP7.SomaAdViewer", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
-                                                        {AdProviderConfigOptions.AppId,""},
-                                                        {AdProviderConfigOptions.SecondaryId,""}
+                                                        {AdProviderConfigOptions.AppId,"Adspace"},
+                                                        {AdProviderConfigOptions.SecondaryId,"Pub"},
+                                                        {AdProviderConfigOptions.StartMethod,"StartAds"},
+                                                        {AdProviderConfigOptions.AdWidth,"AdSpaceWidth"},
+                                                        {AdProviderConfigOptions.AdHeight,"AdSpaceHeight"},
+                                                        {AdProviderConfigOptions.ShowErrors,"ShowErrors"}
+                                                    }
+                                            }
+            },
+            {AdType.InnerActive, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "Inneractive.Ad", 
+                                                ElementName = "Inneractive.Ad.InneractiveAd", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"appId"},
+                                                        {AdProviderConfigOptions.AdType,"adType"},
+                                                        {AdProviderConfigOptions.RefreshRate,"reloadTime"}
+                                                    }
+                                            }
+            },
+            {AdType.MobFox, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "MobFox.Ads", 
+                                                ElementName = "MobFox.Ads.AdControl", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"PublisherID"},
+                                                        {AdProviderConfigOptions.IsTest,"TestMode"},
+                                                        {AdProviderConfigOptions.StartMethod,"RequestNextAd"}
+                                                    }
+                                            }
+            },
+            {AdType.AdMob, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "Google.AdMob.Ads.WindowsPhone7", 
+                                                ElementName = "Google.AdMob.Ads.WindowsPhone7.WPF.BannerAd", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"AdUnitID"},
+                                                        {AdProviderConfigOptions.AdWidth,"Width"},
+                                                        {AdProviderConfigOptions.AdHeight,"Height"}
+                                                    }
+                                            }
+            },
+            {AdType.Inmobi, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "InMobiWP7SDK", 
+                                                ElementName = "InMobi.WpSdk.IMAdView", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"AppId"},
+                                                        {AdProviderConfigOptions.RefreshRate,"RefreshInterval"},
+                                                        {AdProviderConfigOptions.StartMethod,"LoadNewAd"},
+                                                        {AdProviderConfigOptions.AdWidth,"Width"},
+                                                        {AdProviderConfigOptions.AdHeight,"Height"}
                                                     }
                                             }
             },
@@ -77,8 +144,8 @@ namespace AdRotator
                                                 ElementName = "AdDuplex.AdControl", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
-                                                        {AdProviderConfigOptions.AppId,""},
-                                                        {AdProviderConfigOptions.IsTest,""}
+                                                        {AdProviderConfigOptions.AppId,"AppId"},
+                                                        {AdProviderConfigOptions.IsTest,"IsTest"}
                                                     }
                                             }
             },
@@ -88,20 +155,36 @@ namespace AdRotator
                                                 ElementName = "Microsoft.Advertising.Mobile.UI.AdControl", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
-                                                        {AdProviderConfigOptions.AppId,""},
-                                                        {AdProviderConfigOptions.SecondaryId,""},
-                                                        {AdProviderConfigOptions.IsTest,""}
+                                                        {AdProviderConfigOptions.AppId,"ApplicationId"},
+                                                        {AdProviderConfigOptions.SecondaryId,"AdUnitId"},
+                                                        {AdProviderConfigOptions.AdWidth,"Width"},
+                                                        {AdProviderConfigOptions.AdHeight,"Height"}
                                                     }
                                             }
             },
             {AdType.Smaato, new AdProviderDetails() 
                                             { 
                                                 AssemblyName = "SOMAWP8", 
-                                                ElementName = "SOMAWP8.SomaAd", 
+                                                ElementName = "SOMAWP8.SomaAdViewer", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
-                                                        {AdProviderConfigOptions.AppId,""},
-                                                        {AdProviderConfigOptions.SecondaryId,""}
+                                                        {AdProviderConfigOptions.AppId,"Adspace"},
+                                                        {AdProviderConfigOptions.SecondaryId,"Pub"},
+                                                        {AdProviderConfigOptions.StartMethod,"StartAds"}
+                                                    }
+                                            }
+            },
+            {AdType.Inmobi, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "InMobiWPAdSDK", 
+                                                ElementName = "InMobi.WP.AdSDK.IMAdView", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"AppId"},
+                                                        {AdProviderConfigOptions.RefreshRate,"RefreshInterval"},
+                                                        {AdProviderConfigOptions.StartMethod,"LoadNewAd"},
+                                                        {AdProviderConfigOptions.AdWidth,"Width"},
+                                                        {AdProviderConfigOptions.AdHeight,"Height"}
                                                     }
                                             }
             },
@@ -116,31 +199,35 @@ namespace AdRotator
                                                 ElementName = "AdDuplex.Controls.AdControl", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
-                                                        {AdProviderConfigOptions.AppId,""},
-                                                        {AdProviderConfigOptions.IsTest,""}
+                                                        {AdProviderConfigOptions.AppId,"AppId"},
+                                                        {AdProviderConfigOptions.IsTest,"IsTest"}
                                                     }
                                             }
             },
             {AdType.PubCenter, new AdProviderDetails() 
                                             { 
-                                                AssemblyName = "Microsoft.Advertising.WinRT.UI", 
+                                                AssemblyName = "MSAdvertisingXaml, Version=6.1", 
                                                 ElementName = "Microsoft.Advertising.WinRT.UI.AdControl", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
-                                                        {AdProviderConfigOptions.AppId,""},
-                                                        {AdProviderConfigOptions.SecondaryId,""},
-                                                        {AdProviderConfigOptions.IsTest,""}
+                                                        {AdProviderConfigOptions.AppId,"ApplicationId"},
+                                                        {AdProviderConfigOptions.SecondaryId,"AdUnitId"},
+                                                        {AdProviderConfigOptions.AdWidth,"Width"},
+                                                        {AdProviderConfigOptions.AdHeight,"Height"}
                                                     }
                                             }
             },
-            {AdType.Smaato, new AdProviderDetails() 
+            {AdType.Inmobi, new AdProviderDetails() 
                                             { 
-                                                AssemblyName = "", 
-                                                ElementName = "", 
+                                                AssemblyName = "InMobiW8AdSDK", 
+                                                ElementName = "InMobi.W8.AdSDK.IMAdView", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
-                                                        {AdProviderConfigOptions.AppId,""},
-                                                        {AdProviderConfigOptions.SecondaryId,""}
+                                                        {AdProviderConfigOptions.AppId,"AppId"},
+                                                        {AdProviderConfigOptions.RefreshRate,"RefreshInterval"},
+                                                        {AdProviderConfigOptions.StartMethod,"LoadNewAd"},
+                                                        {AdProviderConfigOptions.AdWidth,"Width"},
+                                                        {AdProviderConfigOptions.AdHeight,"Height"}
                                                     }
                                             }
             },
@@ -149,6 +236,8 @@ namespace AdRotator
 
         #endregion
 
+        /// <remarks/>
+        /// TO add a new platform, define it's config above (be nice and region it) then increase the array size below and add it
         public static Dictionary<AdType, AdProviderDetails>[] AdProviderConfigValues = new Dictionary<AdType, AdProviderDetails>[3]
         {
             AdProviderConfig.AdProviderConfigValuesWP7,

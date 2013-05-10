@@ -155,6 +155,9 @@
     <Reference Include="AdDuplex.Windows">
       <HintPath>..\..\packages\AdDuplexWindows.8.0.3.0\lib\winrt45\AdDuplex.Windows.dll</HintPath>
     </Reference>
+    <Reference Include="InMobiW8AdSDK">
+      <HintPath>..\..\AdProviderControls\Windows8\InMobiW8AdSDK.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="MSAdvertisingXaml, Version=6.1">

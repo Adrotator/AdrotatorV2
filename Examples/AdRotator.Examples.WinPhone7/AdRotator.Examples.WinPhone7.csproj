@@ -54,6 +54,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\AdDuplexWP7.2.7.0.3\lib\sl4-windowsphone71\AdDuplex.WindowsPhone.dll</HintPath>
     </Reference>
+    <Reference Include="InMobiWP7SDK">
+      <HintPath>..\..\AdProviderControls\WindowsPhone7\InMobiWP7SDK.dll</HintPath>
+    </Reference>
     <Reference Include="Inneractive.Ad">
       <HintPath>..\..\AdProviderControls\WindowsPhone7\Inneractive.Ad.dll</HintPath>
     </Reference>

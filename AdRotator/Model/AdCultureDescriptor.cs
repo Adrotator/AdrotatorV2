@@ -17,6 +17,13 @@ namespace AdRotator.Model
         private bool enabledInTrialOnlyFieldSpecified;
 
         /// <remarks/>
+        /// To add a new Add provider it needs to be defined in x Places
+        /// * Update XSD with new Ad Provider Type and Choice
+        /// * Add a new AdType using the Providers Market name (take care with case sensitivity)
+        /// * Create new AdProvider class in "AdProviders" folder which inherits the AdProvider Type and sets the correct AdType
+        /// * Add an entry below for the deserialisation for the provider !!Case Sensitive
+        /// * Copy the new line and add to same place in the AdGroup.cs class if you want that provider to also be supported by AdGroups
+        /// * Finally, in the AdProviderConfig.cs add a new provider entry for each of the platforms that provider supports. (see notes there)
         [System.Xml.Serialization.XmlElementAttribute("AdDuplex", typeof(AdProviderAdDuplex), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("AdGroup", typeof(AdGroup), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("AdMob", typeof(AdProviderAdMob), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
@@ -24,8 +31,9 @@ namespace AdRotator.Model
         [System.Xml.Serialization.XmlElementAttribute("InnerActive", typeof(AdProviderInnerActive), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("MobFox", typeof(AdProviderMobFox), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("None", typeof(AdProviderNone), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        [System.Xml.Serialization.XmlElementAttribute("Pubcenter", typeof(AdProviderPubCenter), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [System.Xml.Serialization.XmlElementAttribute("PubCenter", typeof(AdProviderPubCenter), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("Smaato", typeof(AdProviderSmaato), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [System.Xml.Serialization.XmlElementAttribute("Inmobi", typeof(AdProviderInmobi), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public object[] Items
         {
             get

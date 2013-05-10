@@ -165,6 +165,9 @@
     <Reference Include="AdDuplex.WindowsPhone">
       <HintPath>..\..\packages\AdDuplexWP8.2.8.0.3\lib\wp8\AdDuplex.WindowsPhone.dll</HintPath>
     </Reference>
+    <Reference Include="InMobiWPAdSDK">
+      <HintPath>..\..\AdProviderControls\WindowsPhone8\InMobiWPAdSDK.dll</HintPath>
+    </Reference>
     <Reference Include="Inneractive.Ad">
       <HintPath>..\..\AdProviderControls\WindowsPhone8\Inneractive.Ad.dll</HintPath>
     </Reference>

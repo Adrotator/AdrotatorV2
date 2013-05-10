@@ -2,7 +2,7 @@
 using AdRotator.AdProviders;
 namespace AdRotator.Model
 {
-    public partial class AdGroup : AdSettingsBase
+    public partial class AdGroup : AdProvider
     {
         private AdProvider[] itemsField;
 
@@ -27,6 +27,7 @@ namespace AdRotator.Model
         [System.Xml.Serialization.XmlElementAttribute("None", typeof(AdProviderNone), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("Pubcenter", typeof(AdProviderPubCenter), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("Smaato", typeof(AdProviderSmaato), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [System.Xml.Serialization.XmlElementAttribute("Inmobi", typeof(AdProviderInmobi), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public AdProvider[] Items
         {
             get

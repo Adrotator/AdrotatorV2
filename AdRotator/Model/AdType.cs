@@ -9,6 +9,7 @@ namespace AdRotator.Model
         InnerActive,
         MobFox,
         Smaato,
+        Inmobi,
         DefaultHouseAd,
         None
     }
