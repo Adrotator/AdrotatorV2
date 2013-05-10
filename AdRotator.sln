@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{E2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Examples.WinPhone7", "Examples\AdRotator.Examples.WinPhone7\AdRotator.Examples.WinPhone7.csproj", "{210B55C2-AB15-4EAC-A9B6-51A766A40BD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.WinPhone7", "AdRotator\AdRotator.WinPhone7.csproj", "{0804BD51-07FF-407B-8CDA-A92039509D1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.WinPhone7", "AdRotator\Clients\WinPhone7\AdRotator.WinPhone7.csproj", "{0804BD51-07FF-407B-8CDA-A92039509D1C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{971001F2-7071-4A08-9B11-3FB5312EB721}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,11 +18,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{971001
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.WinPhone8", "AdRotator\AdRotator.WinPhone8.csproj", "{7D456892-7A65-4FE7-AA0A-821982FC2E70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.WinPhone8", "AdRotator\Clients\WinPhone8\AdRotator.WinPhone8.csproj", "{7D456892-7A65-4FE7-AA0A-821982FC2E70}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Examples.WinPhone8", "Examples\AdRotator.Examples.WinPhone8\AdRotator.Examples.WinPhone8.csproj", "{5E7A5C78-DA60-457F-AEE1-0562BA1DF6AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Windows8", "AdRotator\AdRotator.Windows8.csproj", "{31829403-E429-4753-BF39-4CA00C7061E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Windows8", "AdRotator\Clients\Windows8\AdRotator.Windows8.csproj", "{31829403-E429-4753-BF39-4CA00C7061E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Examples.Windows8", "Examples\AdRotator.Examples.Windows8\AdRotator.Examples.Windows8.csproj", "{04C0A865-AB86-419B-9D73-6D8BD8BEA3C9}"
 EndProject

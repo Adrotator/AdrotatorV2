@@ -156,7 +156,7 @@
       <Project>{170B13CC-30B9-405C-A032-CF1A6B5F8277}</Project>
       <Name>AdRotator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\AdRotator\AdRotator.WinPhone8.csproj">
+    <ProjectReference Include="..\..\AdRotator\Clients\WinPhone8\AdRotator.WinPhone8.csproj">
       <Project>{7D456892-7A65-4FE7-AA0A-821982FC2E70}</Project>
       <Name>AdRotator.WinPhone8</Name>
     </ProjectReference>
