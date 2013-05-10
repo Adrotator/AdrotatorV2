@@ -61,8 +61,8 @@
     <Reference Include="Microsoft.Advertising.Mobile.UI, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />
-    <Reference Include="SOMAWP7.Location">
-      <HintPath>..\..\AdProviderControls\WindowsPhone7\SOMAWP7.Location.dll</HintPath>
+    <Reference Include="SOMAWP7">
+      <HintPath>..\..\AdProviderControls\WindowsPhone7\SOMAWP7.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />

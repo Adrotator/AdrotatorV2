@@ -22,14 +22,15 @@ namespace AdRotator
 
         public enum SupportedPlatforms
         {
-            WindowsPhone = 0,
-            Windows8 = 1
+            WindowsPhone7 = 0,
+            WindowsPhone8 = 1,
+            Windows8 = 2
         }
 
         #region Platform Config
 
-        #region Windows Phone
-        private static Dictionary<AdType, AdProviderDetails> AdProviderConfigValuesWP = new Dictionary<AdType, AdProviderDetails>()
+        #region Windows Phone 7
+        private static Dictionary<AdType, AdProviderDetails> AdProviderConfigValuesWP7 = new Dictionary<AdType, AdProviderDetails>()
         {
             {AdType.AdDuplex, new AdProviderDetails() 
                                             { 
@@ -44,8 +45,8 @@ namespace AdRotator
             },
             {AdType.PubCenter, new AdProviderDetails() 
                                             { 
-                                                AssemblyName = "", 
-                                                ElementName = "", 
+                                                AssemblyName = "Microsoft.Advertising.Mobile.UI", 
+                                                ElementName = "Microsoft.Advertising.Mobile.UI.AdControl", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
                                                         {AdProviderConfigOptions.AppId,""},
@@ -56,8 +57,47 @@ namespace AdRotator
             },
             {AdType.Smaato, new AdProviderDetails() 
                                             { 
-                                                AssemblyName = "", 
-                                                ElementName = "", 
+                                                AssemblyName = "SOMAWP7", 
+                                                ElementName = "SOMAWP7.SomaAd", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,""},
+                                                        {AdProviderConfigOptions.SecondaryId,""}
+                                                    }
+                                            }
+            },
+        };
+        #endregion
+        #region Windows Phone 8
+        private static Dictionary<AdType, AdProviderDetails> AdProviderConfigValuesWP8 = new Dictionary<AdType, AdProviderDetails>()
+        {
+            {AdType.AdDuplex, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "AdDuplex.WindowsPhone", 
+                                                ElementName = "AdDuplex.AdControl", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,""},
+                                                        {AdProviderConfigOptions.IsTest,""}
+                                                    }
+                                            }
+            },
+            {AdType.PubCenter, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "Microsoft.Advertising.Mobile.UI", 
+                                                ElementName = "Microsoft.Advertising.Mobile.UI.AdControl", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,""},
+                                                        {AdProviderConfigOptions.SecondaryId,""},
+                                                        {AdProviderConfigOptions.IsTest,""}
+                                                    }
+                                            }
+            },
+            {AdType.Smaato, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "SOMAWP8", 
+                                                ElementName = "SOMAWP8.SomaAd", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
                                                         {AdProviderConfigOptions.AppId,""},
@@ -83,8 +123,8 @@ namespace AdRotator
             },
             {AdType.PubCenter, new AdProviderDetails() 
                                             { 
-                                                AssemblyName = "", 
-                                                ElementName = "", 
+                                                AssemblyName = "Microsoft.Advertising.WinRT.UI", 
+                                                ElementName = "Microsoft.Advertising.WinRT.UI.AdControl", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
                                                         {AdProviderConfigOptions.AppId,""},
@@ -109,9 +149,10 @@ namespace AdRotator
 
         #endregion
 
-        public static Dictionary<AdType, AdProviderDetails>[] AdProviderConfigValues = new Dictionary<AdType, AdProviderDetails>[2]
+        public static Dictionary<AdType, AdProviderDetails>[] AdProviderConfigValues = new Dictionary<AdType, AdProviderDetails>[3]
         {
-            AdProviderConfig.AdProviderConfigValuesWP,
+            AdProviderConfig.AdProviderConfigValuesWP7,
+            AdProviderConfig.AdProviderConfigValuesWP8,
             AdProviderConfig.AdProviderConfigValuesWin8
         };
 
