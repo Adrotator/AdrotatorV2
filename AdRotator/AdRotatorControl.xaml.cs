@@ -1,7 +1,7 @@
 ﻿using AdRotator.Model;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,16 +10,10 @@ namespace AdRotator
 {
     public partial class AdRotatorControl : UserControl, IAdRotatorProvider
     {
-        private AdRotatorComponent adRotatorControl = new AdRotatorComponent(Thread.CurrentThread.CurrentUICulture.ToString(), new FileHelpers());
-#if WINPHONE7
-        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone7;
-#else
-        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone8;
-#endif
-
-        #region LoggingEventCode
+        #region Logging Event Code
         public delegate void LogHandler(string message);
         public event LogHandler Log;
+
         protected void OnLog(string message)
         {
             if (Log != null)
@@ -27,7 +21,14 @@ namespace AdRotator
                 Log(message);
             }
         }
-        #endregion
+        #endregion 
+
+        private AdRotatorComponent adRotatorControl = new AdRotatorComponent(Thread.CurrentThread.CurrentUICulture.ToString(), new FileHelpers());
+#if WINPHONE7
+        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone7;
+#else
+        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone8;
+#endif
 
         public AdRotatorControl()
         {
@@ -35,12 +36,17 @@ namespace AdRotator
             Loaded += AdRotatorControl_Loaded;
 
             // List of AdProviders supportd on this platform
-            adRotatorControl.PlatformSupportedAdProviders = new AdType[3] 
+            AdRotatorComponent.PlatformSupportedAdProviders = new List<AdType>()
                 { 
                     AdType.AdDuplex, 
                     AdType.PubCenter, 
-                    AdType.Smaato 
+                    AdType.Smaato,
+                    AdType.Inmobi,
+                    AdType.MobFox,
+                    AdType.AdMob
                 };
+            adRotatorControl.Log += (s) => { OnLog(s); };
+            
         }
 
         void adRotatorControl_AdAvailable(AdProvider adProvider)
@@ -72,33 +78,36 @@ namespace AdRotator
             if (adProvider == null)
             {
                 adRotatorControl.GetAd();
-                return "No Provider";
+                return "No Provider set";
             }
             if (adProvider.AdProviderType == AdType.None)
             {
-                this.IsAdRotatorEnabled = false;
-                return "All attempts failed to get ads, disabling";
+                return adRotatorControl.AdsFailed();
             }
 
             //(SJ) should we make this call the GetAd function? or keep it seperate
             //Isn't the aim of the GetAd function to return an ad to display or would this break other implementations?
-            FrameworkElement providerElement = null;
+            object providerElement = null;
             try
             {
-                providerElement = (FrameworkElement)adRotatorControl.GetProviderFrameworkElement(CurrentPlatform, adProvider);
+                providerElement = adRotatorControl.GetProviderFrameworkElement(CurrentPlatform, adProvider);
             }
-            catch (PlatformNotSupportedException e)
+            catch (Exception)
             {
-                OnLog(string.Format("Configured provider {0} not found in this installation", adProvider.AdProviderType.ToString()));
-                adRotatorControl.GetAd();
-                return "Provider not found, trying to get new ad";
+                adRotatorControl.AdFailed(adProvider.AdProviderType);
+                return "Ad Failed to initialise";
+            }
+            if (providerElement == null)
+            {
+                adRotatorControl.AdFailed(adProvider.AdProviderType);
+                return "No Ad Returned";
             }
 
             LayoutRoot.Children.Clear();
-            LayoutRoot.Children.Add(providerElement);
+            LayoutRoot.Children.Add((FrameworkElement)providerElement);
+            OnLog(string.Format("Displaying ads for {0}", adProvider.AdProviderType));
             return adProvider.AdProviderType.ToString();
         }
-
 
         #region AdWidth
 

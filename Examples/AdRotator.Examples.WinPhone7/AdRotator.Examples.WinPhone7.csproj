@@ -54,6 +54,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\AdDuplexWP7.2.7.0.3\lib\sl4-windowsphone71\AdDuplex.WindowsPhone.dll</HintPath>
     </Reference>
+    <Reference Include="Google.AdMob.Ads.WindowsPhone7">
+      <HintPath>..\..\AdProviderControls\WindowsPhone7\Google.AdMob.Ads.WindowsPhone7.dll</HintPath>
+    </Reference>
     <Reference Include="InMobiWP7SDK">
       <HintPath>..\..\AdProviderControls\WindowsPhone7\InMobiWP7SDK.dll</HintPath>
     </Reference>
@@ -64,6 +67,9 @@
     <Reference Include="Microsoft.Advertising.Mobile.UI, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Interop" />
+    <Reference Include="MobFox.Ads">
+      <HintPath>..\..\AdProviderControls\WindowsPhone7\MobFox.Ads.dll</HintPath>
+    </Reference>
     <Reference Include="SOMAWP7">
       <HintPath>..\..\AdProviderControls\WindowsPhone7\SOMAWP7.dll</HintPath>
     </Reference>

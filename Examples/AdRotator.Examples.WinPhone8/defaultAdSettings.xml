@@ -4,7 +4,9 @@
     <AdDuplex AppId="1379" Probability="0"/>
     <Smaato AppId="0" SecondaryId="0" Probability="0"/>
     <PubCenter AppId="test_client" SecondaryId="Image480_80" Probability="0"/>
-    <Inmobi AppId="ec9ea8fdfcc3436e94df0f5bcac3a227" Probability="100"/>
+    <Inmobi AppId="ec9ea8fdfcc3436e94df0f5bcac3a227" Probability="0"/>
+    <MobFox AppId="474b65a3575dcbc261090efb2b996301=" IsTest="false" Probability="0"/>
+    <AdMob AppId="a14e5b8669ef367" Probability="100"/>
     <AdGroup Probability="0">
       <AdDuplex AppId="1379" Probability="100"/>
     </AdGroup>

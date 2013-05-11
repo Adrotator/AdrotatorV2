@@ -112,6 +112,7 @@ namespace AdRotator.Model
 
             var validDescriptors = adsettings.CurrentCulture.Items
             .Where(x => !adsettings._failedAdTypes.Contains(((AdProvider)x).AdProviderType)
+                        && AdRotatorComponent.PlatformSupportedAdProviders.Contains(((AdProvider)x).AdProviderType)
                         && ((AdProvider)x).Probability > 0);
 
             var defaultHouseAd = (AdProvider)adsettings.CurrentCulture.Items.FirstOrDefault(x => ((AdProvider)x).AdProviderType == AdType.DefaultHouseAd && !adsettings._failedAdTypes.Contains(AdType.DefaultHouseAd));
