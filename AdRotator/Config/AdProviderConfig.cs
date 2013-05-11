@@ -10,6 +10,7 @@ namespace AdRotator
         {
             public string AssemblyName;
             public string ElementName;
+            public bool RequiresParameters;
             public Dictionary<AdProviderConfigOptions, string> ConfigurationOptions;
         }
 
@@ -22,7 +23,7 @@ namespace AdRotator
             StartMethod,
             AdWidth,
             AdHeight,
-            RefreshRate,
+            ReloadTime,
             ShowErrors
         }
 
@@ -86,12 +87,13 @@ namespace AdRotator
             {AdType.InnerActive, new AdProviderDetails() 
                                             { 
                                                 AssemblyName = "Inneractive.Ad", 
-                                                ElementName = "Inneractive.Ad.InneractiveAd", 
+                                                ElementName = "Inneractive.Ad.InneractiveAd",
+                                                RequiresParameters = true,
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
-                                                        {AdProviderConfigOptions.AppId,"appId"},
-                                                        {AdProviderConfigOptions.AdType,"adType"},
-                                                        {AdProviderConfigOptions.RefreshRate,"reloadTime"}
+                                                        {AdProviderConfigOptions.AppId,"AppID"},
+                                                        {AdProviderConfigOptions.AdType,"AdType"},
+                                                        {AdProviderConfigOptions.ReloadTime,"ReloadTime"}
                                                     }
                                             }
             },
@@ -126,7 +128,7 @@ namespace AdRotator
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AppId"},
-                                                        {AdProviderConfigOptions.RefreshRate,"RefreshInterval"},
+                                                        {AdProviderConfigOptions.ReloadTime,"RefreshInterval"},
                                                         {AdProviderConfigOptions.StartMethod,"LoadNewAd"},
                                                         {AdProviderConfigOptions.AdWidth,"Width"},
                                                         {AdProviderConfigOptions.AdHeight,"Height"}
@@ -174,6 +176,42 @@ namespace AdRotator
                                                     }
                                             }
             },
+            {AdType.InnerActive, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "Inneractive.Ad", 
+                                                ElementName = "Inneractive.Ad.InneractiveAd", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"AppID"},
+                                                        {AdProviderConfigOptions.AdType,"AdType"},
+                                                        {AdProviderConfigOptions.ReloadTime,"ReloadTime"}
+                                                    }
+                                            }
+            },
+            {AdType.MobFox, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "MobFox.Ads", 
+                                                ElementName = "MobFox.Ads.AdControl", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"PublisherID"},
+                                                        {AdProviderConfigOptions.IsTest,"TestMode"},
+                                                        {AdProviderConfigOptions.StartMethod,"RequestNextAd"}
+                                                    }
+                                            }
+            },
+            {AdType.AdMob, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "Google.AdMob.Ads.WindowsPhone7", 
+                                                ElementName = "Google.AdMob.Ads.WindowsPhone7.WPF.BannerAd", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"AdUnitID"},
+                                                        {AdProviderConfigOptions.AdWidth,"Width"},
+                                                        {AdProviderConfigOptions.AdHeight,"Height"}
+                                                    }
+                                            }
+            },
             {AdType.Inmobi, new AdProviderDetails() 
                                             { 
                                                 AssemblyName = "InMobiWPAdSDK", 
@@ -181,7 +219,7 @@ namespace AdRotator
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AppId"},
-                                                        {AdProviderConfigOptions.RefreshRate,"RefreshInterval"},
+                                                        {AdProviderConfigOptions.ReloadTime,"RefreshInterval"},
                                                         {AdProviderConfigOptions.StartMethod,"LoadNewAd"},
                                                         {AdProviderConfigOptions.AdWidth,"Width"},
                                                         {AdProviderConfigOptions.AdHeight,"Height"}
@@ -217,6 +255,30 @@ namespace AdRotator
                                                     }
                                             }
             },
+            {AdType.MobFox, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "MobFox.Ads", 
+                                                ElementName = "MobFox.Ads.AdControl", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"PublisherID"},
+                                                        {AdProviderConfigOptions.IsTest,"TestMode"},
+                                                        {AdProviderConfigOptions.StartMethod,"RequestNextAd"}
+                                                    }
+                                            }
+            },
+            {AdType.AdMob, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "Google.AdMob.Ads.WindowsPhone7", 
+                                                ElementName = "Google.AdMob.Ads.WindowsPhone7.WPF.BannerAd", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"AdUnitID"},
+                                                        {AdProviderConfigOptions.AdWidth,"Width"},
+                                                        {AdProviderConfigOptions.AdHeight,"Height"}
+                                                    }
+                                            }
+            },
             {AdType.Inmobi, new AdProviderDetails() 
                                             { 
                                                 AssemblyName = "InMobiW8AdSDK", 
@@ -224,7 +286,7 @@ namespace AdRotator
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AppId"},
-                                                        {AdProviderConfigOptions.RefreshRate,"RefreshInterval"},
+                                                        {AdProviderConfigOptions.ReloadTime,"RefreshInterval"},
                                                         {AdProviderConfigOptions.StartMethod,"LoadNewAd"},
                                                         {AdProviderConfigOptions.AdWidth,"Width"},
                                                         {AdProviderConfigOptions.AdHeight,"Height"}

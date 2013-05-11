@@ -12,7 +12,8 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
@@ -29,9 +30,16 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <adRotator:AdRotatorControl
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <adRotator:AdRotatorControl x:Name="AdRotatorControl"
                 LocalSettingsLocation="/AdRotator.Examples.WinPhone7;component/defaultAdSettings.xml">
             </adRotator:AdRotatorControl>
+            <ScrollViewer Grid.Row="1">
+                <ListBox x:Name="MessagesListBox" Height="Auto"/>
+            </ScrollViewer>
         </Grid>
     </Grid>
  

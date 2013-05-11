@@ -1,24 +1,28 @@
-﻿using System;
+﻿using Microsoft.Phone.Controls;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using Microsoft.Phone.Controls;
 
 namespace AdRotator.Examples.WinPhone7
 {
     public partial class MainPage : PhoneApplicationPage
     {
+
         // Constructor
         public MainPage()
         {
             InitializeComponent();
+            this.AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
+            Loaded += MainPage_Loaded;
+        }
+
+        void MainPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            AdRotatorControl_Log("Page Loaded");
+
+        }
+
+        void AdRotatorControl_Log(string message)
+        {
+            Dispatcher.BeginInvoke(() => MessagesListBox.Items.Insert(0, message));
         }
     }
 }

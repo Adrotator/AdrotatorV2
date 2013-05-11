@@ -2,13 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 
 // The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
 
@@ -39,10 +34,11 @@ namespace AdRotator
             Loaded += AdRotatorControl_Loaded;
 
             // List of AdProviders supportd on this platform
-            adRotatorControl.PlatformSupportedAdProviders = new AdType[2] 
+            AdRotatorComponent.PlatformSupportedAdProviders = new List<AdType>()
                 { 
                     AdType.AdDuplex, 
-                    AdType.PubCenter, 
+                    //AdType.PubCenter, 
+                    AdType.Inmobi
                 };
         }
 
@@ -82,30 +78,33 @@ namespace AdRotator
             if (adProvider == null)
             {
                 adRotatorControl.GetAd();
-                return "No Provider";
+                return "No Provider set";
             }
             if (adProvider.AdProviderType == AdType.None)
             {
-                this.IsAdRotatorEnabled = false;
-                return "All attempts failed to get ads, disabling";
+                return adRotatorControl.AdsFailed();
             }
 
             //(SJ) should we make this call the GetAd function? or keep it seperate
             //Isn't the aim of the GetAd function to return an ad to display or would this break other implementations?
-            FrameworkElement providerElement = null;
+            object providerElement = null;
             try
             {
-                providerElement = (FrameworkElement)adRotatorControl.GetProviderFrameworkElement(CurrentPlatform, adProvider);
+                providerElement = adRotatorControl.GetProviderFrameworkElement(CurrentPlatform, adProvider);
             }
-            catch (PlatformNotSupportedException e)
+            catch (Exception)
             {
-                OnLog(string.Format("Configured provider {0} not found in this installation", adProvider.AdProviderType.ToString()));
-                adRotatorControl.GetAd();
-                return "Provider not found, trying to get new ad";
+                adRotatorControl.AdFailed(adProvider.AdProviderType);
+                return "Ad Failed to initialise";
+            }
+            if (providerElement == null)
+            {
+                adRotatorControl.AdFailed(adProvider.AdProviderType);
+                return "No Ad Returned";
             }
 
             LayoutRoot.Children.Clear();
-            LayoutRoot.Children.Add(providerElement);
+            LayoutRoot.Children.Add((FrameworkElement)providerElement);
             return adProvider.AdProviderType.ToString();
         }
 

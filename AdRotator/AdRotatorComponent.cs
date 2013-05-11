@@ -1,9 +1,11 @@
-﻿using AdRotator.AdProviders;
-using AdRotator.Model;
+﻿using AdRotator.Model;
 using AdRotator.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -13,7 +15,7 @@ namespace AdRotator
     /// *Notes (food for thought)
     ///     - Ad Validity checking?
     /// </summary>
-    public partial class AdRotatorComponent
+    internal partial class AdRotatorComponent
     {
         #region Logging Event Code
         public delegate void LogHandler(string message);
@@ -26,7 +28,7 @@ namespace AdRotator
                 Log(message);
             }
         }
-        #endregion        #endregion
+        #endregion 
 
         #region AdAvailableEventCode
 
@@ -38,6 +40,7 @@ namespace AdRotator
         {
             if (AdAvailable != null)
             {
+                OnLog(string.Format("Trying provider {0}", adProvider.AdProviderType));
                 AdAvailable(adProvider);
             }
         }
@@ -83,7 +86,7 @@ namespace AdRotator
 
         internal bool isTest { get; set; }
 
-        internal AdType[] PlatformSupportedAdProviders { get; set; }
+        internal static List<AdType> PlatformSupportedAdProviders { get; set; }
 
 
         #endregion
@@ -97,10 +100,12 @@ namespace AdRotator
         /// <param name="Culture">Specified culture you want AdRotator initialised for</param>
         public AdRotatorComponent(string Culture, FileHelpers FileHelper)
         {
+            this.IsAdRotatorEnabled = true;
             this.culture = Culture;
             this.fileHelper = FileHelper;
             this.AdHeight = 80;
             this.AdWidth = 480;
+            PlatformSupportedAdProviders = new List<AdType>();
         }
         public AdRotatorComponent(string Culture, FileHelpers FileHelper, ReflectionHelpers ReflectionHelper)
             : this(Culture, FileHelper)
@@ -133,6 +138,7 @@ namespace AdRotator
         {
             var provider = AdProviderConfig.AdProviderConfigValues[(int)platform][adProvider.AdProviderType];
             Type providerType;
+            object instance;
             try
             {
                 providerType = reflectionHelper.TryGetType(provider.AssemblyName, provider.ElementName);
@@ -146,7 +152,49 @@ namespace AdRotator
             {
                 return null;
             }
-            var instance = Activator.CreateInstance(providerType);
+            try
+            {
+            if (provider.RequiresParameters)
+            {
+                throw new NotImplementedException("Not got contructer initialisation working yet");
+
+                var parameterCount = provider.ConfigurationOptions.Count();
+                object[] parameters = new object[parameterCount];
+                var ObjConstr = providerType.GetConstructors().FirstOrDefault(constructor => constructor.GetParameters().Count() == parameterCount);
+                var pInfos = ObjConstr.GetParameters();
+                for (int i = 0; i < parameterCount; i++)
+                {
+                    try
+                    {
+                        switch ((AdProviderConfig.AdProviderConfigOptions)Enum.Parse(typeof(AdProviderConfig.AdProviderConfigOptions), pInfos[i].Name.ToString(), true))
+                        {
+                            case AdProviderConfig.AdProviderConfigOptions.AppId:
+                                parameters[i] = Convert.ChangeType(adProvider.AppId.ToString(), pInfos[i].ParameterType, CultureInfo.InvariantCulture);
+                                break;
+                            case AdProviderConfig.AdProviderConfigOptions.AdType:
+                                parameters[i] = StringToEnum(pInfos[i].ParameterType, "IaAdType_Banner");
+                                break;
+                            case AdProviderConfig.AdProviderConfigOptions.ReloadTime:
+                                parameters[i] = Convert.ChangeType(20, pInfos[i].ParameterType, CultureInfo.InvariantCulture);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    catch
+                    {
+                        parameters[i] = 0;
+                    }
+                }
+                //instance = ObjConstr.Invoke(parameters);
+                instance = Activator.CreateInstance(providerType,parameters);
+
+            }
+            else
+            {
+                instance = Activator.CreateInstance(providerType);
+            }
+
             if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AppId))
             {
                 reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AppId], adProvider.AppId.ToString());
@@ -183,11 +231,57 @@ namespace AdRotator
             {
                 reflectionHelper.TryInvokeMethod(providerType, instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.StartMethod]);
             }
-
+                
+                }
+            catch (PlatformNotSupportedException)
+            {
+                OnLog(string.Format("Configured provider {0} not found in this installation", adProvider.AdProviderType.ToString()));
+                AdFailed(adProvider.AdProviderType);
+                GetAd();
+                return null;
+            }
+            catch (NotImplementedException)
+            {
+                OnLog(string.Format("Configured provider {0} is not fully implemented yet", adProvider.AdProviderType.ToString()));
+                AdFailed(adProvider.AdProviderType);
+                GetAd();
+                return null;
+            }
+            catch (Exception e)
+            {
+                OnLog(string.Format("General exception [{0}] occured, continuing", e.InnerException.ToString()));
+                AdFailed(adProvider.AdProviderType);
+                GetAd();
+                return null;
+            }
 
             return instance;
         }
 
+        static object StringToEnum(Type t, string Value)
+        {
+            foreach (FieldInfo fi in t.GetFields())
+                if (fi.Name == Value)
+                    return fi.GetValue(null);    // We use null because
+            // enumeration values
+            // are static
+
+            throw new Exception(string.Format("Can't convert {0} to {1}", Value, t.ToString()));
+        }
+
+        /// <summary>
+        /// Called when all attempts to get ads have failed and to disable the control
+        /// </summary>
+        /// <returns></returns>
+        public string AdsFailed()
+        {
+            if (IsAdRotatorEnabled)
+            {
+                OnLog(string.Format("No Ads available"));
+                this.IsAdRotatorEnabled = false;
+            }
+            return "All attempts failed to get ads, disabling";
+        }
 
         #region AdSettings File retrieval
 
