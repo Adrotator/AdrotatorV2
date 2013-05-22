@@ -3,23 +3,29 @@ namespace AdRotator
 {
     public interface IAdRotatorProvider
     {
+        int AdWidth { get; set; }
+
+        int AdHeight { get; set; }
+
+        bool IsTest { get; set; }
+
         bool IsInDesignMode { get; }
 
-        //string RemoteSettingsLocation { get; set; }
+        string RemoteSettingsLocation { get; set; }
 
-        //string LocalSettingsLocation { get; set; }
-
-        bool IsLoaded { get; }
-
-        bool IsInitialised { get; }
+        string LocalSettingsLocation { get; set; }
 
         bool IsAdRotatorEnabled { get; set; }
 
         object DefaultHouseAdBody { get; set; }
 
-        //string LoadSettingsFileLocal();
-        //string LoadSettingsFileRemote(string RemoteSettingsLocation);
-        //string LoadSettingsFileProject();
+        bool IsLoaded { get; }
+
+        bool IsInitialised { get; }
+
+        System.Collections.Generic.Dictionary<AdRotator.Model.AdType, System.Type> PlatformAdProviderComponents { get; }
+
+        bool AutoStartAds { get; set; }
 
         //DISCUSS: should we return strings here? Maybe raising events when stuff is loaded would be more sensible (GO)
         string Invalidate(AdRotator.Model.AdProvider adProvider);

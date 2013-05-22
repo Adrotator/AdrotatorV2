@@ -16,7 +16,8 @@
             AdWidth="250"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
-                LocalSettingsLocation="defaultAdSettings.xml">
+            LocalSettingsLocation="defaultAdSettings.xml"
+            AutoStartAds="True">
         </adRotator:AdRotatorControl>
     </Grid>
 </Page>

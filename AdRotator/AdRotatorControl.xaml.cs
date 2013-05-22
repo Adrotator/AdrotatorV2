@@ -67,7 +67,8 @@ namespace AdRotator
             else
             {
                 adRotatorControl.AdAvailable += adRotatorControl_AdAvailable;
-                adRotatorControl.GetConfig();
+                if (AutoStartAds)
+                    adRotatorControl.GetConfig();
             }
 
             adRotatorControl.isLoaded = true;
@@ -268,7 +269,7 @@ namespace AdRotator
 
         // Using a DependencyProperty as the backing store for IsAdRotatorEnabled.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsAdRotatorEnabledProperty =
-            DependencyProperty.Register("IsAdRotatorEnabled", typeof(bool), typeof(AdRotatorControl), new PropertyMetadata(true,IsAdRotatorEnabledPropertyChanged));
+            DependencyProperty.Register("IsAdRotatorEnabled", typeof(bool), typeof(AdRotatorControl), new PropertyMetadata(false,IsAdRotatorEnabledPropertyChanged));
 
         private static void IsAdRotatorEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -332,6 +333,40 @@ namespace AdRotator
         }
         #endregion
 
+        #region PlatformAdProviderComponents
+        public Dictionary<AdType, Type> PlatformAdProviderComponents
+        {
+            get
+            {
+                return AdRotatorComponent.PlatformAdProviderComponents;
+            }
+        }
+        #endregion
 
+        #region AutoStartAds
+        public bool AutoStartAds
+        {
+            get { return (bool)adRotatorControl.autoStartAds; }
+            set { SetValue(AutoStartAdsProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsAdRotatorEnabled.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AutoStartAdsProperty =
+            DependencyProperty.Register("AutoStartAds", typeof(bool), typeof(AdRotatorControl), new PropertyMetadata(false, AutoStartAdsPropertyChanged));
+
+        private static void AutoStartAdsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sender = d as AdRotatorControl;
+            if (sender != null)
+            {
+                sender.OnAutoStartAdsPropertyChanged(e);
+            }
+        }
+
+        private void OnAutoStartAdsPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            adRotatorControl.autoStartAds = (bool)e.NewValue;
+        }
+        #endregion
     }
 }

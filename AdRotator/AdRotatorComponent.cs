@@ -86,6 +86,8 @@ namespace AdRotator
 
         internal bool isTest { get; set; }
 
+        internal bool autoStartAds { get; set; }
+
         internal static List<AdType> PlatformSupportedAdProviders { get; set; }
 
         internal static Dictionary<AdType,Type> PlatformAdProviderComponents { get; set; }
