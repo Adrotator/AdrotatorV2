@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using AdRotator.AdProviders;
+using AdRotator.Model;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using AdRotator.Model;
-using AdRotator.AdProviders;
 
 namespace AdRotator.AdDescriptorCreator
 {

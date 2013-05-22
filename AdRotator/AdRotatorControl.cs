@@ -37,9 +37,10 @@ namespace AdRotator
             AdRotatorComponent.PlatformSupportedAdProviders = new List<AdType>()
                 { 
                     AdType.AdDuplex, 
-                    //AdType.PubCenter, 
+                    AdType.PubCenter, 
                     AdType.Inmobi
                 };
+            adRotatorControl.Log += (s) => OnLog(s);
         }
 
         private Grid LayoutRoot
@@ -330,6 +331,16 @@ namespace AdRotator
             get
             {
                 return adRotatorControl.isInitialised;
+            }
+        }
+        #endregion
+
+        #region PlatformAdProviderComponents
+        public Dictionary<AdType,Type> PlatformAdProviderComponents
+        {
+            get
+            {
+                return AdRotatorComponent.PlatformAdProviderComponents;
             }
         }
         #endregion

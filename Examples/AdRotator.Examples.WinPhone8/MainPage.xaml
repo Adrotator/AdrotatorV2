@@ -48,9 +48,16 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <adRotator:AdRotatorControl
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <adRotator:AdRotatorControl x:Name="AdRotatorControl"
                 LocalSettingsLocation="/AdRotator.Examples.WinPhone8;component/defaultAdSettings.xml">
             </adRotator:AdRotatorControl>
+            <ScrollViewer Grid.Row="1">
+                <ListBox x:Name="MessagesListBox" Height="Auto"/>
+            </ScrollViewer>
         </Grid>
 
         <!--Uncomment to see an alignment grid to help ensure your controls are

@@ -17,7 +17,9 @@ namespace AdRotator
         public enum AdProviderConfigOptions
         {
             AppId,
+            SetAppId,
             SecondaryId,
+            SetSecondaryId,
             IsTest,
             AdType,
             StartMethod,
@@ -244,8 +246,6 @@ namespace AdRotator
             },
             {AdType.PubCenter, new AdProviderDetails() 
                                             { 
-                                                AssemblyName = "MSAdvertisingXaml, Version=6.1", 
-                                                ElementName = "Microsoft.Advertising.WinRT.UI.AdControl", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"ApplicationId"},

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Phone.Controls;
-using System.Collections.Generic;
 
 namespace AdRotator.Examples.WinPhone7
 {

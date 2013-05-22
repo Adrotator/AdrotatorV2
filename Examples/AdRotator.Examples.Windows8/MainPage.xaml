@@ -6,10 +6,14 @@
     xmlns:adRotator="using:AdRotator"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:UI="using:Microsoft.Advertising.WinRT.UI"
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <adRotator:AdRotatorControl
+            x:Name="Win8AdRotator"
+            AdHeight="250"
+            AdWidth="250"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
                 LocalSettingsLocation="defaultAdSettings.xml">

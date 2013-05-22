@@ -1,9 +1,7 @@
 ﻿
 using System;
 using System.Globalization;
-using System.IO;
 using System.Reflection;
-using System.Threading;
 
 namespace AdRotator
 {
@@ -198,9 +196,28 @@ namespace AdRotator
 #else
                 PropertyInfo propertyInfo = instance.GetType().GetProperty(PropertyName);
 #endif
-                propertyInfo.SetValue(instance, Convert.ChangeType(PropertyValue, propertyInfo.PropertyType, CultureInfo.InvariantCulture), null);
+                if (propertyInfo.PropertyType.BaseType.FullName == "System.Enum")
+                {
+                    propertyInfo.SetValue(instance, StringToEnum(propertyInfo.PropertyType, PropertyValue), null);
+                }
+                else
+                {
+                    propertyInfo.SetValue(instance, Convert.ChangeType(PropertyValue, propertyInfo.PropertyType, CultureInfo.InvariantCulture), null);
+                }
             }
             catch { }
+        }
+
+        static object StringToEnum(Type t, string Value)
+        {
+            foreach (FieldInfo fi in t.GetFields())
+                if (fi.Name == Value)
+                    return fi.GetValue(null);    
+            // We use null because
+            // enumeration values
+            // are static
+
+            throw new Exception(string.Format("Can't convert {0} to {1}", Value, t.ToString()));
         }
 
     }

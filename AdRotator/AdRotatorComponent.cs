@@ -88,6 +88,7 @@ namespace AdRotator
 
         internal static List<AdType> PlatformSupportedAdProviders { get; set; }
 
+        internal static Dictionary<AdType,Type> PlatformAdProviderComponents { get; set; }
 
         #endregion
 
@@ -106,6 +107,7 @@ namespace AdRotator
             this.AdHeight = 80;
             this.AdWidth = 480;
             PlatformSupportedAdProviders = new List<AdType>();
+            PlatformAdProviderComponents = new Dictionary<AdType, Type>();
         }
         public AdRotatorComponent(string Culture, FileHelpers FileHelper, ReflectionHelpers ReflectionHelper)
             : this(Culture, FileHelper)
@@ -141,7 +143,14 @@ namespace AdRotator
             object instance;
             try
             {
-                providerType = reflectionHelper.TryGetType(provider.AssemblyName, provider.ElementName);
+                if (PlatformAdProviderComponents.ContainsKey(adProvider.AdProviderType))
+                {
+                    providerType = PlatformAdProviderComponents[adProvider.AdProviderType];
+                }
+                else
+                {
+                    providerType = reflectionHelper.TryGetType(provider.AssemblyName, provider.ElementName);
+                }
             }
             catch (PlatformNotSupportedException e)
             {
@@ -154,46 +163,47 @@ namespace AdRotator
             }
             try
             {
-            if (provider.RequiresParameters)
-            {
-                throw new NotImplementedException("Not got contructer initialisation working yet");
+                //Removed constructor initialising for now, code kept for reference for now,JIC
+            //if (provider.RequiresParameters)
+            //{
+            //    throw new NotImplementedException("Not got constructor initialisation working yet");
 
-                var parameterCount = provider.ConfigurationOptions.Count();
-                object[] parameters = new object[parameterCount];
-                var ObjConstr = providerType.GetConstructors().FirstOrDefault(constructor => constructor.GetParameters().Count() == parameterCount);
-                var pInfos = ObjConstr.GetParameters();
-                for (int i = 0; i < parameterCount; i++)
-                {
-                    try
-                    {
-                        switch ((AdProviderConfig.AdProviderConfigOptions)Enum.Parse(typeof(AdProviderConfig.AdProviderConfigOptions), pInfos[i].Name.ToString(), true))
-                        {
-                            case AdProviderConfig.AdProviderConfigOptions.AppId:
-                                parameters[i] = Convert.ChangeType(adProvider.AppId.ToString(), pInfos[i].ParameterType, CultureInfo.InvariantCulture);
-                                break;
-                            case AdProviderConfig.AdProviderConfigOptions.AdType:
-                                parameters[i] = StringToEnum(pInfos[i].ParameterType, "IaAdType_Banner");
-                                break;
-                            case AdProviderConfig.AdProviderConfigOptions.ReloadTime:
-                                parameters[i] = Convert.ChangeType(20, pInfos[i].ParameterType, CultureInfo.InvariantCulture);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    catch
-                    {
-                        parameters[i] = 0;
-                    }
-                }
-                //instance = ObjConstr.Invoke(parameters);
-                instance = Activator.CreateInstance(providerType,parameters);
+            //    var parameterCount = provider.ConfigurationOptions.Count();
+            //    object[] parameters = new object[parameterCount];
+            //    var ObjConstr = providerType.GetConstructors().FirstOrDefault(constructor => constructor.GetParameters().Count() == parameterCount);
+            //    var pInfos = ObjConstr.GetParameters();
+            //    for (int i = 0; i < parameterCount; i++)
+            //    {
+            //        try
+            //        {
+            //            switch ((AdProviderConfig.AdProviderConfigOptions)Enum.Parse(typeof(AdProviderConfig.AdProviderConfigOptions), pInfos[i].Name.ToString(), true))
+            //            {
+            //                case AdProviderConfig.AdProviderConfigOptions.AppId:
+            //                    parameters[i] = Convert.ChangeType(adProvider.AppId.ToString(), pInfos[i].ParameterType, CultureInfo.InvariantCulture);
+            //                    break;
+            //                case AdProviderConfig.AdProviderConfigOptions.AdType:
+            //                    parameters[i] = StringToEnum(pInfos[i].ParameterType, "IaAdType_Banner");
+            //                    break;
+            //                case AdProviderConfig.AdProviderConfigOptions.ReloadTime:
+            //                    parameters[i] = Convert.ChangeType(20, pInfos[i].ParameterType, CultureInfo.InvariantCulture);
+            //                    break;
+            //                default:
+            //                    break;
+            //            }
+            //        }
+            //        catch
+            //        {
+            //            parameters[i] = 0;
+            //        }
+            //    }
+            //    //instance = ObjConstr.Invoke(parameters);
+            //    instance = Activator.CreateInstance(providerType,parameters);
 
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 instance = Activator.CreateInstance(providerType);
-            }
+            //}
 
             if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AppId))
             {
@@ -203,6 +213,11 @@ namespace AdRotator
             if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.SecondaryId))
             {
                 reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.SecondaryId], adProvider.SecondaryId.ToString());
+            }
+
+            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdType))
+            {
+                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "IaAdType_Banner");
             }
 
             if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.IsTest))
@@ -255,19 +270,12 @@ namespace AdRotator
                 return null;
             }
 
+            OnLog(string.Format("Ad created for provider {0}", adProvider.AdProviderType.ToString()));
+
             return instance;
         }
 
-        static object StringToEnum(Type t, string Value)
-        {
-            foreach (FieldInfo fi in t.GetFields())
-                if (fi.Name == Value)
-                    return fi.GetValue(null);    // We use null because
-            // enumeration values
-            // are static
 
-            throw new Exception(string.Format("Can't convert {0} to {1}", Value, t.ToString()));
-        }
 
         /// <summary>
         /// Called when all attempts to get ads have failed and to disable the control

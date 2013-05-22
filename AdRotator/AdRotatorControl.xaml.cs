@@ -43,7 +43,8 @@ namespace AdRotator
                     AdType.Smaato,
                     AdType.Inmobi,
                     AdType.MobFox,
-                    AdType.AdMob
+                    AdType.AdMob,
+                    AdType.InnerActive
                 };
             adRotatorControl.Log += (s) => { OnLog(s); };
             

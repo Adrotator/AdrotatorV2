@@ -20,6 +20,19 @@ namespace AdRotator.Examples.WinPhone8
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
+            this.AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
+            Loaded += MainPage_Loaded;
+        }
+
+        void MainPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            AdRotatorControl_Log("Page Loaded");
+
+        }
+
+        void AdRotatorControl_Log(string message)
+        {
+            Dispatcher.BeginInvoke(() => MessagesListBox.Items.Insert(0, message));
         }
 
         // Sample code for building a localized ApplicationBar
