@@ -13,12 +13,8 @@ namespace AdRotator
             {
                 throw new NullReferenceException("Must supply the targetType parameter");
             }
-#if WINRT
-            return !targetType.GetTypeInfo().IsValueType;
-#else
+
             return !targetType.IsValueType;
-#endif
-           
         }
 
         //GetBase Type
@@ -28,11 +24,7 @@ namespace AdRotator
             {
                 throw new NullReferenceException("Must supply the targetType parameter");
             }
-#if WINRT
-            var type = targetType.GetTypeInfo().BaseType;
-#else
             var type = targetType.BaseType;
-#endif
             return type;
         }
 
@@ -43,14 +35,10 @@ namespace AdRotator
             {
                 throw new NullReferenceException("Must supply the t (type) parameter");
             }
-#if WINRT
-            var ti = t.GetTypeInfo();
-            if (ti.IsClass && !ti.IsAbstract)
-                return true;
-#else
+
             if (t.IsClass && !t.IsAbstract)
                 return true;
-#endif
+
             return false;
             }
 
@@ -63,17 +51,11 @@ namespace AdRotator
             }
 
             MethodInfo methodInfo;
-#if WINRT
-            if(method == "get")
-                methodInfo = property.GetMethod;
-            else
-                methodInfo = property.SetMethod;
-#else
+
             if(method == "get")
                 methodInfo = property.GetGetMethod();
             else
                 methodInfo = property.GetSetMethod();
-#endif
             return methodInfo;
 
         }
@@ -89,11 +71,8 @@ namespace AdRotator
             {
                 throw new NullReferenceException("Must supply the memberType parameter");
             }
-#if WINRT
-            Attribute attr = member.GetCustomAttribute(memberType);
-#else
+
             Attribute attr = Attribute.GetCustomAttribute(member, memberType);
-#endif
             return attr;
         }
 
@@ -104,18 +83,12 @@ namespace AdRotator
             {
                 throw new NullReferenceException("Must supply the property parameter");
             }
-#if WINRT
-            if ( property.GetMethod != null && !property.GetMethod.IsPublic )
-                return true;
-            if ( property.SetMethod != null && !property.SetMethod.IsPublic )
-                return true;
-#else
+
             foreach (MethodInfo info in property.GetAccessors(true))
             {
                 if (info.IsPublic == false)
                     return true;
             }
-#endif
             return false;
         }
 		
@@ -125,13 +98,9 @@ namespace AdRotator
                 throw new ArgumentNullException("type");
             if (provider == null)
                 throw new ArgumentNullException("provider");
-#if WINRT
-            if (type.GetTypeInfo().IsAssignableFrom(provider.GetType().GetTypeInfo()))
-				return true;
-#else
+
             if (type.IsAssignableFrom(provider.GetType()))
 				return true;
-#endif
             return false;
         }
 
@@ -140,15 +109,9 @@ namespace AdRotator
         {
             try
             {
-#if WINRT
-                var assem = Assembly.Load(new AssemblyName("MSAdvertisingXaml, Version=6.1"));
-                Type t = assem.GetType(typeName);
-                if (t != null) { return t; }
-#else
                 var assem = Assembly.Load(assemblyName);
                 Type t = assem.GetType(typeName, false);
                 if (t != null) { return t; }
-#endif
             }
             catch
             {
@@ -164,11 +127,7 @@ namespace AdRotator
             {
                 if (type != null)
                 {
-#if WINRT
-                    MethodInfo methodInfo = type.GetRuntimeMethod(methodName,null);
-#else
                     MethodInfo methodInfo = type.GetMethod(methodName,new Type[0]);
-#endif
                     if (methodInfo != null)
                     {
                         object result = null;
@@ -191,11 +150,7 @@ namespace AdRotator
         {
             try
             {
-#if WINRT
-                PropertyInfo propertyInfo = instance.GetType().GetRuntimeProperty(PropertyName);
-#else
                 PropertyInfo propertyInfo = instance.GetType().GetProperty(PropertyName);
-#endif
                 if (propertyInfo.PropertyType.BaseType.FullName == "System.Enum")
                 {
                     propertyInfo.SetValue(instance, StringToEnum(propertyInfo.PropertyType, PropertyValue), null);
@@ -219,6 +174,75 @@ namespace AdRotator
 
             throw new Exception(string.Format("Can't convert {0} to {1}", Value, t.ToString()));
         }
+
+        public MethodInfo GetMethodInfo(object targetObject, string methodname)
+        {
+            MethodInfo mi = null;
+            if (targetObject == null)
+                throw new ArgumentNullException("targetObject");
+            if (methodname == null)
+                throw new ArgumentNullException("methodname");
+            try
+            {
+                mi = targetObject.GetType().GetMethod(methodname, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            }
+            catch { }
+
+            return mi;
+        }
+
+        public void WireUpEvent(object o, string eventname, Delegate handler)
+        {
+            if (o == null)
+                throw new ArgumentNullException("o");
+            if (eventname == null)
+                throw new ArgumentNullException("eventname");
+            if (handler == null)
+                throw new ArgumentNullException("handler");
+
+            try
+            {
+            EventInfo ei = o.GetType().GetEvent(eventname);
+            Delegate del = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
+
+            ei.AddEventHandler(o, del);
+            }
+            catch { }
+
+        }
+
+        private Type[] GetDelegateParameterTypes(Type d)
+        {
+            if (d.BaseType != typeof(MulticastDelegate))
+                throw new Exception("Not a delegate.");
+
+            MethodInfo invoke = d.GetMethod("Invoke");
+            if (invoke == null)
+                throw new Exception("Not a delegate.");
+
+            ParameterInfo[] parameters = invoke.GetParameters();
+            Type[] typeParameters = new Type[parameters.Length];
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                typeParameters[i] = parameters[i].ParameterType;
+            }
+            return typeParameters;
+        }
+
+        private Type GetDelegateReturnType(Type d)
+        {
+            if (d.BaseType != typeof(MulticastDelegate))
+                throw new Exception("Not a delegate.");
+
+            MethodInfo invoke = d.GetMethod("Invoke");
+            if (invoke == null)
+                throw new Exception("Not a delegate.");
+
+            return invoke.ReturnType;
+        }
+
+
+
 
     }
 }

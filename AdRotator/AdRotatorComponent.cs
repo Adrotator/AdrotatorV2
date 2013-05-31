@@ -111,13 +111,8 @@ namespace AdRotator
             PlatformSupportedAdProviders = new List<AdType>();
             PlatformAdProviderComponents = new Dictionary<AdType, Type>();
         }
-        public AdRotatorComponent(string Culture, FileHelpers FileHelper, ReflectionHelpers ReflectionHelper)
-            : this(Culture, FileHelper)
-        {
-        }
-            
 
-        public async void GetConfig()
+        internal async void GetConfig()
         {
             await LoadAdSettings();
 
@@ -129,7 +124,7 @@ namespace AdRotator
             OnAdAvailable(_settings.GetAd());
         }
 
-        public void GetAd()
+        internal void GetAd()
         {
             if (_settings == null)
             {
@@ -138,7 +133,7 @@ namespace AdRotator
             OnAdAvailable(_settings.GetAd());
         }
 
-        public object GetProviderFrameworkElement(AdRotator.AdProviderConfig.SupportedPlatforms platform, AdProvider adProvider)
+        internal object GetProviderFrameworkElement(AdRotator.AdProviderConfig.SupportedPlatforms platform, AdProvider adProvider)
         {
             var provider = AdProviderConfig.AdProviderConfigValues[(int)platform][adProvider.AdProviderType];
             Type providerType;
@@ -165,91 +160,65 @@ namespace AdRotator
             }
             try
             {
-                //Removed constructor initialising for now, code kept for reference for now,JIC
-            //if (provider.RequiresParameters)
-            //{
-            //    throw new NotImplementedException("Not got constructor initialisation working yet");
-
-            //    var parameterCount = provider.ConfigurationOptions.Count();
-            //    object[] parameters = new object[parameterCount];
-            //    var ObjConstr = providerType.GetConstructors().FirstOrDefault(constructor => constructor.GetParameters().Count() == parameterCount);
-            //    var pInfos = ObjConstr.GetParameters();
-            //    for (int i = 0; i < parameterCount; i++)
-            //    {
-            //        try
-            //        {
-            //            switch ((AdProviderConfig.AdProviderConfigOptions)Enum.Parse(typeof(AdProviderConfig.AdProviderConfigOptions), pInfos[i].Name.ToString(), true))
-            //            {
-            //                case AdProviderConfig.AdProviderConfigOptions.AppId:
-            //                    parameters[i] = Convert.ChangeType(adProvider.AppId.ToString(), pInfos[i].ParameterType, CultureInfo.InvariantCulture);
-            //                    break;
-            //                case AdProviderConfig.AdProviderConfigOptions.AdType:
-            //                    parameters[i] = StringToEnum(pInfos[i].ParameterType, "IaAdType_Banner");
-            //                    break;
-            //                case AdProviderConfig.AdProviderConfigOptions.ReloadTime:
-            //                    parameters[i] = Convert.ChangeType(20, pInfos[i].ParameterType, CultureInfo.InvariantCulture);
-            //                    break;
-            //                default:
-            //                    break;
-            //            }
-            //        }
-            //        catch
-            //        {
-            //            parameters[i] = 0;
-            //        }
-            //    }
-            //    //instance = ObjConstr.Invoke(parameters);
-            //    instance = Activator.CreateInstance(providerType,parameters);
-
-            //}
-            //else
-            //{
                 instance = Activator.CreateInstance(providerType);
-            //}
 
-            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AppId))
-            {
-                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AppId], adProvider.AppId.ToString());
-            }
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AppId))
+                {
+                    reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AppId], adProvider.AppId.ToString());
+                }
 
-            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.SecondaryId))
-            {
-                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.SecondaryId], adProvider.SecondaryId.ToString());
-            }
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.SecondaryId))
+                {
+                    reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.SecondaryId], adProvider.SecondaryId.ToString());
+                }
 
-            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdType))
-            {
-                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "IaAdType_Banner");
-            }
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdType))
+                {
+                    reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "IaAdType_Banner");
+                }
 
-            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.IsTest))
-            {
-                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.IsTest], adProvider.IsTest.ToString());
-            }
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.IsTest))
+                {
+                    reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.IsTest], adProvider.IsTest.ToString());
+                }
 
-            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdWidth))
-            {
-                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdWidth], AdWidth.ToString());
-            }
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdWidth))
+                {
+                    reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdWidth], AdWidth.ToString());
+                }
 
-            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdHeight))
-            {
-                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdHeight], AdHeight.ToString());
-            }
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdHeight))
+                {
+                    reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdHeight], AdHeight.ToString());
+                }
 
 #if DEBUG
-            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.ShowErrors))
-            {
-                reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.ShowErrors], "true");
-            }
-#endif
-
-            if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.StartMethod))
-            {
-                reflectionHelper.TryInvokeMethod(providerType, instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.StartMethod]);
-            }
-                
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.ShowErrors))
+                {
+                    reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.ShowErrors], "true");
                 }
+#endif
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdSuccessEvent))
+                {
+                    WireUpDelegateEvent(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdSuccessEvent], string.Format("Ads served for: {0}", _settings.CurrentAdType.ToString()));
+                }
+
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdFailedEvent))
+                {
+                    WireUpDelegateEvent(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdFailedEvent], string.Format("Ad failed request for: {0}", _settings.CurrentAdType.ToString()));
+                }
+
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdClickedEvent))
+                {
+                    WireUpDelegateEvent(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdClickedEvent], string.Format("Ad clicked for: {0}", _settings.CurrentAdType.ToString()));
+                } 
+                
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.StartMethod))
+                {
+                    reflectionHelper.TryInvokeMethod(providerType, instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.StartMethod]);
+                }
+
+            }
             catch (PlatformNotSupportedException)
             {
                 OnLog(string.Format("Configured provider {0} not found in this installation", adProvider.AdProviderType.ToString()));
@@ -277,13 +246,11 @@ namespace AdRotator
             return instance;
         }
 
-
-
         /// <summary>
         /// Called when all attempts to get ads have failed and to disable the control
         /// </summary>
         /// <returns></returns>
-        public string AdsFailed()
+        internal string AdsFailed()
         {
             if (IsAdRotatorEnabled)
             {
@@ -412,6 +379,45 @@ namespace AdRotator
         {
             _settings.RemoveAdFromFailedAds(AdType);
             OnLog(string.Format("Ads failed request for: {0}", AdType.ToString()));
+        }
+
+
+        private void WireUpDelegateEvent(object o, string eventName, string message)
+        {
+            Delegate handler;
+            try
+            {
+                EventInfo ei = o.GetType().GetEvent(eventName);
+                var parameters = ei.EventHandlerType.GetMethod("Invoke").GetParameters();
+                switch (parameters.Count())
+                {
+                    case 2:
+                        handler = new Action<object, object>((o1, o2) => DelegateEventHandler(message));
+                        break;
+                    case 3:
+                        handler = new Action<object, object, object>((o1, o2, o3) => DelegateEventHandler(message));
+                        break;
+                    default:
+                        handler = new Action<object>((o1) => DelegateEventHandler(message));
+                        break;
+                }
+                Delegate del = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
+
+                ei.AddEventHandler(o, del);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Failed to bind events, general failure");
+            }
+        }
+
+        private void DelegateEventHandler(string message)
+        {
+            OnLog(message);
+            if (message.Contains("failed"))
+            {
+                AdFailed(_settings.CurrentAdType);
+            }
         }
 
         /// <summary>

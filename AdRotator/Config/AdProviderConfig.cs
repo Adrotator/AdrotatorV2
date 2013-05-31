@@ -26,7 +26,10 @@ namespace AdRotator
             AdWidth,
             AdHeight,
             ReloadTime,
-            ShowErrors
+            ShowErrors,
+            AdSuccessEvent,
+            AdFailedEvent,
+            AdClickedEvent
         }
 
         public enum SupportedPlatforms
@@ -54,7 +57,10 @@ namespace AdRotator
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AppId"},
-                                                        {AdProviderConfigOptions.IsTest,"IsTest"}
+                                                        {AdProviderConfigOptions.IsTest,"IsTest"},
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"AdLoaded"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"AdLoadingError"},
+                                                        {AdProviderConfigOptions.AdClickedEvent,"AdClick"}
                                                     }
                                             }
             },
@@ -67,7 +73,9 @@ namespace AdRotator
                                                         {AdProviderConfigOptions.AppId,"ApplicationId"},
                                                         {AdProviderConfigOptions.SecondaryId,"AdUnitId"},
                                                         {AdProviderConfigOptions.AdWidth,"Width"},
-                                                        {AdProviderConfigOptions.AdHeight,"Height"}
+                                                        {AdProviderConfigOptions.AdHeight,"Height"},
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"AdRefreshed"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"ErrorOccurred"}
                                                     }
                                             }
             },
@@ -82,7 +90,10 @@ namespace AdRotator
                                                         {AdProviderConfigOptions.StartMethod,"StartAds"},
                                                         {AdProviderConfigOptions.AdWidth,"AdSpaceWidth"},
                                                         {AdProviderConfigOptions.AdHeight,"AdSpaceHeight"},
-                                                        {AdProviderConfigOptions.ShowErrors,"ShowErrors"}
+                                                        {AdProviderConfigOptions.ShowErrors,"ShowErrors"},
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"NewAdAvailable"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"AdError"},
+                                                        {AdProviderConfigOptions.AdClickedEvent,"AdClick"}
                                                     }
                                             }
             },
@@ -95,7 +106,10 @@ namespace AdRotator
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AppID"},
                                                         {AdProviderConfigOptions.AdType,"AdType"},
-                                                        {AdProviderConfigOptions.ReloadTime,"ReloadTime"}
+                                                        {AdProviderConfigOptions.ReloadTime,"ReloadTime"},
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"AdReceived"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"AdFailed"},
+                                                        {AdProviderConfigOptions.AdClickedEvent,"AdClicked"}
                                                     }
                                             }
             },
@@ -107,7 +121,9 @@ namespace AdRotator
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"PublisherID"},
                                                         {AdProviderConfigOptions.IsTest,"TestMode"},
-                                                        {AdProviderConfigOptions.StartMethod,"RequestNextAd"}
+                                                        {AdProviderConfigOptions.StartMethod,"RequestNextAd"},
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"NewAd"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"NoAd"}
                                                     }
                                             }
             },
@@ -119,7 +135,9 @@ namespace AdRotator
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AdUnitID"},
                                                         {AdProviderConfigOptions.AdWidth,"Width"},
-                                                        {AdProviderConfigOptions.AdHeight,"Height"}
+                                                        {AdProviderConfigOptions.AdHeight,"Height"},
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"AdReceived"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"AdFailed"}
                                                     }
                                             }
             },
@@ -133,7 +151,9 @@ namespace AdRotator
                                                         {AdProviderConfigOptions.ReloadTime,"RefreshInterval"},
                                                         {AdProviderConfigOptions.StartMethod,"LoadNewAd"},
                                                         {AdProviderConfigOptions.AdWidth,"Width"},
-                                                        {AdProviderConfigOptions.AdHeight,"Height"}
+                                                        {AdProviderConfigOptions.AdHeight,"Height"},
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"AdRequestLoaded"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"AdRequestFailed"}
                                                     }
                                             }
             },

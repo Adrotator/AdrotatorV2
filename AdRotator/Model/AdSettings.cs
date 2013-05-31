@@ -14,6 +14,8 @@ namespace AdRotator.Model
         /// Current working Culture
         /// </summary>
         internal AdCultureDescriptor CurrentCulture = null;
+
+        internal AdType CurrentAdType = AdType.None;
         
         private AdCultureDescriptor[] cultureDescriptorsField;
 
@@ -129,6 +131,7 @@ namespace AdRotator.Model
                     totalCounter += probabilityDescriptor.Probability;
                     if (randomValue < totalCounter)
                     {
+                        adsettings.CurrentAdType = probabilityDescriptor.AdProviderType;
                         return probabilityDescriptor;
                     }
                 }
@@ -136,6 +139,7 @@ namespace AdRotator.Model
 
             if (defaultHouseAd != null)
             {
+                adsettings.CurrentAdType = AdType.DefaultHouseAd;
                 return defaultHouseAd;
             }
 
