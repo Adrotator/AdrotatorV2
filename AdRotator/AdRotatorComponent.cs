@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -48,6 +49,9 @@ namespace AdRotator
         #endregion
 
         #region Properties
+
+        const int AdRotatorMinRefreshRate = 60;
+
         /// <summary>
         /// The ad settings based on which the ad descriptor for the current UI culture can be selected
         /// </summary>
@@ -67,6 +71,13 @@ namespace AdRotator
 
         private FileHelpers fileHelper;
         private ReflectionHelpers reflectionHelper = new ReflectionHelpers();
+
+        private static Timer adRotatorTimer;
+
+        private static TimerCallback timerDelegate;
+
+        private int _adRotatorRefreshInterval;
+
 
         internal int AdWidth { get; set; }
 
@@ -92,6 +103,13 @@ namespace AdRotator
 
         internal static Dictionary<AdType,Type> PlatformAdProviderComponents { get; set; }
 
+
+        /// <summary>
+        /// RefreshInterval in seconds
+        /// Control the minimum value so that AdProviders are not abused, or set to 0 to disable auto refresh (just the live provider will be used)
+        /// </summary>
+        internal int adRotatorRefreshInterval { get { return _adRotatorRefreshInterval; } set { _adRotatorRefreshInterval = value == 0 ? 0 : Math.Max(AdRotatorMinRefreshRate, value); } }
+        internal bool adRotatorRefreshIntervalSet = false;
         #endregion
 
 
@@ -110,6 +128,8 @@ namespace AdRotator
             this.AdWidth = 480;
             PlatformSupportedAdProviders = new List<AdType>();
             PlatformAdProviderComponents = new Dictionary<AdType, Type>();
+
+            timerDelegate = new TimerCallback(GetAd);
         }
 
         internal async void GetConfig()
@@ -121,10 +141,13 @@ namespace AdRotator
                 //Set Current culture based on Culture Value
                _settings.GetAdDescriptorBasedOnUICulture(culture);
             }
-            OnAdAvailable(_settings.GetAd());
+            if (adRotatorRefreshInterval == 0)
+            {
+                OnAdAvailable(_settings.GetAd());
+            } 
         }
 
-        internal void GetAd()
+        internal void GetAd(Object stateInfo)
         {
             if (_settings == null)
             {
@@ -223,21 +246,18 @@ namespace AdRotator
             {
                 OnLog(string.Format("Configured provider {0} not found in this installation", adProvider.AdProviderType.ToString()));
                 AdFailed(adProvider.AdProviderType);
-                GetAd();
                 return null;
             }
             catch (NotImplementedException)
             {
                 OnLog(string.Format("Configured provider {0} is not fully implemented yet", adProvider.AdProviderType.ToString()));
                 AdFailed(adProvider.AdProviderType);
-                GetAd();
                 return null;
             }
             catch (Exception e)
             {
                 OnLog(string.Format("General exception [{0}] occured, continuing", e.InnerException.ToString()));
                 AdFailed(adProvider.AdProviderType);
-                GetAd();
                 return null;
             }
 
@@ -246,6 +266,25 @@ namespace AdRotator
             return instance;
         }
 
+        public void StartAdTimer()
+        {
+            TimeSpan delayTime = new TimeSpan(0, 0, 0);
+            TimeSpan intervalTime = new TimeSpan(0, 0, 0, 0, adRotatorRefreshInterval * 1000);
+            if (adRotatorTimer != null)
+            {
+                StopAdTimer();
+            }
+            if (adRotatorRefreshInterval > 0)
+            {
+                adRotatorTimer = new Timer(timerDelegate, null, delayTime, intervalTime);
+            }
+        }
+
+        public void StopAdTimer()
+        {
+            adRotatorTimer.Dispose();
+            adRotatorTimer = null;
+        }
         /// <summary>
         /// Called when all attempts to get ads have failed and to disable the control
         /// </summary>
@@ -367,6 +406,7 @@ namespace AdRotator
         {
             _settings.AdFailed(AdType);
             OnLog(string.Format("Ads failed request for: {0}", AdType.ToString()));
+            GetAd(null);
         }
 
         public void ClearFailedAds()

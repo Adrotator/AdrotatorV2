@@ -68,8 +68,15 @@ namespace AdRotator
             else
             {
                 adRotatorControl.AdAvailable += adRotatorControl_AdAvailable;
+                adRotatorControl.AdAvailable += adRotatorControl_AdAvailable;
                 if (AutoStartAds)
+                {
                     adRotatorControl.GetConfig();
+                    if (!adRotatorControl.adRotatorRefreshIntervalSet)
+                    {
+                        adRotatorControl.StartAdTimer();
+                    }
+                }
             }
 
             adRotatorControl.isLoaded = true;
@@ -79,7 +86,7 @@ namespace AdRotator
         {
             if (adProvider == null)
             {
-                adRotatorControl.GetAd();
+                adRotatorControl.GetAd(null);
                 return "No Provider set";
             }
             if (adProvider.AdProviderType == AdType.None)
@@ -369,6 +376,40 @@ namespace AdRotator
         private void OnAutoStartAdsPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
             adRotatorControl.autoStartAds = (bool)e.NewValue;
+        }
+        #endregion
+
+        #region AdRefreshInterval
+        /// <summary>
+        /// Another notes about the Ad Refresh Rate
+        /// </summary>
+        public int AdRefreshInterval
+        {
+            get { return (int)adRotatorControl.adRotatorRefreshInterval; }
+            set { SetValue(AutoStartAdsProperty, value); }
+        }
+
+        /// <summary>
+        /// Sets the Ad Refresh rate in seconds
+        /// *Note minimum is 60 seconds
+        /// </summary>
+        public static readonly DependencyProperty AdRefreshIntervalProperty =
+            DependencyProperty.Register("AdRefreshInterval", typeof(int), typeof(AdRotatorControl), new PropertyMetadata(60, AdRefreshIntervalChanged));
+
+        private static void AdRefreshIntervalChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sender = d as AdRotatorControl;
+            if (sender != null)
+            {
+                sender.OnAdRefreshIntervalPropertyChanged(e);
+            }
+        }
+
+        private void OnAdRefreshIntervalPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            adRotatorControl.adRotatorRefreshInterval = (int)e.NewValue;
+            adRotatorControl.adRotatorRefreshIntervalSet = true;
+            adRotatorControl.StartAdTimer();
         }
         #endregion
 

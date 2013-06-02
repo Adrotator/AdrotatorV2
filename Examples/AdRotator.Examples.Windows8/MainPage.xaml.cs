@@ -26,8 +26,6 @@ namespace AdRotator.Examples.Windows8
             this.InitializeComponent();
             Win8AdRotator.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
             Win8AdRotator.Log += (s) => System.Diagnostics.Debug.WriteLine(s);
-            //msadcontrol.AdRefreshed += msadcontrol_AdRefreshed;
-            //msadcontrol.ErrorOccurred += msadcontrol_ErrorOccurred;
         }
 
         void msadcontrol_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
