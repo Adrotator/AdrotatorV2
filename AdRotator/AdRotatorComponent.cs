@@ -135,7 +135,7 @@ namespace AdRotator
 
         internal object GetProviderFrameworkElement(AdRotator.AdProviderConfig.SupportedPlatforms platform, AdProvider adProvider)
         {
-            var provider = AdProviderConfig.AdProviderConfigValues[(int)platform][adProvider.AdProviderType];
+            var provider = adProvider.AdProviderConfigValues[platform];
             Type providerType;
             object instance;
             try

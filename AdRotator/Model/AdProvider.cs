@@ -1,4 +1,5 @@
 ﻿using AdRotator.AdProviders;
+using System.Collections.Generic;
 
 namespace AdRotator.Model
 {
@@ -29,6 +30,13 @@ namespace AdRotator.Model
         private int adOrderField;
 
         private bool adOrderFieldSpecified;
+
+        private bool enabledInTrialOnlyField;
+
+        private bool enabledInTrialOnlyFieldSpecified;
+
+        [System.Xml.Serialization.XmlIgnore]
+        internal Dictionary<AdRotator.AdProviderConfig.SupportedPlatforms, AdRotator.AdProviderConfig.AdProviderDetails> AdProviderConfigValues;
 
         [System.Xml.Serialization.XmlIgnore]
         public AdType AdProviderType
@@ -155,6 +163,34 @@ namespace AdRotator.Model
             }
         }
 
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public bool EnabledInTrialOnly
+        {
+            get
+            {
+                return this.enabledInTrialOnlyField;
+            }
+            set
+            {
+                this.enabledInTrialOnlyField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool EnabledInTrialOnlySpecified
+        {
+            get
+            {
+                return this.enabledInTrialOnlyFieldSpecified;
+            }
+            set
+            {
+                this.enabledInTrialOnlyFieldSpecified = value;
+            }
+        }
+        
         protected void Populate(IAdProvider adProvider)
         {
             this.AdProviderType = adProvider.AdProviderType;
