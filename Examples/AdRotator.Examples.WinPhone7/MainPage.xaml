@@ -35,7 +35,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <adRotator:AdRotatorControl x:Name="AdRotatorControl"
-                LocalSettingsLocation="/AdRotator.Examples.WinPhone7;component/defaultAdSettings.xml"
+                LocalSettingsLocation="defaultAdSettings.xml"
                 AutoStartAds="True">
             </adRotator:AdRotatorControl>
             <ScrollViewer Grid.Row="1">

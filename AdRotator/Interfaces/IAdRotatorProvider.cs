@@ -1,7 +1,7 @@
 ﻿
 namespace AdRotator
 {
-    public interface IAdRotatorProvider
+    internal interface IAdRotatorProvider
     {
         int AdWidth { get; set; }
 

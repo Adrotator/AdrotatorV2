@@ -1,7 +1,7 @@
 ﻿
 namespace AdRotator
 {
-    public class GlobalConfig
+    internal class GlobalConfig
     {
         /// <summary>
         /// String to identify the default Ad Settings filename

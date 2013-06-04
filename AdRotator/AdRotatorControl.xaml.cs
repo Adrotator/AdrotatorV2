@@ -100,7 +100,7 @@ namespace AdRotator
             {
                 providerElement = adRotatorControl.GetProviderFrameworkElement(CurrentPlatform, adProvider);
             }
-            catch (Exception)
+            catch
             {
                 adRotatorControl.AdFailed(adProvider.AdProviderType);
                 return "Ad Failed to initialise";

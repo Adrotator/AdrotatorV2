@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>AdRotator</id>
+        <version>2.0.0-Alpha1</version>
+        <title>AdRotator</title>
+        <authors>Simon-Darkside / Gergel Orosz</authors>
+        <owners>Simon-Darkside / Gergel Orosz</owners>
+        <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
+        <projectUrl>http://getadrotator.codeplex.com/</projectUrl>
+        <iconUrl>http://i0.wp.com/getadrotator.com/wp-content/uploads/2013/05/Icon_1_purple.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>tba</description>
+        <summary>the ultimate Ad Rotating solution to manage all your Ad Providers</summary>
+        <releaseNotes />
+        <copyright>Copyright  2013</copyright>
+        <language>en-GB</language>
+        <dependencies>
+            <group targetFramework=".NETCore4.5">
+                <dependency id="AdDuplexWindows" version="8.0.3.0" />
+                <dependency id="Microsoft.Bcl.Async" version="1.0.16" />
+            </group>
+            <group targetFramework="WindowsPhone8.0">
+                <dependency id="AdDuplexWP8" version="2.8.0.3" />
+                <dependency id="Microsoft.Bcl.Async" version="1.0.16" />
+            </group>
+            <group targetFramework="Silverlight4.0-WindowsPhone71">
+                <dependency id="AdDuplexWP7" version="2.7.0.3" />
+                <dependency id="Microsoft.Bcl.Async" version="1.0.16" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="content\defaultAdSettings.xml" target="content\defaultAdSettings.xml" />
+        <file src="content\ReadMe-AdRotator-XAML.txt" target="content\ReadMe-AdRotator-XAML.txt" />
+        <file src="bin\release\lib\netcore45\AdRotator\Themes\Generic.xaml" target="lib\netcore45\AdRotator\Themes\Generic.xaml" />
+        <file src="bin\release\lib\netcore45\AdRotator.Core.dll" target="lib\netcore45\AdRotator.Core.dll" />
+        <file src="bin\release\lib\netcore45\AdRotator.dll" target="lib\netcore45\AdRotator.dll" />
+        <file src="bin\release\lib\netcore45\AdRotator.pri" target="lib\netcore45\AdRotator.pri" />
+        <file src="bin\release\lib\wp71\AdRotator.Core.dll" target="lib\wp71\AdRotator.Core.dll" />
+        <file src="bin\release\lib\wp71\AdRotator.dll" target="lib\wp71\AdRotator.dll" />
+        <file src="bin\release\lib\wp8\AdRotator.Core.dll" target="lib\wp8\AdRotator.Core.dll" />
+        <file src="bin\release\lib\wp8\AdRotator.dll" target="lib\wp8\AdRotator.dll" />
+        <file src="tools\init.ps1" target="tools\init.ps1" />
+        <file src="tools\install.ps1" target="tools\install.ps1" />
+        <file src="tools\uninstall.ps1" target="tools\uninstall.ps1" />
+    </files>
+</package>

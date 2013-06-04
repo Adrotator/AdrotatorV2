@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AdRotator.Networking
 {
-    public class Network : INetworkWire
+    internal class Network : INetworkWire
     {
         private static string CurrentIP;
         const string IPValidatorHost = "http://compiledexperience.com/windows-phone-7/my-ip";

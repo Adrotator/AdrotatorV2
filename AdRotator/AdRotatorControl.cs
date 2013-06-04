@@ -17,7 +17,7 @@ namespace AdRotator
         #region LoggingEventCode
         public delegate void LogHandler(string message);
         public event LogHandler Log;
-        protected void OnLog(string message)
+        internal void OnLog(string message)
         {
             if (Log != null)
             {
@@ -101,7 +101,7 @@ namespace AdRotator
             {
                 providerElement = adRotatorControl.GetProviderFrameworkElement(CurrentPlatform, adProvider);
             }
-            catch (Exception)
+            catch
             {
                 adRotatorControl.AdFailed(adProvider.AdProviderType);
                 return "Ad Failed to initialise";

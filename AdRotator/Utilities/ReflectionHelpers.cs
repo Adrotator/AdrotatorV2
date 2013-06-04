@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace AdRotator
 {
-    public class ReflectionHelpers
+    internal class ReflectionHelpers
     {
         public bool IsValueType(Type targetType)
         {

@@ -1,9 +1,8 @@
-﻿using AdRotator.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace AdRotator.AdProviderConfig
 {
-        public struct AdProviderDetails
+        internal struct AdProviderDetails
         {
             public string AssemblyName;
             public string ElementName;
@@ -11,7 +10,7 @@ namespace AdRotator.AdProviderConfig
             public Dictionary<AdProviderConfigOptions, string> ConfigurationOptions;
         }
 
-        public enum AdProviderConfigOptions
+        internal enum AdProviderConfigOptions
         {
             AppId,
             SetAppId,
@@ -29,7 +28,7 @@ namespace AdRotator.AdProviderConfig
             AdClickedEvent
         }
 
-        public enum SupportedPlatforms
+        internal enum SupportedPlatforms
         {
             WindowsPhone7 = 0,
             WindowsPhone8 = 1,

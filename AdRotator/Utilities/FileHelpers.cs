@@ -1,7 +1,8 @@
 using System;
+using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
-using System.Linq;
+
 
 #if WINRT
 using Windows.Storage;
@@ -122,7 +123,13 @@ namespace AdRotator
         {
 #if WINDOWS_PHONE
             //Needs Error Handling
-            return Application.GetResourceStream(Location).Stream;
+            Stream stream = null;
+            try
+            {
+                stream = Application.GetResourceStream(Location).Stream;
+            }
+            catch { }
+            return stream;
 #else
             throw new NotImplementedException();
 #endif
@@ -564,6 +571,7 @@ namespace AdRotator
                 return null;
             }
 #else
+            await TaskEx.Run(() => { });
             throw new NotImplementedException();
 #endif
 

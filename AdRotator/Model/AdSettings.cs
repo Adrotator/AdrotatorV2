@@ -52,9 +52,9 @@ namespace AdRotator.Model
             {
                 adsettings = (AdSettings)xs.Deserialize(input);
             }
-            catch (Exception Ex)
+            catch
             {
-                throw new XmlException("Config file was not in the expected format", Ex.InnerException);
+                throw new XmlException("Config file was not in the expected format or not found");
             }
             return adsettings;
         }
@@ -107,7 +107,7 @@ namespace AdRotator.Model
         {
             //Need to handle Groups and Order
 
-            if (adsettings.CurrentCulture == null)
+            if (adsettings == null || adsettings.CurrentCulture == null)
             {
                 return new AdRotator.AdProviders.AdProviderNone();
             }

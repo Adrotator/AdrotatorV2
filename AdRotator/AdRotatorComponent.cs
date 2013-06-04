@@ -2,7 +2,6 @@
 using AdRotator.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -134,7 +133,11 @@ namespace AdRotator
 
         internal async void GetConfig()
         {
-            await LoadAdSettings();
+            try
+            {
+                await LoadAdSettings();
+            }
+            catch { }
 
             if (_settings != null && _settings.CultureDescriptors.Count() > 0)
             {
@@ -159,7 +162,7 @@ namespace AdRotator
         internal object GetProviderFrameworkElement(AdRotator.AdProviderConfig.SupportedPlatforms platform, AdProvider adProvider)
         {
             var provider = adProvider.AdProviderConfigValues[platform];
-            Type providerType;
+            Type providerType = null;
             object instance;
             try
             {
@@ -175,7 +178,6 @@ namespace AdRotator
             catch (PlatformNotSupportedException e)
             {
                 AdFailed(adProvider.AdProviderType);
-                throw e;
             }
             if (providerType == null)
             {
@@ -311,7 +313,11 @@ namespace AdRotator
             //If not checked remote && network available - get remote
             if (!String.IsNullOrEmpty(RemoteSettingsLocation))
             {
-                 await LoadSettingsFileRemote(RemoteSettingsLocation);
+                try
+                {
+                    await LoadSettingsFileRemote(RemoteSettingsLocation);
+                }
+                catch { }
             }
 
             if (_settings == null)
@@ -319,7 +325,11 @@ namespace AdRotator
                 await LoadSettingsFileLocal();
                 if (_settings == null)
                 {
-                    await LoadSettingsFileProject();
+                    try
+                    {
+                        await LoadSettingsFileProject();
+                    }
+                    catch { }
                 }
             }
         }
@@ -337,7 +347,11 @@ namespace AdRotator
                         {
                             using (var stream = fileHelper.FileOpenRead("", SETTINGS_FILE_NAME))
                             {
-                                _settings = _settings.Deserialise(stream);
+                                try
+                                {
+                                    _settings = _settings.Deserialise(stream);
+                                }
+                                catch { }
                             }
                         }
                     });
@@ -366,13 +380,17 @@ namespace AdRotator
                         {
                             using (var stream = fileHelper.FileOpenRead(new Uri(LocalSettingsLocation, UriKind.Relative), ""))
                             {
-                                _settings = _settings.Deserialise(stream);
+                                try
+                                {
+                                    _settings = _settings.Deserialise(stream);
+                                }
+                                catch { }
                             }
                         });
                 }
                 catch
                 {
-                    throw new FileNotFoundException(string.Format("The ad configuration file {0} could not be found. Either the path is incorrect or the build type is not set to resource", LocalSettingsLocation));
+                    throw new FileNotFoundException(string.Format("The ad configuration file {0} could not be found. Either the path is incorrect or the build type is not set correctly", LocalSettingsLocation));
                 }
             }
         }
