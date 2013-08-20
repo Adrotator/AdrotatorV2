@@ -20,6 +20,7 @@ namespace AdRotator.AdProviders
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AppId"},
                                                         {AdProviderConfigOptions.IsTest,"IsTest"},
+                                                        {AdProviderConfigOptions.Size,"Size"},
                                                         {AdProviderConfigOptions.AdSuccessEvent,"AdLoaded"},
                                                         {AdProviderConfigOptions.AdFailedEvent,"AdLoadingError"},
                                                         {AdProviderConfigOptions.AdClickedEvent,"AdClick"}
@@ -34,6 +35,7 @@ namespace AdRotator.AdProviders
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AppId"},
                                                         {AdProviderConfigOptions.IsTest,"IsTest"},
+                                                        {AdProviderConfigOptions.Size,"Size"},
                                                         {AdProviderConfigOptions.AdSuccessEvent,"AdLoaded"},
                                                         {AdProviderConfigOptions.AdFailedEvent,"AdLoadingError"},
                                                         {AdProviderConfigOptions.AdClickedEvent,"AdClick"}
@@ -48,6 +50,7 @@ namespace AdRotator.AdProviders
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AppId"},
                                                         {AdProviderConfigOptions.IsTest,"IsTest"},
+                                                        {AdProviderConfigOptions.Size,"Size"},
                                                         {AdProviderConfigOptions.AdSuccessEvent,"AdLoaded"},
                                                         {AdProviderConfigOptions.AdFailedEvent,"AdLoadingError"},
                                                         {AdProviderConfigOptions.AdClickedEvent,"AdClick"}

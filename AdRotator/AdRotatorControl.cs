@@ -43,11 +43,11 @@ namespace AdRotator
             adRotatorControl.Log += (s) => OnLog(s);
         }
 
-        private Grid LayoutRoot
+        private Grid AdRotatorRoot
         {
             get
             {
-                return GetTemplateChild("LayoutRoot") as Grid;
+                return GetTemplateChild("AdRotatorRoot") as Grid;
             }
         }
 
@@ -63,7 +63,7 @@ namespace AdRotator
 
             if (IsInDesignMode)
             {
-                LayoutRoot.Children.Add(new TextBlock() { Text = "AdRotator in design mode, No ads will be displayed", VerticalAlignment = VerticalAlignment.Center });
+                AdRotatorRoot.Children.Add(new TextBlock() { Text = "AdRotator in design mode, No ads will be displayed", VerticalAlignment = VerticalAlignment.Center });
             }
             else
             {
@@ -112,8 +112,8 @@ namespace AdRotator
                 return "No Ad Returned";
             }
 
-            LayoutRoot.Children.Clear();
-            LayoutRoot.Children.Add((FrameworkElement)providerElement);
+            AdRotatorRoot.Children.Clear();
+            AdRotatorRoot.Children.Add((FrameworkElement)providerElement);
             return adProvider.AdProviderType.ToString();
         }
 

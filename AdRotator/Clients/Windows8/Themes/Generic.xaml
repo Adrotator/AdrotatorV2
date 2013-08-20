@@ -7,7 +7,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:AdRotatorControl">
-                    <Grid x:Name="LayoutRoot" Width="{TemplateBinding AdWidth}" Height="{TemplateBinding AdHeight}">
+                    <Grid x:Name="AdRotatorRoot" Width="{TemplateBinding AdWidth}" Height="{TemplateBinding AdHeight}">
                         <Grid.RenderTransform>
                             <CompositeTransform/>
                         </Grid.RenderTransform>

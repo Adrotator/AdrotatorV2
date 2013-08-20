@@ -2,10 +2,10 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>AdRotator</id>
-        <version>2.0.0-Alpha1</version>
+        <version>2.0.1-Alpha2</version>
         <title>AdRotator</title>
-        <authors>Simon-Darkside / Gergel Orosz</authors>
-        <owners>Simon-Darkside / Gergel Orosz</owners>
+        <authors>Simon-Darkside / Gergely Orosz</authors>
+        <owners>Simon-Darkside / Gergely Orosz</owners>
         <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
         <projectUrl>http://getadrotator.codeplex.com/</projectUrl>
         <iconUrl>http://i0.wp.com/getadrotator.com/wp-content/uploads/2013/05/Icon_1_purple.png</iconUrl>
@@ -44,5 +44,6 @@
         <file src="tools\init.ps1" target="tools\init.ps1" />
         <file src="tools\install.ps1" target="tools\install.ps1" />
         <file src="tools\uninstall.ps1" target="tools\uninstall.ps1" />
+        <file src="readme.txt" target="" />
     </files>
 </package>

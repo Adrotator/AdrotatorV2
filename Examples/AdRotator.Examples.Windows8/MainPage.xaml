@@ -12,8 +12,8 @@
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
         <adRotator:AdRotatorControl
             x:Name="Win8AdRotator"
-            AdHeight="250"
-            AdWidth="250"
+            AdHeight="90"
+            AdWidth="728"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             LocalSettingsLocation="defaultAdSettings.xml"

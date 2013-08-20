@@ -62,7 +62,7 @@ namespace AdRotator
 
             if (IsInDesignMode)
             {
-                LayoutRoot.Children.Add(new TextBlock() { Text = "AdRotator in design mode, No ads will be displayed", VerticalAlignment = System.Windows.VerticalAlignment.Center });
+                AdRotatorRoot.Children.Add(new TextBlock() { Text = "AdRotator in design mode, No ads will be displayed", VerticalAlignment = System.Windows.VerticalAlignment.Center });
             }
             else
             {
@@ -112,8 +112,8 @@ namespace AdRotator
             }
             Dispatcher.BeginInvoke(() =>
                 {
-                    LayoutRoot.Children.Clear();
-                    LayoutRoot.Children.Add((FrameworkElement)providerElement);
+                    AdRotatorRoot.Children.Clear();
+                    AdRotatorRoot.Children.Add((FrameworkElement)providerElement);
                     OnLog(string.Format("Displaying ads for {0}", adProvider.AdProviderType));
                 });
             return adProvider.AdProviderType.ToString();

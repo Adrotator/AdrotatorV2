@@ -8,8 +8,8 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="480" d:DesignWidth="480">
-    
-    <Grid x:Name="LayoutRoot" Background="{StaticResource PhoneChromeBrush}">
+
+    <Grid x:Name="AdRotatorRoot" Background="{StaticResource PhoneChromeBrush}">
 
     </Grid>
 </UserControl>

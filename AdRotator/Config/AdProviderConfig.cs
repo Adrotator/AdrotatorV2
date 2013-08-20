@@ -21,6 +21,7 @@ namespace AdRotator.AdProviderConfig
             StartMethod,
             AdWidth,
             AdHeight,
+            Size,
             ReloadTime,
             ShowErrors,
             AdSuccessEvent,

@@ -217,6 +217,11 @@ namespace AdRotator
                     reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdHeight], AdHeight.ToString());
                 }
 
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.Size))
+                {
+                    reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.Size], AdWidth.ToString() + "x" + AdHeight.ToString());
+                }
+
 #if DEBUG
                 if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.ShowErrors))
                 {
