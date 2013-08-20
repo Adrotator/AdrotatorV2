@@ -110,10 +110,12 @@ namespace AdRotator
                 adRotatorControl.AdFailed(adProvider.AdProviderType);
                 return "No Ad Returned";
             }
-
-            LayoutRoot.Children.Clear();
-            LayoutRoot.Children.Add((FrameworkElement)providerElement);
-            OnLog(string.Format("Displaying ads for {0}", adProvider.AdProviderType));
+            Dispatcher.BeginInvoke(() =>
+                {
+                    LayoutRoot.Children.Clear();
+                    LayoutRoot.Children.Add((FrameworkElement)providerElement);
+                    OnLog(string.Format("Displaying ads for {0}", adProvider.AdProviderType));
+                });
             return adProvider.AdProviderType.ToString();
         }
 
