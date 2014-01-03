@@ -68,7 +68,7 @@ namespace AdRotator
         /// </summary>
         private int OrderIndex = 0;
 
-        private FileHelpers fileHelper;
+        private IFileHelpers fileHelper;
         private ReflectionHelpers reflectionHelper = new ReflectionHelpers();
 
         private static Timer adRotatorTimer;
@@ -118,7 +118,7 @@ namespace AdRotator
         /// </summary>
         /// <param name="adSettings">XML string of the AdSettings content</param>
         /// <param name="Culture">Specified culture you want AdRotator initialised for</param>
-        public AdRotatorComponent(string Culture, FileHelpers FileHelper)
+        public AdRotatorComponent(string Culture, IFileHelpers FileHelper)
         {
             this.IsAdRotatorEnabled = true;
             this.culture = Culture;

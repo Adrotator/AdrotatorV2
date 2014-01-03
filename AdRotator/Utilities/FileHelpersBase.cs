@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace AdRotator.Utilities
 {
-    internal abstract class FileHelpers
+    internal abstract class FileHelpers : IFileHelpers
     {
         public abstract char notSeparator { get; }
         public abstract char separator { get; }
