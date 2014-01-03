@@ -28,3 +28,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyVersion("2.0.1")]
 [assembly: AssemblyFileVersion("2.0.1")]
 [assembly: InternalsVisibleTo("AdRotator")]
+[assembly: InternalsVisibleTo("AdRotator.UnitTests")]

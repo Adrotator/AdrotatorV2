@@ -28,6 +28,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Examples.WinPhone
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Examples.WinPhone8", "Examples\AdRotator.Examples.WinPhone8\AdRotator.Examples.WinPhone8.csproj", "{5E7A5C78-DA60-457F-AEE1-0562BA1DF6AB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4ABF1E81-6B70-40B3-AB38-D69597B69192}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.UnitTests", "Tests\AdRotator.UnitTests\AdRotator.UnitTests.csproj", "{A1432A44-A637-4BA2-89BF-B772F39B17AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -226,6 +230,22 @@ Global
 		{5E7A5C78-DA60-457F-AEE1-0562BA1DF6AB}.Release|x86.ActiveCfg = Release|x86
 		{5E7A5C78-DA60-457F-AEE1-0562BA1DF6AB}.Release|x86.Build.0 = Release|x86
 		{5E7A5C78-DA60-457F-AEE1-0562BA1DF6AB}.Release|x86.Deploy.0 = Release|x86
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|Windows Phone.ActiveCfg = Debug|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Release|ARM.ActiveCfg = Release|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Release|Windows Phone.ActiveCfg = Release|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Release|x64.ActiveCfg = Release|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -234,5 +254,6 @@ Global
 		{04C0A865-AB86-419B-9D73-6D8BD8BEA3C9} = {E2E6A6A8-5342-4850-A86E-6B1E153EBABC}
 		{210B55C2-AB15-4EAC-A9B6-51A766A40BD0} = {E2E6A6A8-5342-4850-A86E-6B1E153EBABC}
 		{5E7A5C78-DA60-457F-AEE1-0562BA1DF6AB} = {E2E6A6A8-5342-4850-A86E-6B1E153EBABC}
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF} = {4ABF1E81-6B70-40B3-AB38-D69597B69192}
 	EndGlobalSection
 EndGlobal
