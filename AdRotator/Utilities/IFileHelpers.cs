@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AdRotator.Utilities
 {
-    internal interface IFileHelpers
+    public interface IFileHelpers
     {
         Stream OpenStream(string rootDirectory, string assetName, string extension);
 
