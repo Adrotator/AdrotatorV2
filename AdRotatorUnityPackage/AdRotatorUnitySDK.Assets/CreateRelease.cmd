@@ -1,0 +1,1 @@
+call "C:\Development\GitHub\AdRotatorV2-Working\AdRotatorUnityPackage\AdRotatorUnitySDK.Assets\ExportPackage.cmd" "C:\Development\GitHub\AdRotatorV2-Working\AdRotatorUnityPackage\AdRotatorUnitySDK.Assets\bin\Release\" "%~1" 

@@ -1,0 +1,333 @@
+﻿// Version 1.0.0.0
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
+using UnityEngine;
+
+namespace AdRotatorUnitySDK.Integration
+{
+	public delegate void ExecuteHandler(NoParameterExecuteHandler toExecute);
+
+	public delegate void NoParameterExecuteHandler();
+	
+	/// <summary>
+	/// Unity to Windows 8 bridge initializer.
+	/// </summary>
+	public static class AdRotatorBridge
+	{
+		/// <summary>
+		/// Name of the AdRotator control added to the swap panel.
+		/// </summary>
+		private const string AdRotatorManagementIdentifier = "AdRotatorManagement";
+
+		/// <summary>
+		/// Initial setup of the Unity to Windows 8 bridge.
+		/// </summary>
+		/// <param name="unityPage">Page where the Unity scene will be showing.</param>
+		/// <param name="uiThread">Delegate used to forward execution to the UI Thread. Bridge with Unity APIs.</param>
+		public static void Register(Page unityPage, ExecuteHandler uiThread)
+		{
+			GameObject go = GameObject.Find(AdRotatorManagementIdentifier);
+			if (go != null)
+			{
+				var mgt = go.GetComponent<AdRotatorUnitySDK.Assets.Plugins.AdRotatorManagement>();
+				if (mgt != null)
+				{
+					// Initial load of the rotator with initial settings.
+					UpdateAd(mgt.AdSettings, mgt.AppSettings, unityPage, uiThread);
+
+					// Register callback from Unity to receive calls.
+					mgt.OnSettingsUpdated = (ad, app) => UpdateAd(ad, app, unityPage, uiThread);
+				}
+				else
+				{
+					Debug.LogError("AdRotatorManagement behaviour not attached to the AdRotatorManagement game object.");
+				}
+			}
+			else
+			{
+				Debug.LogError("AdRotatorManagement game object not found, make sure it is added in the first scene loaded in the game.");
+			}
+		}
+		
+		/// <summary>
+		/// Update the Ad settings on the AdRotator.
+		/// This will trigger the creation a new AdRotator to make sure state is well known.
+		/// </summary>
+		/// <param name="ad">Unity provided AdSettings.</param>
+		/// <param name="app">Unity provided AppSettings.</param>
+		/// <param name="page">Page where the Unity scene is showing.</param>
+		/// <param name="uiThread">Delegate used to forward execution to the UI Thread. Bridge with Unity APIs.</param>
+		private static void UpdateAd(AdRotatorUnitySDK.Assets.Plugins.AdSettings ad, AdRotatorUnitySDK.Assets.Plugins.AppSettings app, Page page, ExecuteHandler uiThread)
+		{
+			var position = ad.Position;
+			var size = ad.Size;
+			var isEnabled = ad.IsEnabled;
+			var slidingDisplay = ad.SlidingAdDisplaySeconds;
+			var slidingHidden = ad.SlidingAdHiddenSeconds;
+			Windows.UI.Xaml.VerticalAlignment verticalAlign;
+			Windows.UI.Xaml.HorizontalAlignment horizontalAlign;
+			int adWidth;
+			int adHeight;
+
+			var slidingDirection = GetSlidingAdDirection(ad.SlidingAdDirection);
+			var adType = GetAdType(app.DefaultAdType);
+			GetAdPosition(position, out verticalAlign, out horizontalAlign);
+			GetAdSize(size, out adWidth, out adHeight);			
+
+			// Initialize the AdRotator on the UI thread only.
+			uiThread(() =>
+			{
+				var panel = page.Content as SwapChainBackgroundPanel;
+				CleanUpExistingRotator(panel);
+
+				if (isEnabled)
+				{
+					// Add new rotator only if it is enabled, otherwise remove control to safe resources.
+					var rotator = InitNewRotator(panel, app, verticalAlign, horizontalAlign, adWidth, adHeight, isEnabled, slidingDisplay, slidingHidden, slidingDirection, adType);
+					
+					// Set parameters only once rotator is Loaded, otherwise some internal init is missing.
+					rotator.Loaded += (s, e) =>
+					{
+						ActivateRotator(rotator);
+					};
+				}
+			});
+		}
+
+		/// <summary>
+		/// Remove existing AdRotator, if found.
+		/// </summary>
+		/// <param name="panel">Panel where to search for the existing rotator.</param>
+		private static void CleanUpExistingRotator(SwapChainBackgroundPanel panel)
+		{
+			var rotator = panel.FindName(AdRotatorManagementIdentifier) as AdRotator.AdRotatorControl;
+
+			if (rotator != null)
+			{
+				rotator.Log -= Log;
+				rotator.IsAdRotatorEnabled = false;
+				rotator.Dispose();
+				panel.Children.Remove(rotator);
+			}
+		}
+
+		/// <summary>
+		/// Create a new AdRotator and add it to swap panel, ready for configuration.
+		/// </summary>
+		/// <param name="panel">Panel where to add the newly created rotator.</param>
+		/// <param name="appSettings">Ad Provider configuration.</param>
+		/// <param name="verticalAlign">Converted Ad Position (vertical).</param>
+		/// <param name="horizontalAlign">Converted Ad Position (horizontal).</param>
+		/// <param name="adWidth">Ad Width.</param>
+		/// <param name="adHeight">Ad Height.</param>
+		/// <param name="isEnabled">Status of the rotator.</param>
+		/// <param name="slidingDisplay">Sliding Ad display time in seconds.</param>
+		/// <param name="slidingHidden">Sliding Ad hidden time in seconds.</param>
+		/// <param name="slidingDirection">Sliding Ad Direction.</param>
+		/// <param name="adType">Default Ad Type.</param>
+		/// <returns>Newly created AdRotator.</returns>
+		private static AdRotator.AdRotatorControl InitNewRotator(SwapChainBackgroundPanel panel, AdRotatorUnitySDK.Assets.Plugins.AppSettings appSettings, Windows.UI.Xaml.VerticalAlignment verticalAlign, Windows.UI.Xaml.HorizontalAlignment horizontalAlign, int adWidth, int adHeight, bool isEnabled, int slidingDisplay, int slidingHidden, AdRotator.Model.AdSlideDirection slidingDirection, AdRotator.Model.AdType adType)
+		{
+			AdRotator.AdRotatorControl rotator;
+			rotator = new AdRotator.AdRotatorControl();
+			rotator.Name = AdRotatorManagementIdentifier;
+			rotator.AdWidth = adWidth;
+			rotator.AdHeight = adHeight;
+
+			rotator.RemoteSettingsLocation = appSettings.SettingsUrl;
+			rotator.LocalSettingsLocation = "defaultAdSettings.xml";
+			rotator.DefaultHouseAdBody = appSettings.DefaultHouseAdBody;
+			rotator.DefaultHouseAdURI = appSettings.DefaultHouseAdUri;
+			//rotator.DefaultAdType = adType;
+
+			rotator.VerticalAlignment = verticalAlign;
+			rotator.HorizontalAlignment = horizontalAlign;
+			rotator.SlidingAdDisplaySeconds = slidingDisplay;
+			rotator.SlidingAdHiddenSeconds = slidingHidden;
+			rotator.SlidingAdDirection = slidingDirection;
+			rotator.IsAdRotatorEnabled = isEnabled;
+			panel.Children.Add(rotator);
+			rotator.Log += Log;
+			return rotator;
+		}
+
+		/// <summary>
+		/// Initialize the control with the provided settings.
+		/// </summary>
+		/// <param name="rotator">AdRotator to configure.</param>
+		private static void ActivateRotator(AdRotator.AdRotatorControl rotator)
+		{
+			rotator.Invalidate(null);
+		}
+
+		/// <summary>
+		/// Forward to Unity logger.
+		/// Each message will be prefixed with "AdRotator:".
+		/// </summary>
+		/// <param name="msg">Message to log.</param>
+		private static void Log(string msg)
+		{
+			Debug.Log("AdRotator: " + msg);
+		}
+
+		/// <summary>
+		/// Convert Unity domain AdProvider to AdRotator AdType.
+		/// </summary>
+		/// <param name="adProviderType">Unity domain AdProvider</param>
+		/// <returns>AdRotator AdType</returns>
+		private static AdRotator.Model.AdType GetAdType(AdRotatorUnitySDK.Assets.Plugins.AdProvider adProviderType)
+		{
+			AdRotator.Model.AdType adType = AdRotator.Model.AdType.PubCenter;
+			switch (adProviderType)
+			{
+				case AdRotatorUnitySDK.Assets.Plugins.AdProvider.AdDuplex:
+					adType = AdRotator.Model.AdType.AdDuplex;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdProvider.PubCenter:
+					adType = AdRotator.Model.AdType.PubCenter;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdProvider.DefaultHouseAd:
+					adType = AdRotator.Model.AdType.DefaultHouseAd;
+					break;
+			}
+			return adType;
+		}
+
+		/// <summary>
+		/// Convert Unity domain AdSize to XAML control dimensions.
+		/// </summary>
+		/// <param name="size">Unity domain AdSize.</param>
+		/// <param name="adWidth">Ad Width.</param>
+		/// <param name="adHeight">Ad Height.</param>
+		private static void GetAdSize(Assets.Plugins.AdSize size, out int adWidth, out int adHeight)
+		{
+			adWidth = 728;
+			adHeight = 90;
+
+			switch (size)
+			{
+				case AdRotatorUnitySDK.Assets.Plugins.AdSize.MediumRectangle300x250:
+					adWidth = 300;
+					adHeight = 250;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdSize.Leaderboard728x90:
+					adWidth = 728;
+					adHeight = 90;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdSize.WideSkyscraper160x600:
+					adWidth = 160;
+					adHeight = 600;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdSize.SquarePopUp250x250:
+					adWidth = 250;
+					adHeight = 250;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdSize.SplitViewBanner500x130:
+					adWidth = 500;
+					adHeight = 130;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdSize.SnapViewBanner292x60:
+					adWidth = 292;
+					adHeight = 60;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdSize.HalfTile250x125:
+					adWidth = 250;
+					adHeight = 125;
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Convert Unity domain AdPosition to XAML position alignments.
+		/// </summary>
+		/// <param name="horizontalAlign">XAML HorizontalAlignment.</param>
+		/// <param name="verticalAlign">XAML VerticalAlignment.</param>
+		/// <param name="position">Unity domain AdPosition.</param>
+		private static void GetAdPosition(Assets.Plugins.AdPosition position, out VerticalAlignment verticalAlign, out HorizontalAlignment horizontalAlign)
+		{
+			verticalAlign = Windows.UI.Xaml.VerticalAlignment.Top;
+			horizontalAlign = Windows.UI.Xaml.HorizontalAlignment.Center;
+	
+			switch (position)
+			{
+				case AdRotatorUnitySDK.Assets.Plugins.AdPosition.TopLeftCorner:
+					verticalAlign = Windows.UI.Xaml.VerticalAlignment.Top;
+					horizontalAlign = Windows.UI.Xaml.HorizontalAlignment.Left;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdPosition.TopRightCorner:
+					verticalAlign = Windows.UI.Xaml.VerticalAlignment.Top;
+					horizontalAlign = Windows.UI.Xaml.HorizontalAlignment.Right;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdPosition.BottomLeftCorner:
+					verticalAlign = Windows.UI.Xaml.VerticalAlignment.Bottom;
+					horizontalAlign = Windows.UI.Xaml.HorizontalAlignment.Left;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdPosition.BottomRightCorner:
+					verticalAlign = Windows.UI.Xaml.VerticalAlignment.Bottom;
+					horizontalAlign = Windows.UI.Xaml.HorizontalAlignment.Right;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdPosition.TopCenter:
+					verticalAlign = Windows.UI.Xaml.VerticalAlignment.Top;
+					horizontalAlign = Windows.UI.Xaml.HorizontalAlignment.Center;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdPosition.BottomCenter:
+					verticalAlign = Windows.UI.Xaml.VerticalAlignment.Bottom;
+					horizontalAlign = Windows.UI.Xaml.HorizontalAlignment.Center;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdPosition.LeftCenter:
+					verticalAlign = Windows.UI.Xaml.VerticalAlignment.Center;
+					horizontalAlign = Windows.UI.Xaml.HorizontalAlignment.Left;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdPosition.RightCenter:
+					verticalAlign = Windows.UI.Xaml.VerticalAlignment.Center;
+					horizontalAlign = Windows.UI.Xaml.HorizontalAlignment.Right;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.AdPosition.Center:
+					verticalAlign = Windows.UI.Xaml.VerticalAlignment.Center;
+					horizontalAlign = Windows.UI.Xaml.HorizontalAlignment.Center;
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Convert Unity domain SlidingAdDirection to AdRotator SlidingAdDirection.
+		/// </summary>
+		/// <param name="direction">Unity SlidingAdDirection.</param>
+		/// <returns>AdRotator SlidingAdDirection.</returns>
+		private static AdRotator.Model.AdSlideDirection GetSlidingAdDirection(AdRotatorUnitySDK.Assets.Plugins.SlidingAdDirection direction)
+		{
+			AdRotator.Model.AdSlideDirection slidingDirection = AdRotator.Model.AdSlideDirection.None;
+			switch (direction)
+			{
+				case AdRotatorUnitySDK.Assets.Plugins.SlidingAdDirection.None:
+					slidingDirection = AdRotator.Model.AdSlideDirection.None;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.SlidingAdDirection.Bottom:
+					slidingDirection = AdRotator.Model.AdSlideDirection.Bottom;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.SlidingAdDirection.Left:
+					slidingDirection = AdRotator.Model.AdSlideDirection.Left;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.SlidingAdDirection.Right:
+					slidingDirection = AdRotator.Model.AdSlideDirection.Right;
+					break;
+				case AdRotatorUnitySDK.Assets.Plugins.SlidingAdDirection.Top:
+					slidingDirection = AdRotator.Model.AdSlideDirection.Top;
+					break;
+			}
+			return slidingDirection;
+		}
+	}
+}
