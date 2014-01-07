@@ -2,18 +2,29 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+#if WINDOWS_PHONE
+using System.Windows.Controls;
+using System.Windows;
+using System.ComponentModel;
+using System.Windows.Media.Animation;
+#else
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
+#endif
 
 // The Templated Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234235
 
 namespace AdRotator
 {
-    public sealed class AdRotatorControl : Control, IAdRotatorProvider
+    public sealed class AdRotatorControl : Control, IAdRotatorProvider, IDisposable
     {
         private AdRotatorComponent adRotatorControl = new AdRotatorComponent(CultureInfo.CurrentUICulture.ToString(), new FileHelpers());
+#if WINDOWS_PHONE
+        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone8;
+#else
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.Windows8;
-
+#endif
         #region LoggingEventCode
         public delegate void LogHandler(string message);
         public event LogHandler Log;
@@ -38,7 +49,13 @@ namespace AdRotator
                 { 
                     AdType.AdDuplex, 
                     AdType.PubCenter, 
-                    AdType.Inmobi
+                    AdType.Inmobi,
+#if WINDOWS_PHONE
+                    AdType.Smaato,
+                    AdType.MobFox,
+                    AdType.AdMob,
+                    AdType.InnerActive,
+#endif
                 };
             adRotatorControl.Log += (s) => OnLog(s);
         }
@@ -56,11 +73,16 @@ namespace AdRotator
             Invalidate(adProvider);
         }
 
-        void AdRotatorControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            // This call needs to happen when the control is loaded 
-            // b/c dependency properties are propagated to their values at this point
+        private bool templateApplied;
 
+#if WINDOWS_PHONE
+        public override void OnApplyTemplate()
+
+#else
+        protected override void OnApplyTemplate()
+#endif
+        {
+            base.OnApplyTemplate();
             if (IsInDesignMode)
             {
                 AdRotatorRoot.Children.Add(new TextBlock() { Text = "AdRotator in design mode, No ads will be displayed", VerticalAlignment = VerticalAlignment.Center });
@@ -77,7 +99,22 @@ namespace AdRotator
                         adRotatorControl.StartAdTimer();
                     }
                 }
+                InitialiseSlidingAnimations();
             }
+            templateApplied = true;
+            OnAdRotatorReady();
+            if (adRotatorControl.isLoaded)
+            {
+                Invalidate(null);
+            }
+
+        }
+        void AdRotatorControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            // This call needs to happen when the control is loaded 
+            // b/c dependency properties are propagated to their values at this point
+
+
 
             adRotatorControl.isLoaded = true;
         }
@@ -92,6 +129,12 @@ namespace AdRotator
             if (adProvider.AdProviderType == AdType.None)
             {
                 return adRotatorControl.AdsFailed();
+            }
+
+            if (SlidingAdDirection != AdSlideDirection.None && !_slidingAdTimerStarted)
+            {
+                _slidingAdTimerStarted = true;
+                ResetSlidingAdTimer(SlidingAdDisplaySeconds);
             }
 
             //(SJ) should we make this call the GetAd function? or keep it seperate
@@ -213,7 +256,11 @@ namespace AdRotator
         {
             get
             {
+#if WINDOWS_PHONE
+                return DesignerProperties.GetIsInDesignMode(this);
+#else
                 return Windows.ApplicationModel.DesignMode.DesignModeEnabled;
+#endif
             }
         }
         #endregion
@@ -296,31 +343,36 @@ namespace AdRotator
         }
         #endregion
 
+        #region DefaultHouseAd
+
         #region DefaultHouseAdBody
-        public object DefaultHouseAdBody
+        public string DefaultHouseAdBody
         {
-            get { return (object)adRotatorControl.DefaultHouseAdBody; }
+            get { return (string)GetValue(DefaultHouseAdBodyProperty);}
             set { SetValue(DefaultHouseAdBodyProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for DefaultHouseAdBody.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DefaultHouseAdBodyProperty =
-            DependencyProperty.Register("DefaultHouseAdBody", typeof(object), typeof(AdRotatorControl), new PropertyMetadata(null, AdRotatorEnabledPropertyChanged));
+            DependencyProperty.Register("DefaultHouseAdBody", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(string.Empty));
 
-        private static void AdRotatorEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        #endregion
+
+        #region DefaultHouseAdURI
+
+        public string DefaultHouseAdURI
         {
-            var sender = d as AdRotatorControl;
-            if (sender != null)
-            {
-                sender.OnDefaultHouseAdBodyPropertyChanged(e);
-            }
+            get { return (string)GetValue(DefaultHouseAdURIProperty);}
+            set { SetValue(DefaultHouseAdURIProperty, value); }
         }
 
-        private void OnDefaultHouseAdBodyPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            adRotatorControl.DefaultHouseAdBody = e.NewValue;
-        }
+        public static readonly DependencyProperty DefaultHouseAdURIProperty = DependencyProperty.Register("DefaultHouseAdURI", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(String.Empty));
 
+        #endregion
+
+        public delegate void DefaultHouseAdClickEventHandler();
+
+        public event DefaultHouseAdClickEventHandler DefaultHouseAdClick;
         #endregion
 
         #region IsLoaded
@@ -414,5 +466,281 @@ namespace AdRotator
         #endregion
 
         #endregion
+
+        #region SlidingAd Properties
+
+        Storyboard SlidingAdTimer;
+        Storyboard SlideOutLRAdStoryboard;
+        Storyboard SlideInLRAdStoryboard;
+        Storyboard SlideOutUDAdStoryboard;
+        Storyboard SlideInUDAdStoryboard;
+
+        private bool _slidingAdHidden = false;
+
+        private bool _slidingAdTimerStarted = false;
+
+        #region SlidingAdDirection
+
+        /// <summary>
+        /// Direction the popup will hide / appear from
+        /// If not set the AdControl will remain on screen
+        /// </summary>
+        public AdSlideDirection SlidingAdDirection
+        {
+            get { return (AdSlideDirection)GetValue(SlidingAdDirectionProperty); }
+            set { SetValue(SlidingAdDirectionProperty, value); }
+        }
+
+        public static readonly DependencyProperty SlidingAdDirectionProperty = DependencyProperty.Register("SlidingAdDirection", typeof(AdSlideDirection), typeof(AdRotatorControl), new PropertyMetadata(AdSlideDirection.None, SlidingAdDirectionChanged));
+
+        private static void SlidingAdDirectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sender = d as AdRotatorControl;
+            if (sender != null)
+            {
+                sender.OnSlidingAdDirectionChanged(e);
+            }
+        }
+
+        private void OnSlidingAdDirectionChanged(DependencyPropertyChangedEventArgs e)
+        {
+            SetupAnimationBounds((AdSlideDirection)e.NewValue);
+        }
+
+        private void SetupAnimationBounds(AdSlideDirection adSlideDirection)
+        {
+            if (AdRotatorRoot != null)
+            {
+#if WINDOWS_PHONE
+                var bounds = AdRotatorControl.DisplayResolution;
+#else
+                var bounds = Window.Current.Bounds;
+#endif
+                switch (adSlideDirection)
+                {
+                    case AdSlideDirection.Left:
+                        ((DoubleAnimation)SlideOutLRAdStoryboard.Children[0]).To = -(bounds.Width * 2);
+                        ((DoubleAnimation)SlideInLRAdStoryboard.Children[0]).From = -(bounds.Width * 2);
+                        break;
+                    case AdSlideDirection.Right:
+                        ((DoubleAnimation)SlideOutLRAdStoryboard.Children[0]).To = bounds.Width * 2;
+                        ((DoubleAnimation)SlideInLRAdStoryboard.Children[0]).From = bounds.Width * 2;
+                        break;
+                    case AdSlideDirection.Bottom:
+                        ((DoubleAnimation)SlideOutUDAdStoryboard.Children[0]).To = bounds.Height * 2;
+                        ((DoubleAnimation)SlideInUDAdStoryboard.Children[0]).From = bounds.Height * 2;
+                        break;
+                    case AdSlideDirection.Top:
+                        ((DoubleAnimation)SlideOutUDAdStoryboard.Children[0]).To = -(bounds.Height * 2);
+                        ((DoubleAnimation)SlideInUDAdStoryboard.Children[0]).From = -(bounds.Height * 2);
+                        break;
+                    default:
+                        ((DoubleAnimation)SlideOutLRAdStoryboard.Children[0]).To = 0;
+                        ((DoubleAnimation)SlideInLRAdStoryboard.Children[0]).From = 0;
+                        ((DoubleAnimation)SlideOutUDAdStoryboard.Children[0]).To = 0;
+                        ((DoubleAnimation)SlideInUDAdStoryboard.Children[0]).From = 0;
+                        break;
+                }
+            }
+        }
+
+
+        #endregion
+
+        #region SlidingAdDisplaySeconds
+
+        /// <summary>
+        /// Amount of time in seconds the ad is displayed on Screen if <see cref="SlidingAdDirection"/> is set to something else than None
+        /// </summary>
+        public int SlidingAdDisplaySeconds
+        {
+            get { return (int)GetValue(SlidingAdDisplaySecondsProperty); }
+            set { SetValue(SlidingAdDisplaySecondsProperty, value); }
+        }
+
+        public static readonly DependencyProperty SlidingAdDisplaySecondsProperty = DependencyProperty.Register("SlidingAdDisplaySeconds", typeof(int), typeof(AdRotatorControl), new PropertyMetadata(10));
+
+        #endregion
+
+        #region SlidingAdHiddenSeconds
+
+        /// <summary>
+        ///  Amount of time in seconds to wait before displaying the ad again 
+        ///  (if <see cref="SlidingAdDirection"/> is set to something else than None).
+        ///  Basically the lower this number the more the user is "nagged" by the ad coming back now and again
+        /// </summary>
+        public int SlidingAdHiddenSeconds
+        {
+            get { return (int)GetValue(SlidingAdHiddenSecondsProperty); }
+            set { SetValue(SlidingAdHiddenSecondsProperty, value); }
+        }
+
+        public static readonly DependencyProperty SlidingAdHiddenSecondsProperty = DependencyProperty.Register("SlidingAdHiddenSeconds", typeof(int), typeof(AdRotatorControl), new PropertyMetadata(20));
+
+        #endregion
+
+        #region Animation Events
+        private void SlideOutAdStoryboard_Completed(object sender, object e)
+        {
+            _slidingAdHidden = true;
+            Invalidate(null);
+            ResetSlidingAdTimer(SlidingAdHiddenSeconds);
+        }
+
+        private void SlideInAdStoryboard_Completed(object sender, object e)
+        {
+            _slidingAdHidden = false;
+            ResetSlidingAdTimer(SlidingAdDisplaySeconds);
+        }
+
+        private void ResetSlidingAdTimer(int durationInSeconds)
+        {
+            if (IsAdRotatorEnabled)
+            {
+                SlidingAdTimer.Duration = new Duration(new TimeSpan(0, 0, durationInSeconds));
+                SlidingAdTimer.Begin();
+            }
+        }
+
+        private void SlidingAdTimer_Completed(object sender, object e)
+        {
+            switch (SlidingAdDirection)
+            {
+                case AdSlideDirection.Top:
+                case AdSlideDirection.Bottom:
+                    if (_slidingAdHidden)
+                    {
+                        SlideInUDAdStoryboard.Begin();
+                    }
+                    else
+                    {
+                        SlideOutUDAdStoryboard.Begin();
+                    }
+                    break;
+                case AdSlideDirection.Left:
+                case AdSlideDirection.Right:
+                    if (_slidingAdHidden)
+                    {
+                        SlideInLRAdStoryboard.Begin();
+                    }
+                    else
+                    {
+                        SlideOutLRAdStoryboard.Begin();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        void InitialiseSlidingAnimations()
+        {
+            SlidingAdTimer = new Storyboard();
+            SlidingAdTimer.Completed += SlidingAdTimer_Completed;
+
+            DoubleAnimation SlideOutLRAdStoryboardAnimation = new DoubleAnimation();
+            Storyboard.SetTarget(SlideOutLRAdStoryboardAnimation, AdRotatorRoot);
+#if WINDOWS_PHONE
+            Storyboard.SetTargetProperty(SlideOutLRAdStoryboardAnimation, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateX)"));
+#else
+            Storyboard.SetTargetProperty(SlideOutLRAdStoryboardAnimation, "(UIElement.RenderTransform).(CompositeTransform.TranslateX)");
+#endif
+            SlideOutLRAdStoryboardAnimation.Completed += SlideOutAdStoryboard_Completed;
+
+            SlideOutLRAdStoryboard = new Storyboard();
+            SlideOutLRAdStoryboard.Children.Add(SlideOutLRAdStoryboardAnimation);
+
+
+            DoubleAnimation SlideInLRAdStoryboardAnimation = new DoubleAnimation();
+            Storyboard.SetTarget(SlideInLRAdStoryboardAnimation, AdRotatorRoot);
+#if WINDOWS_PHONE
+            Storyboard.SetTargetProperty(SlideInLRAdStoryboardAnimation, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateX)"));
+ #else
+            Storyboard.SetTargetProperty(SlideInLRAdStoryboardAnimation, "(UIElement.RenderTransform).(CompositeTransform.TranslateX)");
+#endif
+            SlideInLRAdStoryboardAnimation.Completed += SlideInAdStoryboard_Completed;
+
+            SlideInLRAdStoryboard = new Storyboard();
+            SlideInLRAdStoryboard.Children.Add(SlideInLRAdStoryboardAnimation);
+
+            DoubleAnimation SlideOutUDAdStoryboardAnimation = new DoubleAnimation();
+            Storyboard.SetTarget(SlideOutUDAdStoryboardAnimation, AdRotatorRoot);
+#if WINDOWS_PHONE
+            Storyboard.SetTargetProperty(SlideOutUDAdStoryboardAnimation, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateY)"));
+ #else
+            Storyboard.SetTargetProperty(SlideOutUDAdStoryboardAnimation, "(UIElement.RenderTransform).(CompositeTransform.TranslateY)");
+#endif
+            SlideOutUDAdStoryboardAnimation.Completed += SlideOutAdStoryboard_Completed;
+
+            SlideOutUDAdStoryboard = new Storyboard();
+            SlideOutUDAdStoryboard.Children.Add(SlideOutUDAdStoryboardAnimation);
+
+            DoubleAnimation SlideInUDAdStoryboardAnimation = new DoubleAnimation();
+            Storyboard.SetTarget(SlideInUDAdStoryboardAnimation, AdRotatorRoot);
+#if WINDOWS_PHONE
+            Storyboard.SetTargetProperty(SlideInUDAdStoryboardAnimation, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateY)"));
+ #else
+            Storyboard.SetTargetProperty(SlideInUDAdStoryboardAnimation, "(UIElement.RenderTransform).(CompositeTransform.TranslateY)");
+#endif
+            SlideInUDAdStoryboardAnimation.Completed += SlideInAdStoryboard_Completed;
+
+            SlideInUDAdStoryboard = new Storyboard();
+            SlideInUDAdStoryboard.Children.Add(SlideInUDAdStoryboardAnimation);
+
+            SetupAnimationBounds(SlidingAdDirection);
+        }
+        #endregion
+        #endregion
+
+        #region WindowsPhone Screen size detection
+#if WINDOWS_PHONE
+        public static Size DisplayResolution
+        {
+            get
+            {
+                if (Environment.OSVersion.Version.Major < 8)
+                    return new Size(480, 800);
+                int scaleFactor = (int)GetProperty(Application.Current.Host.Content, "ScaleFactor");
+                switch (scaleFactor)
+                {
+                    case 100:
+                        return new Size(480, 800);
+                    case 150:
+                        return new Size(720, 1280);
+                    case 160:
+                        return new Size(768, 1280);
+                }
+                return new Size(480, 800);
+            }
+        }
+        private static object GetProperty(object instance, string name)
+        {
+            var getMethod = instance.GetType().GetProperty(name).GetGetMethod();
+            return getMethod.Invoke(instance, null);
+        } 
+#endif
+        #endregion
+
+        #region AdRotatorReadyEvent
+
+        public delegate void AdRotatorReadyStatus();
+
+        public event AdRotatorReadyStatus AdRotatorReady;
+
+        private void OnAdRotatorReady()
+        {
+            if (AdRotatorReady != null)
+            {
+                AdRotatorReady();
+            }
+        }
+        #endregion
+
+        public void Dispose()
+        {
+            AdRotatorRoot.Children.Clear();
+            //providerElement = null;
+            DefaultHouseAdBody = null;
+        }
     }
 }

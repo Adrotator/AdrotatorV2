@@ -151,11 +151,6 @@ namespace AdRotator
             try
             {
                 PropertyInfo propertyInfo = instance.GetType().GetProperty(PropertyName);
-                if (propertyInfo == null)
-                {
-                    // No such property name
-                    return;
-                }
                 if (propertyInfo.PropertyType.BaseType.FullName == "System.Enum")
                 {
                     propertyInfo.SetValue(instance, StringToEnum(propertyInfo.PropertyType, PropertyValue), null);

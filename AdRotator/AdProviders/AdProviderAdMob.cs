@@ -27,15 +27,15 @@ namespace AdRotator.AdProviders
                             },
                             {SupportedPlatforms.WindowsPhone8, new AdProviderDetails() 
                                             { 
-                                                AssemblyName = "Google.AdMob.Ads.WindowsPhone7", 
-                                                ElementName = "Google.AdMob.Ads.WindowsPhone7.WPF.BannerAd", 
+                                                AssemblyName = "GoogleAds", 
+                                                ElementName = "GoogleAds.AdView", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AdUnitID"},
                                                         {AdProviderConfigOptions.AdWidth,"Width"},
                                                         {AdProviderConfigOptions.AdHeight,"Height"},
-                                                        {AdProviderConfigOptions.AdSuccessEvent,"AdReceived"},
-                                                        {AdProviderConfigOptions.AdFailedEvent,"AdFailed"}
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"ReceivedAd"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"FailedToReceiveAd"}
                                                     }
                                             }
                             },

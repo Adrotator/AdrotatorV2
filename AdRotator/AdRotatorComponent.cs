@@ -175,7 +175,7 @@ namespace AdRotator
                     providerType = reflectionHelper.TryGetType(provider.AssemblyName, provider.ElementName);
                 }
             }
-            catch (PlatformNotSupportedException e)
+            catch (PlatformNotSupportedException)
             {
                 AdFailed(adProvider.AdProviderType);
             }
@@ -354,7 +354,7 @@ namespace AdRotator
                             {
                                 try
                                 {
-                                    _settings = _settings.Deserialise(stream);
+                                    if(stream != null) _settings = _settings.Deserialise(stream);
                                 }
                                 catch { }
                             }
@@ -370,7 +370,7 @@ namespace AdRotator
         public async Task LoadSettingsFileRemote(string RemoteSettingsLocation)
         {
             var settings = await Networking.Network.GetStringFromURLAsync(RemoteSettingsLocation);
-            _settings = _settings.Deserialise(settings);
+            if (settings != null) _settings = _settings.Deserialise(settings);
         }
 
         //Not Finished (SJ)
@@ -383,11 +383,11 @@ namespace AdRotator
                 {
                     await Task.Factory.StartNew(() =>
                         {
-                            using (var stream = fileHelper.FileOpenRead(new Uri(LocalSettingsLocation, UriKind.Relative), ""))
+                            using (var stream = fileHelper.FileOpenRead(new Uri(LocalSettingsLocation, UriKind.Relative), LocalSettingsLocation))
                             {
                                 try
                                 {
-                                    _settings = _settings.Deserialise(stream);
+                                    if(stream != null) _settings = _settings.Deserialise(stream);
                                 }
                                 catch { }
                             }

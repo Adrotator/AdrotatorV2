@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AdSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CultureDescriptors CultureName="">
+    <AdDuplex AppId="1379" Probability="0"/>
+    <PubCenter AppId="d25517cb-12d4-4699-8bdc-52040c712cab" SecondaryId="10043105" Probability="50"/>
+    <Inmobi AppId="ec9ea8fdfcc3436e94df0f5bcac3a227" Probability="50"/>
+    <AdGroup Probability="0">
+      <AdDuplex AppId="1379" Probability="100"/>
+    </AdGroup>
+  </CultureDescriptors>
+</AdSettings>

@@ -52,7 +52,7 @@ namespace AdRotator
 
         void adRotatorControl_AdAvailable(AdProvider adProvider)
         {
-            Invalidate(adProvider);
+            Dispatcher.BeginInvoke(() => Invalidate(adProvider));
         }
 
         void AdRotatorControl_Loaded(object sender, RoutedEventArgs e)
@@ -297,15 +297,15 @@ namespace AdRotator
     #endregion
 
         #region DefaultHouseAdBody
-        public object DefaultHouseAdBody
+        public string DefaultHouseAdBody
         {
-            get { return (object)adRotatorControl.DefaultHouseAdBody; }
+            get { return (string)adRotatorControl.DefaultHouseAdBody; }
             set { SetValue(DefaultHouseAdBodyProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for DefaultHouseAdBody.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DefaultHouseAdBodyProperty =
-            DependencyProperty.Register("DefaultHouseAdBody", typeof(object), typeof(AdRotatorControl), new PropertyMetadata(null,AdRotatorEnabledPropertyChanged));
+            DependencyProperty.Register("DefaultHouseAdBody", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(null,AdRotatorEnabledPropertyChanged));
 
         private static void AdRotatorEnabledPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

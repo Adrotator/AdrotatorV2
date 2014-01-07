@@ -1,0 +1,30 @@
+﻿<Page
+    x:Class="AdRotator.Examples.Windows8._1.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AdRotator.Examples.Windows8._1"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:adRotator="using:AdRotator"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <adRotator:AdRotatorControl
+            x:Name="AdRotatorControl"
+            AdHeight="90"
+            AdWidth="728"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            LocalSettingsLocation="defaultAdSettings.xml"
+            SlidingAdDirection="Left"
+            AutoStartAds="True">
+        </adRotator:AdRotatorControl>
+        <Grid Grid.Row="1" x:Name="ProgramaticAdRotator"/>
+        <Button Grid.Row="2" x:Name="HideButton" Content="Hide/unhide AdRotator" Tapped="HideButton_Tapped"/>
+    </Grid>
+</Page>
