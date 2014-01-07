@@ -21,11 +21,16 @@ namespace AdRotator.Examples.Windows8
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        bool AdRotatorHidden = true;
+        AdRotator.AdRotatorControl myAdControl;
+
         public MainPage()
         {
             this.InitializeComponent();
-            Win8AdRotator.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
-            Win8AdRotator.Log += (s) => System.Diagnostics.Debug.WriteLine(s);
+            AdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
+            AdRotatorControl.Log += (s) => System.Diagnostics.Debug.WriteLine(s);
+            Loaded += (s, e) => HideButton_Tapped(null,null);
+            InitialiseAdRotatorProgramatically();
         }
 
         void msadcontrol_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
@@ -46,6 +51,25 @@ namespace AdRotator.Examples.Windows8
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("Started");
+        }
+
+        private void HideButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            AdRotatorHidden = !AdRotatorHidden;
+            AdRotatorControl.Visibility = AdRotatorHidden ? Visibility.Collapsed : Visibility.Visible;
+            HideButton.Content = AdRotatorHidden ? "UnHide AdRotator" : "Hide AdRotator";
+
+        }
+
+        void InitialiseAdRotatorProgramatically()
+        {
+            myAdControl = new AdRotatorControl();
+            //myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
+            myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
+            myAdControl.AdWidth = 150;
+            myAdControl.AdHeight = 150;
+            myAdControl.AutoStartAds = true;
+            ProgramaticAdRotator.Children.Add(myAdControl);
         }
     }
 }

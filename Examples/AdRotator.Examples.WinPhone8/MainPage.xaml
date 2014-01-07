@@ -50,12 +50,17 @@
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <adRotator:AdRotatorControl x:Name="AdRotatorControl"
                 LocalSettingsLocation="defaultAdSettings.xml"
+                                        SlidingAdDirection="Left"
                                         AutoStartAds="True"/>
-            <ScrollViewer Grid.Row="1">
+            <Grid Grid.Row="1" x:Name="ProgramaticAdRotator"/>
+            <Button Grid.Row="2" x:Name="HideButton" Content="Hide/unhide AdRotator" Tap="HideButton_Tap"/>
+            <ScrollViewer Grid.Row="3">
                 <ListBox x:Name="MessagesListBox" Height="Auto"/>
             </ScrollViewer>
         </Grid>

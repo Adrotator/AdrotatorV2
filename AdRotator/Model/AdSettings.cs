@@ -61,10 +61,6 @@ namespace AdRotator.Model
 
         internal static AdSettings Deserialise(this AdSettings adsettings, string input)
         {
-            if (String.IsNullOrEmpty(input))
-            {
-                return adsettings;
-            }
             XmlSerializer xs = new XmlSerializer(typeof(AdSettings));
             try
             {

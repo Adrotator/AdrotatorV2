@@ -17,7 +17,7 @@ namespace AdRotator
 
         bool IsAdRotatorEnabled { get; set; }
 
-        object DefaultHouseAdBody { get; set; }
+        string DefaultHouseAdBody { get; set; }
 
         bool IsLoaded { get; }
 

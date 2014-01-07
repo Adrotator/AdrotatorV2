@@ -126,7 +126,8 @@ namespace AdRotator
             Stream stream = null;
             try
             {
-                stream = Application.GetResourceStream(Location).Stream;
+                var resourceStream = Application.GetResourceStream(Location);
+                stream = resourceStream.Stream;
             }
             catch { }
             return stream;

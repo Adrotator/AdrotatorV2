@@ -10,14 +10,22 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <adRotator:AdRotatorControl
-            x:Name="Win8AdRotator"
+            x:Name="AdRotatorControl"
             AdHeight="90"
             AdWidth="728"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             LocalSettingsLocation="defaultAdSettings.xml"
+            SlidingAdDirection="Left"
             AutoStartAds="True">
         </adRotator:AdRotatorControl>
+        <Grid Grid.Row="1" x:Name="ProgramaticAdRotator"/>
+        <Button Grid.Row="2" x:Name="HideButton" Content="Hide/unhide AdRotator" Tapped="HideButton_Tapped"/>
     </Grid>
 </Page>
