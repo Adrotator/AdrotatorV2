@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{715C557A-C00F-4471-892D-84B988DEC86A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AdRotatorUnitySDK.Assets</RootNamespace>
+    <AssemblyName>AdRotatorUnitySDK.Assets</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEditor">
+      <HintPath>..\Libs\Unity\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>..\Libs\Unity\UnityEditor.Graphs.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\Libs\Unity\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AdRotator\defaultAdSettingsWP8.xml" />
+    <Content Include="ReleaseReadme.txt" />
+    <None Include="AdRotator\AdRotatorBridgeWin8.cs.ignore" />
+    <Compile Include="Demo\Assets\Editor\ConfigureDemoScript.cs" />
+    <Compile Include="Demo\Assets\Plugins\DisplayDemo.cs" />
+    <Compile Include="Editor\AdRotatorPostBuild.cs" />
+    <Compile Include="PackageRelease.cs" />
+    <Compile Include="Plugins\AdRotatorManagement.cs" />
+    <Compile Include="Editor\AdRotatorManagementCreationScript.cs" />
+    <Compile Include="Plugins\AdRotatorSettings.cs" />
+    <Compile Include="Editor\AdRotatorManagementEditor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="AdRotator\defaultAdSettingsWin8.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="AdRotator\AdRotatorUnitySDK.AdSettings.targets" />
+    <Content Include="AdRotator\AdRotatorUnitySDK.HouseAds.targets" />
+    <None Include="AdRotator\AdRotatorBridgeWP8.cs.ignore" />
+    <None Include="Doc\My Game.zip" />
+    <None Include="Doc\Windows 8 Ad Rotator for Unity SDK.docx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AdRotator\AdRotatorUnitySDK.targets" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Demo\Assets\AdRotatorDemo.unity" />
+    <Content Include="Demo\Assets\green.unity" />
+    <Content Include="Demo\Assets\red.unity" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ExportPackage.cmd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Demo\Assets\AdRotator\HouseAdDemo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>echo Package Assets
+xcopy /R /Y /S "$(ProjectDir)Editor" "$(TargetDir)AdRotatorUnitySDK\Assets\Editor\AdRotator\"
+xcopy /R /Y /S "$(ProjectDir)Plugins" "$(TargetDir)AdRotatorUnitySDK\Assets\Plugins\AdRotator\"
+xcopy /R /Y /S "$(ProjectDir)AdRotator" "$(TargetDir)AdRotatorUnitySDK\Assets\AdRotator\"
+
+echo Package Demo
+xcopy /R /Y /S "$(ProjectDir)Demo\Assets" "$(TargetDir)AdRotatorUnitySDK\Demo\Assets\"
+xcopy /R /Y /S "$(ProjectDir)Editor" "$(TargetDir)AdRotatorUnitySDK\Demo\Assets\Editor\AdRotator\"
+xcopy /R /Y /S "$(ProjectDir)Plugins" "$(TargetDir)AdRotatorUnitySDK\Demo\Assets\Plugins\AdRotator\"
+xcopy /R /Y /S "$(ProjectDir)AdRotator" "$(TargetDir)AdRotatorUnitySDK\Demo\Assets\AdRotator\"
+xcopy /R /Y "$(ProjectDir)PackageRelease.cs" "$(TargetDir)AdRotatorUnitySDK\Demo\Assets\Editor\AdRotator\"
+echo call "$(ProjectDir)ExportPackage.cmd" "$(TargetDir)" "%25%25~1" &gt; "$(ProjectDir)\CreateRelease.cmd"
+</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

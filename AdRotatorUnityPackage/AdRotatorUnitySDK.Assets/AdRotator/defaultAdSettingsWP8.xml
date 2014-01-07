@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AdSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CultureDescriptors CultureName="">
+    <AdDuplex AppId="1379" Probability="20"/>
+    <Smaato AppId="0" SecondaryId="0" Probability="20"/>
+    <PubCenter AppId="test_client" SecondaryId="Image480_80" Probability="20"/>
+    <Inmobi AppId="ec9ea8fdfcc3436e94df0f5bcac3a227" Probability="20"/>
+    <InnerActive AppId="ZenithMoon_Studios_StarterSeriesGames_WP"  Probability="20"/>
+  </CultureDescriptors>
+</AdSettings>
