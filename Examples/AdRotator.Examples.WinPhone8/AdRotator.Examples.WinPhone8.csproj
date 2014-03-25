@@ -158,6 +158,9 @@
     <Reference Include="AdDuplex.WindowsPhone">
       <HintPath>..\..\packages\AdDuplexWP8.2.8.0.4\lib\wp8\AdDuplex.WindowsPhone.dll</HintPath>
     </Reference>
+    <Reference Include="Google.AdMob.Ads.WindowsPhone7">
+      <HintPath>..\..\AdProviderControls\WindowsPhone8\Google.AdMob.Ads.WindowsPhone7.dll</HintPath>
+    </Reference>
     <Reference Include="InMobiWPAdSDK">
       <HintPath>..\..\AdProviderControls\WindowsPhone8\InMobiWPAdSDK.dll</HintPath>
     </Reference>
@@ -178,9 +181,6 @@
     </Reference>
     <Reference Include="SOMAWP8">
       <HintPath>..\..\AdProviderControls\WindowsPhone8\SOMAWP8.dll</HintPath>
-    </Reference>
-    <Reference Include="GoogleAds">
-      <HintPath>..\..\AdProviderControls\WindowsPhone8\GoogleAds.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
