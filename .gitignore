@@ -5,3 +5,6 @@ Bin
 obj
 packages
 /*.userprefs
+*.sap
+PerfLogs
+UpgradeLog.htm
