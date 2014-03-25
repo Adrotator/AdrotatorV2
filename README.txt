@@ -4,4 +4,6 @@ The project is currently in beta stage, under development. For the current, stab
 
 Full details and news on the project, including full usage instructions can be found at http://getadrotator.com
 
+*Suggest new features on the AdRotator V2 backlog requests voting page -  http://www.voteit.com/v/HiHC8jq1MV8wxEW
+
 **Note - trialling out a new backlog system integrated with GitHub, try it here - https://waffle.io/adrotator/adrotatorv2
