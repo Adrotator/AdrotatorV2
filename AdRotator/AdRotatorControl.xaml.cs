@@ -21,9 +21,9 @@ namespace AdRotator
                 Log(message);
             }
         }
-        #endregion 
+        #endregion
 
-        private AdRotatorComponent adRotatorControl = new AdRotatorComponent(Thread.CurrentThread.CurrentUICulture.ToString(), new FileHelpers());
+        private AdRotatorComponent adRotatorControl;
 #if WINPHONE7
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone7;
 #else
@@ -33,6 +33,7 @@ namespace AdRotator
         public AdRotatorControl()
         {
             InitializeComponent();
+            adRotatorControl = new AdRotatorComponent(Thread.CurrentThread.CurrentUICulture.ToString(), IsInDesignMode ? null : new FileHelpers());
             Loaded += AdRotatorControl_Loaded;
 
             // List of AdProviders supportd on this platform
