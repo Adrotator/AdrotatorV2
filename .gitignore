@@ -8,3 +8,5 @@ packages
 *.sap
 PerfLogs
 UpgradeLog.htm
+*.nupkg
+*.bak

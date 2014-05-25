@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:adRotator="clr-namespace:AdRotator;assembly=AdRotator"
+    xmlns:adduplex="clr-namespace:AdDuplex;assembly=AdDuplex.WindowsPhone"
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -52,6 +53,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <adRotator:AdRotatorControl x:Name="AdRotatorControl"
@@ -59,7 +61,8 @@
                                         AutoStartAds="True"/>
             <Grid Grid.Row="1" x:Name="ProgramaticAdRotator"/>
             <Button Grid.Row="2" x:Name="HideButton" Content="Hide/unhide AdRotator" Tap="HideButton_Tap"/>
-            <ScrollViewer Grid.Row="3">
+            <adduplex:AdControl x:Name="adDuplexAd" AppId="63299"/>
+            <ScrollViewer Grid.Row="4">
                 <ListBox x:Name="MessagesListBox" Height="Auto"/>
             </ScrollViewer>
         </Grid>

@@ -49,7 +49,7 @@ namespace AdRotator.AdProviders
                                                         {AdProviderConfigOptions.SecondaryId,"AdUnitId"},
                                                         {AdProviderConfigOptions.AdWidth,"Width"},
                                                         {AdProviderConfigOptions.AdHeight,"Height"},
-                                                        //WinRT components cannot dynamically bind events, the rotters :(
+                                                        //NETFX_CORE components cannot dynamically bind events, the rotters :(
                                                         //{AdProviderConfigOptions.AdSuccessEvent,"AdRefreshed"},
                                                         //{AdProviderConfigOptions.AdFailedEvent,"ErrorOccurred"}
                                                     }

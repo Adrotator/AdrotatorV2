@@ -19,9 +19,14 @@ namespace AdRotator
 {
     public sealed class AdRotatorControl : Control, IAdRotatorProvider, IDisposable
     {
+        private int AdRotatorControlID;
         private AdRotatorComponent adRotatorControl = new AdRotatorComponent(CultureInfo.CurrentUICulture.ToString(), new FileHelpers());
 #if WINDOWS_PHONE
+#if WP7
+        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone7;
+#else
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone8;
+#endif
 #else
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.Windows8;
 #endif
@@ -32,14 +37,18 @@ namespace AdRotator
         {
             if (Log != null)
             {
-                Log(message);
+                Log("Control {" + AdRotatorControlID + "} - " + message);
             }
         }
         #endregion
 
-
-        public AdRotatorControl()
+        public AdRotatorControl(): this(0)
+        {}
+ 
+        public AdRotatorControl(int id)
         {
+            AdRotatorControlID = id;
+
             this.DefaultStyleKey = typeof(AdRotatorControl);
 
             Loaded += AdRotatorControl_Loaded;
@@ -113,9 +122,6 @@ namespace AdRotator
         {
             // This call needs to happen when the control is loaded 
             // b/c dependency properties are propagated to their values at this point
-
-
-
             adRotatorControl.isLoaded = true;
         }
 
