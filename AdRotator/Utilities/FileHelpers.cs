@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 
-#if WINRT
+#if NETFX_CORE
 using Windows.Storage;
 using Windows.Storage.Search;
 #endif
@@ -31,7 +31,7 @@ namespace AdRotator
 
         #region public properties
 		
-		#if WINRT
+		#if NETFX_CORE
         public override char notSeparator { get { return '/'; } }
         public override char separator { get { return '\\'; } }
 #else
@@ -44,14 +44,14 @@ namespace AdRotator
 
         public override Stream FileOpen(string filePath, string fileMode, string fileAccess, string fileShare)
         {
-#if !WINRT
+#if !NETFX_CORE
             return FileOpen(filePath, (FileMode)Enum.Parse(typeof(FileMode), fileMode, true), (FileAccess)Enum.Parse(typeof(FileAccess), fileAccess, false), (FileShare)Enum.Parse(typeof(FileShare), fileShare, false));
 #else
             throw new NotImplementedException();
 #endif
         }
 
-#if !WINRT
+#if !NETFX_CORE
         public Stream FileOpen(string filePath, FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
         {
 #if WINDOWS_STORE_APP
@@ -90,7 +90,7 @@ namespace AdRotator
 #endif
         public override Stream FileOpenRead(string Location, string safeName)
         {
-#if WINRT
+#if NETFX_CORE
             var stream = Task.Run( () => OpenStreamAsync(safeName).Result ).Result;
             if (stream == null)
                 throw new FileNotFoundException(safeName);
@@ -138,7 +138,7 @@ namespace AdRotator
 
         public override bool FileExists(string fileName)
         {
-#if WINRT
+#if NETFX_CORE
             var result = Task.Run(async () =>
             {
                 try
@@ -190,7 +190,7 @@ namespace AdRotator
             return awaiter.GetResult();
 #elif WINDOWS_PHONE
             return storage.CreateFile(filePath);
-#elif WINRT
+#elif NETFX_CORE
             throw new NotImplementedException();
 #else
             // return A new file with read/write access.
@@ -206,7 +206,7 @@ namespace AdRotator
             deleteFile.DeleteAsync().AsTask().Wait();
 #elif WINDOWS_PHONE
             storage.DeleteFile(filePath);
-#elif WINRT
+#elif NETFX_CORE
             throw new NotImplementedException();
 #else
             // Now let's try to delete it
@@ -239,7 +239,7 @@ namespace AdRotator
         // Renamed from - public override string GetFilename(string name)
         public override string NormalizeFilePathSeperators(string name)
         {
-#if WINRT
+#if NETFX_CORE
             // Replace non-windows seperators.
             name = name.Replace('/', '\\');
 #else
@@ -318,7 +318,7 @@ namespace AdRotator
 
         public override bool DirectoryExists(string dirPath)
         {
-#if WINDOWS_STOREAPP || WINRT
+#if WINDOWS_STOREAPP || NETFX_CORE
             var folder = ApplicationData.Current.LocalFolder;
 
             try
@@ -339,7 +339,7 @@ namespace AdRotator
 
         public override string[] DirectoryGetFiles(string storagePath)
         {
-#if WINDOWS_STOREAPP || WINRT
+#if WINDOWS_STOREAPP || NETFX_CORE
             var folder = ApplicationData.Current.LocalFolder;
             var results = folder.GetFilesAsync().AsTask().GetAwaiter().GetResult();
             return results.Select<StorageFile, string>(e => e.Name).ToArray();
@@ -363,7 +363,7 @@ namespace AdRotator
             if (string.IsNullOrEmpty(searchPattern))
                 throw new ArgumentNullException("Parameter searchPattern must contain a value.");
 
-#if WINDOWS_STOREAPP || WINRT
+#if WINDOWS_STOREAPP || NETFX_CORE
             var folder = ApplicationData.Current.LocalFolder;
             var options = new QueryOptions( CommonFileQuery.DefaultQuery, new [] { searchPattern } );
             var query = folder.CreateFileQueryWithOptions(options);
@@ -376,7 +376,7 @@ namespace AdRotator
 
         public override string[] DirectoryGetDirectories(string storagePath)
         {
-#if WINDOWS_STOREAPP || WINRT
+#if WINDOWS_STOREAPP || NETFX_CORE
             var folder = ApplicationData.Current.LocalFolder;
             var results = folder.GetFoldersAsync().AsTask().GetAwaiter().GetResult();
             return results.Select<StorageFolder, string>(e => e.Name).ToArray();
@@ -396,7 +396,7 @@ namespace AdRotator
                 throw new ArgumentNullException("Parameter directory must contain a value.");
 
             // Now let's try to create it
-#if WINDOWS_STOREAPP || WINRT
+#if WINDOWS_STOREAPP || NETFX_CORE
             var folder = ApplicationData.Current.LocalFolder;
             var task = folder.CreateFolderAsync(directory, CreationCollisionOption.OpenIfExists);
             task.AsTask().Wait();
@@ -422,7 +422,7 @@ namespace AdRotator
 
         public override void DirectoryDelete(string dirPath)
         {
-#if WINDOWS_STOREAPP || WINRT
+#if WINDOWS_STOREAPP || NETFX_CORE
             var folder = ApplicationData.Current.LocalFolder;
             var deleteFolder = folder.GetFolderAsync(dirPath).AsTask().GetAwaiter().GetResult();
             deleteFolder.DeleteAsync().AsTask().Wait();
@@ -437,7 +437,7 @@ namespace AdRotator
 		//Get Install Path 
 #if WINDOWS || LINUX
             Location = AppDomain.CurrentDomain.BaseDirectory;
-#elif WINRT
+#elif NETFX_CORE
             Location = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
 #elif IOS || MONOMAC
 			Location = NSBundle.MainBundle.ResourcePath;
@@ -486,7 +486,7 @@ namespace AdRotator
         #endregion
 
         #region Stream Handlers
-#if WINRT
+#if NETFX_CORE
         public override Stream OpenStream(string rootDirectory, string assetName, string extension)
         {
             throw new NotImplementedException();
@@ -514,7 +514,7 @@ namespace AdRotator
             {
                 throw new FileNotFoundException("The content file was not found.", fileNotFound);
             }
-#if !WINRT
+#if !NETFX_CORE
             catch (DirectoryNotFoundException directoryNotFound)
             {
                 throw new DirectoryNotFoundException("The directory was not found.", directoryNotFound);
@@ -549,7 +549,7 @@ namespace AdRotator
 
         public override void StreamClose(Stream stream)
         {
-#if !WINRT
+#if !NETFX_CORE
             stream.Close();
 #endif
         }
@@ -557,7 +557,7 @@ namespace AdRotator
 
         public override async Task<Stream> OpenStreamAsync(string name)
         {
-#if WINRT
+#if NETFX_CORE
             var package = Windows.ApplicationModel.Package.Current;
 
             try

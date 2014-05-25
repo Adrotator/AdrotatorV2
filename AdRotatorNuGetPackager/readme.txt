@@ -56,7 +56,7 @@ http://getadrotator.com
 In order to support PubCenter due to the way the control is implemented in Windows 8/8.1, you need to pass the reference to the assembly in your project.
 Simply install the Windows 8/8.1 SDK as normal and reference the "Microsoft Advertising SDK", then include the following in the page code behind constuctor.
 	
-	AdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
+	AdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.NETFX_CORE.UI.AdControl));
 This enables AdRotator to access the local WinMD component.
 For further examples check the example projects in the codeplex source.
 

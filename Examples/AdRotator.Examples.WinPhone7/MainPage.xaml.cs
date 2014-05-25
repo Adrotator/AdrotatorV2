@@ -42,8 +42,9 @@ namespace AdRotator.Examples.WinPhone7
 
         void InitialiseAdRotatorProgramatically()
         {
-            _myAdControl = new AdRotatorControl();
-            //myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
+            _myAdControl = new AdRotatorControl(1);
+            _myAdControl.Log += (s) => AdRotatorControl_Log(s);
+            //_myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
             _myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
             _myAdControl.AdWidth = 728;
             _myAdControl.AdHeight = 90;

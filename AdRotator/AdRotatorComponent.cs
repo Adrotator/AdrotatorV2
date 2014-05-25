@@ -428,7 +428,7 @@ namespace AdRotator
         public void AdFailed(Model.AdType AdType)
         {
             _settings.AdFailed(AdType);
-            OnLog(string.Format("Ads failed request for: {0}", AdType.ToString()));
+            //OnLog(string.Format("Ads failed request for: {0}", AdType.ToString()));
             GetAd(null);
         }
 
@@ -441,7 +441,7 @@ namespace AdRotator
         private void RemoveAdFromFailedAds(AdType AdType)
         {
             _settings.RemoveAdFromFailedAds(AdType);
-            OnLog(string.Format("Ads failed request for: {0}", AdType.ToString()));
+            //OnLog(string.Format("Ads failed request for: {0}", AdType.ToString()));
         }
 
 

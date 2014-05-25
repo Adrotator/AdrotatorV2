@@ -49,18 +49,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\AdRotator\bin\Windows8\AdRotator.Core.dll">
-      <Link>lib\netcore45\AdRotator.Core.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AdRotator\bin\Windows8\AdRotator.pri">
-      <Link>lib\netcore45\AdRotator.pri</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\AdRotator\bin\WindowsPhone8\AdRotator.Core.dll">
-      <Link>lib\wp8\AdRotator.Core.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="content\defaultAdSettings.xml" />
     <Content Include="content\ReadMe-AdRotator-XAML.txt" />
     <Content Include="readme.txt" />
@@ -76,19 +64,37 @@
     <None Include="tools\uninstall.ps1" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\AdRotator\bin\Windows8\AdRotator.Core.dll">
+      <Link>lib\netcore\AdRotator.Core.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\AdRotator\bin\Windows8\Themes\Generic.xaml">
-      <Link>lib\netcore45\AdRotator\Themes\Generic.xaml</Link>
+      <Link>lib\netcore\AdRotator\Themes\Generic.xaml</Link>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="..\AdRotator\bin\Windows8\AdRotator.dll">
-      <Link>lib\netcore45\AdRotator.dll</Link>
+      <Link>lib\netcore\AdRotator.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\AdRotator\bin\Windows8\AdRotator.pri">
+      <Link>lib\netcore\AdRotator.pri</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\AdRotator\bin\WindowsPhone8\AdRotator.Core.dll">
+      <Link>lib\wp8\AdRotator.Core.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\AdRotator\bin\WindowsPhone8\AdRotator.dll">
       <Link>lib\wp8\AdRotator.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\AdRotator\bin\WindowsPhone7\AdRotator.Core.dll">
+      <Link>lib\wp7\AdRotator.Core.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\AdRotator\bin\WindowsPhone7\AdRotator.dll">
+      <Link>lib\wp7\AdRotator.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
