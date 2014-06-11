@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace AdRotator.Utilities
 {
     public interface IFileHelpers
     {
-        Stream OpenStream(string rootDirectory, string assetName, string extension);
+        Task<Stream> OpenStreamAsync(string name);
 
-        Stream FileOpen(string filePath, string fileMode, string fileAccess, string fileShare);
+        Task<string> LoadData(string path);
 
-        Stream FileOpenRead(string Location, string safeName);
+        Task<object> LoadData(string path, System.Type type);
 
-        Stream FileOpenRead(Uri Location, string safeName);
-
-        Stream FileOpenRead(object storageFile, string Location, string safeName);
-
-        bool FileExists(string fileName);
+        Task<bool> SaveData(string path, string data);
     }
 }

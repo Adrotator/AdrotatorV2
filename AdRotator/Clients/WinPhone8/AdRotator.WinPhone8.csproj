@@ -88,6 +88,9 @@
     <Compile Include="..\..\AdRotatorControl.cs">
       <Link>AdRotatorControl.cs</Link>
     </Compile>
+    <Compile Include="..\..\DefaultHouseAd.cs">
+      <Link>DefaultHouseAd.cs</Link>
+    </Compile>
     <Compile Include="..\..\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>

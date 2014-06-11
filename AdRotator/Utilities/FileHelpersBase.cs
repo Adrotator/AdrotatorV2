@@ -68,5 +68,12 @@ namespace AdRotator.Utilities
         public abstract Stream SeekStreamtoStart(Stream stream, long StartPos, out long pos);
 
         public abstract void StreamClose(Stream stream);
+
+        public abstract Task<string> LoadData(string path);
+
+        public abstract Task<object> LoadData(string path, Type type);
+
+        public abstract Task<bool> SaveData(string path, string data);
+
     }
 }

@@ -45,6 +45,38 @@ namespace AdRotator.Model
 
     internal static class AdSettingsExtensions
     {
+        internal static void Serialise(this AdSettings adsettings, Stream output)
+        {
+            XmlSerializer xs = new XmlSerializer(typeof(AdSettings));
+            try
+            {
+                xs.Serialize(output, adsettings);
+            }
+            catch
+            {
+                throw new XmlException("Config file was not in the expected format or not found");
+            }
+        }
+
+        //internal static void Serialise(this AdSettings adsettings)
+        //{
+        //    string output;
+        //    XmlSerializer xs = new XmlSerializer(typeof(AdSettings));
+        //    try
+        //    {
+        //        using (TextWriter stringWriter = new StringWriter())
+        //        {
+        //            xs.Serialize(stringWriter,adsettings);
+        //            output = stringWriter.
+        //        }
+        //    }
+        //    catch (Exception Ex)
+        //    {
+        //        throw new XmlException("Unable to save AdSettings", Ex.InnerException);
+        //    }
+        //    return adsettings;
+        //}
+
         internal static AdSettings Deserialise(this AdSettings adsettings, Stream input)
         {
             XmlSerializer xs = new XmlSerializer(typeof(AdSettings));

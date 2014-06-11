@@ -346,20 +346,8 @@ namespace AdRotator
             var SETTINGS_FILE_NAME = string.IsNullOrEmpty(LocalSettingsLocation) ? GlobalConfig.DEFAULT_SETTINGS_FILE_NAME : LocalSettingsLocation;
             try
             {
-                await Task.Factory.StartNew(() =>
-                    {
-                        if (fileHelper.FileExists(SETTINGS_FILE_NAME))
-                        {
-                            using (var stream = fileHelper.FileOpenRead("", SETTINGS_FILE_NAME))
-                            {
-                                try
-                                {
-                                    if(stream != null) _settings = _settings.Deserialise(stream);
-                                }
-                                catch { }
-                            }
-                        }
-                    });
+                var stream = await fileHelper.OpenStreamAsync(SETTINGS_FILE_NAME);
+                if (stream != null) _settings = _settings.Deserialise(stream);
             }
             catch
             {
@@ -381,17 +369,14 @@ namespace AdRotator
             {
                 try
                 {
-                    await Task.Factory.StartNew(() =>
+                    using (Stream stream = await fileHelper.OpenStreamAsync(LocalSettingsLocation))
+                    {
+                        try
                         {
-                            using (var stream = fileHelper.FileOpenRead(new Uri(LocalSettingsLocation, UriKind.Relative), LocalSettingsLocation))
-                            {
-                                try
-                                {
-                                    if(stream != null) _settings = _settings.Deserialise(stream);
-                                }
-                                catch { }
-                            }
-                        });
+                            if (stream != null) _settings = _settings.Deserialise(stream);
+                        }
+                        catch { }
+                    }
                 }
                 catch
                 {
@@ -404,15 +389,14 @@ namespace AdRotator
         /// Saves the passed settings file to isolated storage
         /// </summary>
         /// <param name="settings"></param>
-        private void SaveAdSettings(AdSettings settings)
+        private async void SaveAdSettings(AdSettings settings)
         {
             var SETTINGS_FILE_NAME = string.IsNullOrEmpty(LocalSettingsLocation) ? GlobalConfig.DEFAULT_SETTINGS_FILE_NAME : LocalSettingsLocation;
             try
             {
-                XmlSerializer xs = new XmlSerializer(typeof(AdSettings));
-                using (var stream = fileHelper.OpenStream("", SETTINGS_FILE_NAME, ""))
+                using (Stream stream = await fileHelper.OpenStreamAsync(SETTINGS_FILE_NAME))
                 {
-                    xs.Serialize(stream, settings);
+                    settings.Serialise(stream);
                 }
             }
             catch
