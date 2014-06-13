@@ -16,9 +16,9 @@ namespace AdRotator.Examples.WinPhone7
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
-            this.AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
+            AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
             Loaded += MainPage_Loaded;
-            InitialiseAdRotatorProgramatically();
+            //InitialiseAdRotatorProgramatically();
         }
 
         void MainPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
@@ -43,7 +43,7 @@ namespace AdRotator.Examples.WinPhone7
         void InitialiseAdRotatorProgramatically()
         {
             _myAdControl = new AdRotatorControl(1);
-            _myAdControl.Log += (s) => AdRotatorControl_Log(s);
+            AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
             //_myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
             _myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
             _myAdControl.AdWidth = 728;

@@ -23,7 +23,7 @@ namespace AdRotator.Examples.WinPhone8
 
             // Sample code to localize the ApplicationBar
             //BuildLocalizedApplicationBar();
-            this.AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
+            AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
             Loaded += MainPage_Loaded;
             InitialiseAdRotatorProgramatically();
         }
@@ -56,12 +56,6 @@ namespace AdRotator.Examples.WinPhone8
             //myAdControl.AdHeight = 90;
             //myAdControl.AutoStartAds = true;
             //ProgramaticAdRotator.Children.Add(myAdControl);
-
-            var mymsad = new Microsoft.Advertising.Mobile.UI.AdControl();
-            mymsad.AdUnitId = "";
-            mymsad.ApplicationId = "";
-            mymsad.ErrorOccurred += mymsad_ErrorOccurred;
-            mymsad.AdRefreshed += mymsad_AdRefreshed;
         }
 
         void mymsad_AdRefreshed(object sender, EventArgs e)

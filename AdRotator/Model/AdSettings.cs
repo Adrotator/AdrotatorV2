@@ -147,13 +147,13 @@ namespace AdRotator.Model
             var validDescriptors = adsettings.CurrentCulture.Items
             .Where(x => !adsettings._failedAdTypes.Contains(((AdProvider)x).AdProviderType)
                         && AdRotatorComponent.PlatformSupportedAdProviders.Contains(((AdProvider)x).AdProviderType)
-                        && ((AdProvider)x).Probability > 0);
+                        && ((AdProvider)x).Probability > 0).Cast<AdProvider>().ToArray();
 
             var defaultHouseAd = (AdProvider)adsettings.CurrentCulture.Items.FirstOrDefault(x => ((AdProvider)x).AdProviderType == AdType.DefaultHouseAd && !adsettings._failedAdTypes.Contains(AdType.DefaultHouseAd));
 
             if (validDescriptors != null)
             {
-                validDescriptors = validDescriptors.ToList();
+                validDescriptors = RandomPermutation<AdProvider>(validDescriptors);
 
                 var totalValueBetweenValidAds = validDescriptors.Sum(x => ((AdProvider)x).Probability);
                 var randomValue = AdRotator.AdRotatorComponent._rnd.NextDouble() * totalValueBetweenValidAds;
@@ -198,6 +198,45 @@ namespace AdRotator.Model
             {
                 adsettings._failedAdTypes.Remove(adType);
             }
+        }
+
+        internal static IEnumerable<T> RandomPermutation<T>(IEnumerable<T> array)
+        {
+
+            T[] retArray = array.ToArray();
+
+            for (int i = 0; i < array.Count(); i += 1)
+            {
+                int swapIndex = AdRotator.AdRotatorComponent._rnd.Next(i, array.Count());
+                if (swapIndex != i)
+                {
+                    T temp = retArray[i];
+                    retArray[i] = retArray[swapIndex];
+                    retArray[swapIndex] = temp;
+                }
+            }
+
+            return retArray;
+        }
+
+        public static T[] RandomPermutation<T>(T[] array)
+        {
+
+            T[] retArray = new T[array.Length];
+            array.CopyTo(retArray, 0);
+
+            for (int i = 0; i < array.Length; i += 1)
+            {
+                int swapIndex = AdRotator.AdRotatorComponent._rnd.Next(i, array.Length);
+                if (swapIndex != i)
+                {
+                    T temp = retArray[i];
+                    retArray[i] = retArray[swapIndex];
+                    retArray[swapIndex] = temp;
+                }
+            }
+
+            return retArray;
         }
         
     }
