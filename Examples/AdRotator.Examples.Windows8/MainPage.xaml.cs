@@ -23,17 +23,19 @@ namespace AdRotator.Examples.Windows8
     {
         bool AdRotatorHidden = true;
         AdRotator.AdRotatorControl myAdControl;
+        
 
         public MainPage()
         {
             this.InitializeComponent();
-            AdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.NETFX_CORE.UI.AdControl));
+            AdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
+            AdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.AdDuplex, typeof(AdDuplex.Controls.AdControl));
             AdRotatorControl.Log += (s) => System.Diagnostics.Debug.WriteLine(s);
             Loaded += (s, e) => HideButton_Tapped(null,null);
-            InitialiseAdRotatorProgramatically();
+            //InitialiseAdRotatorProgramatically();
         }
 
-        void msadcontrol_ErrorOccurred(object sender, Microsoft.Advertising.NETFX_CORE.UI.AdErrorEventArgs e)
+        void msadcontrol_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
         {
             throw new NotImplementedException();
         }
@@ -64,6 +66,8 @@ namespace AdRotator.Examples.Windows8
         void InitialiseAdRotatorProgramatically()
         {
             myAdControl = new AdRotatorControl();
+            myAdControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
+            myAdControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.AdDuplex, typeof(AdDuplex.Controls.AdControl));
             //myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
             myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
             myAdControl.AdWidth = 150;

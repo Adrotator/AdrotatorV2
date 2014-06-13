@@ -1,0 +1,27 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+    
+    <Grid x:Name="LayoutRoot">
+    	<Grid.ColumnDefinitions>
+    		<ColumnDefinition Width="90"/>
+    		<ColumnDefinition/>
+    	</Grid.ColumnDefinitions>
+        <StackPanel HorizontalAlignment="Left"
+                    VerticalAlignment="Top" Grid.Column="1" Margin="5">
+            <TextBlock Style="{StaticResource PhoneTextNormalStyle}"
+                       TextWrapping="Wrap"
+                       Text="An Example Default House Ad"
+                       Margin="5"/>
+
+            <HyperlinkButton NavigateUri="http://wp7adrotator.codeplex.com/"
+                             TargetName="_blank"
+                             HorizontalAlignment="Center"
+                             Padding="0"
+                             Content="http://wp7adrotator.codeplex.com/"
+                             Foreground="{StaticResource PhoneAccentBrush}" Margin="0,10,0,0" />
+
+        </StackPanel>
+        <Image Source="http://adrotator.apphb.com/XNADefaultHouseAdRemote.jpg" Stretch="UniformToFill" Margin="0" />
+    </Grid>
+</UserControl>

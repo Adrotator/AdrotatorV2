@@ -19,6 +19,8 @@ namespace AdRotator
 
         public string DefaultHouseAdURL;
 
+        private int adRotatorControlID;
+
         public delegate void OnAdFailed(object sender, EventArgs e);
         public delegate void OnAdLoaded(object sender, EventArgs e);
         public delegate void OnAdClicked(object sender, EventArgs e);
@@ -31,9 +33,10 @@ namespace AdRotator
 
         private FrameworkElement Content { get; set; }
 
-        public DefaultHouseAd(IFileHelpers FileHelper)
+        public DefaultHouseAd(int AdRotatorControlID, IFileHelpers FileHelper)
         {
             this.fileHelper = FileHelper;
+            this.adRotatorControlID = AdRotatorControlID;
         }
 
         public async Task<FrameworkElement> Initialise(string LocalHouseAdBodyName, string URL = "")
@@ -55,12 +58,14 @@ namespace AdRotator
             Object o = null;
             try
             {
-                AssemblyName name = new AssemblyName(LocalHouseAdBodyName.Substring(0, LocalHouseAdBodyName.IndexOf(".")));
-                var asm = Assembly.Load(name);
+                var asm = GetAssemblyFromClass(LocalHouseAdBodyName);
                 Type t = asm.GetType(LocalHouseAdBodyName);
                 o = Activator.CreateInstance(t);
             }
-            catch { }
+            catch (Exception e) 
+            {
+                AdRotatorControl.OnLog(adRotatorControlID, "Failed to resolve DefaultAd Class definition - not found");
+            }
 
 
             //check to see if the class is instantiated or not
@@ -78,6 +83,29 @@ namespace AdRotator
             {
                 LoadProjectDefaultAd();
             }
+        }
+
+        private static Assembly GetAssemblyFromClass(string LocalHouseAdBodyName)
+        {
+            Assembly resolvedAssembly = null;
+            var classDefinition = LocalHouseAdBodyName.Split('.');
+            var assemblyLength = classDefinition.Length - 1;
+            for (int i = assemblyLength; i > 1; i--)
+            {
+                try
+                {
+                    var assemblyNameValue = LocalHouseAdBodyName.Substring(0, LocalHouseAdBodyName.IndexOf(classDefinition[i]) - 1);
+                    AssemblyName name = new AssemblyName(assemblyNameValue);
+                    resolvedAssembly = Assembly.Load(name);
+                    if (resolvedAssembly != null)
+                    {
+                        break;
+                    }
+                }
+                catch { }
+            }
+
+            return resolvedAssembly;
         }
 
 #if WINDOWS_PHONE

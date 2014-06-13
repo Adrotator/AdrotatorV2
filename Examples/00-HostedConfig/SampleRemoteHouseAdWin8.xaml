@@ -1,0 +1,21 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+    
+    <Grid x:Name="LayoutRoot">
+        <Image Source="http://adrotator.apphb.com/XNADefaultHouseAdRemote.jpg" Margin="0" Stretch="Uniform" />
+        <StackPanel HorizontalAlignment="Center"
+                    VerticalAlignment="Top" Margin="5">
+            <TextBlock TextWrapping="Wrap"
+                       Text="An Example RemoteDefault House Ad"
+                       Margin="20" FontSize="24" FontFamily="Segoe UI Semibold"/>
+
+            <HyperlinkButton NavigateUri="http://wp7adrotator.codeplex.com/" 
+                             HorizontalAlignment="Center"
+                             Padding="0"
+                             Content="http://wp7adrotator.codeplex.com/"
+                             Margin="0,10,0,0" Foreground="#FFFFFEFE" FontSize="18" />
+
+        </StackPanel>
+    </Grid>
+</UserControl>

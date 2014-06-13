@@ -586,6 +586,37 @@ namespace AdRotator
 
 		}
 
+        public override async Task<Stream> OpenStreamAsyncFromProject(string name)
+        {
+#if NETFX_CORE
+			var package = Windows.ApplicationModel.Package.Current;
+
+			try
+			{
+				var storageFile = await package.InstalledLocation.GetFileAsync(name);
+				var randomAccessStream = await storageFile.OpenReadAsync();
+				return randomAccessStream.AsStreamForRead();
+			}
+			catch (IOException)
+			{
+				// The file must not exist... return a null stream.
+				return null;
+			}
+#else
+            Stream returnStream = null;
+            await Task.Factory.StartNew(() =>
+            {
+                    try
+                    {
+                        returnStream = FileOpenRead(new Uri(name, UriKind.Relative), name);
+                    }
+                    catch { }
+            });
+            return returnStream;
+#endif
+
+        }
+
 
 		#region Stream Handler reciprocal overloads
 

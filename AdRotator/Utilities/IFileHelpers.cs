@@ -7,6 +7,8 @@ namespace AdRotator.Utilities
     {
         Task<Stream> OpenStreamAsync(string name);
 
+        Task<Stream> OpenStreamAsyncFromProject(string name);
+
         Task<string> LoadData(string path);
 
         Task<object> LoadData(string path, System.Type type);

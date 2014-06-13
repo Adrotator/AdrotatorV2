@@ -32,6 +32,7 @@ namespace AdRotator.AdProviders
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AdUnitID"},
+                                                        {AdProviderConfigOptions.AdType,"Format"},
                                                         {AdProviderConfigOptions.AdWidth,"Width"},
                                                         {AdProviderConfigOptions.AdHeight,"Height"},
                                                         {AdProviderConfigOptions.AdSuccessEvent,"ReceivedAd"},

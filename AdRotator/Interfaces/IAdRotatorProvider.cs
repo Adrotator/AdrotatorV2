@@ -1,4 +1,5 @@
 ﻿
+using System.Threading.Tasks;
 namespace AdRotator
 {
     internal interface IAdRotatorProvider
@@ -30,6 +31,6 @@ namespace AdRotator
         int AdRefreshInterval { get; set; }
 
         //DISCUSS: should we return strings here? Maybe raising events when stuff is loaded would be more sensible (GO)
-        string Invalidate(AdRotator.Model.AdProvider adProvider);
+        Task<string> Invalidate(AdRotator.Model.AdProvider adProvider);
     }
 }

@@ -102,8 +102,8 @@
     <Reference Include="AdDuplex.WindowsPhone">
       <HintPath>..\..\packages\AdDuplexWP8.2.8.0.8\lib\sl4-wp71\AdDuplex.WindowsPhone.dll</HintPath>
     </Reference>
-    <Reference Include="AdRotator.Core">
-      <HintPath>..\..\AdRotator\bin\WindowsPhone7\AdRotator.Core.dll</HintPath>
+    <Reference Include="Google.AdMob.Ads.WindowsPhone7">
+      <HintPath>..\..\AdProviderControls\WindowsPhone7\Google.AdMob.Ads.WindowsPhone7.dll</HintPath>
     </Reference>
     <Reference Include="InMobiWP7SDK">
       <HintPath>..\..\AdProviderControls\WindowsPhone7\InMobiWP7SDK.dll</HintPath>
@@ -171,6 +171,10 @@
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AdRotator\AdRotator.csproj">
+      <Project>{170B13CC-30B9-405C-A032-CF1A6B5F8277}</Project>
+      <Name>AdRotator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\AdRotator\Clients\WinPhone7\AdRotator.WinPhone7.csproj">
       <Project>{0804BD51-07FF-407B-8CDA-A92039509D1C}</Project>
       <Name>AdRotator.WinPhone7</Name>

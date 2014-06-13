@@ -61,7 +61,6 @@
                                         AutoStartAds="True"/>
             <Grid Grid.Row="1" x:Name="ProgramaticAdRotator"/>
             <Button Grid.Row="2" x:Name="HideButton" Content="Hide/unhide AdRotator" Tap="HideButton_Tap"/>
-            <adduplex:AdControl x:Name="adDuplexAd" AppId="63299"/>
             <ScrollViewer Grid.Row="4">
                 <ListBox x:Name="MessagesListBox" Height="Auto"/>
             </ScrollViewer>

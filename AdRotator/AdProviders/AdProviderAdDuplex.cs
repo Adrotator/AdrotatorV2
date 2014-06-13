@@ -42,16 +42,16 @@ namespace AdRotator.AdProviders
                             },
                             {SupportedPlatforms.Windows8, new AdProviderDetails() 
                                             { 
-                                                AssemblyName = "AdDuplex.Windows", 
-                                                ElementName = "AdDuplex.Controls.AdControl", 
+                                                //AssemblyName = "AdDuplex.WinRT", 
+                                                //ElementName = "AdDuplex.Controls.AdControl", 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
                                                     { 
                                                         {AdProviderConfigOptions.AppId,"AppId"},
                                                         {AdProviderConfigOptions.IsTest,"IsTest"},
                                                         {AdProviderConfigOptions.Size,"Size"},
-                                                        {AdProviderConfigOptions.AdSuccessEvent,"AdLoaded"},
-                                                        {AdProviderConfigOptions.AdFailedEvent,"AdLoadingError"},
-                                                        {AdProviderConfigOptions.AdClickedEvent,"AdClick"}
+                                                        //{AdProviderConfigOptions.AdSuccessEvent,"AdLoaded"},
+                                                        //{AdProviderConfigOptions.AdFailedEvent,"AdLoadingError"},
+                                                        //{AdProviderConfigOptions.AdClickedEvent,"AdClick"}
                                                     }
                                             }
                             },

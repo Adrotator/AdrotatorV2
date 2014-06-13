@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AdSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<CultureDescriptors>
+    <AdCultureDescriptor CultureName="en-US">
+      <Probabilities Probability="16" AdType="AdMob" AppID="a14e5b8669ef367"/>
+      <Probabilities Probability="15" AdType="InnerActive" AppID="ZenithMoon_Studios_StarterSeriesGames_WP" />
+      <Probabilities Probability="15" AdType="MobFox" AppID="1d59fb0a677336d8cd4cbd5c7c117f9d" IsTest="false"/>
+      <Probabilities Probability="40" AdType="PubCenter" AppID="78b9455f-db44-4de8-b0c3-1a91784790cd" SecondaryID="10029821" />
+      <Probabilities Probability="10" AdType="AdDuplex" AppID="2859"/>
+      <Probabilities AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAd.xaml"/>
+    </AdCultureDescriptor>
+    <AdCultureDescriptor CultureName="en-GB">
+      <Probabilities Probability="10" AdType="InnerActive" AppID="ZenithMoon_Studios_StarterSeriesGames_WP" />
+      <Probabilities Probability="10" AdType="MobFox" AppID="1d59fb0a677336d8cd4cbd5c7c117f9d" IsTest="false"/>
+      <Probabilities Probability="10" AdType="AdDuplex" AppID="2859"/>
+      <Probabilities Probability="20" AdType="AdMob" AppID="a14e5b8669ef367"/>
+      <Probabilities Probability="20" AdType="PubCenter" AppID="78b9455f-db44-4de8-b0c3-1a91784790cd" SecondaryID="10029821" />
+      <Probabilities AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAd.xaml"/>
+    </AdCultureDescriptor>
+    <AdCultureDescriptor CultureName="de-DE">
+      <Probabilities Probability="25" AdType="PubCenter" AppID="78b9455f-db44-4de8-b0c3-1a91784790cd" SecondaryID="10029821" />
+      <Probabilities Probability="25" AdType="AdMob" AppID="a14e5b8669ef367"/>
+      <Probabilities Probability="25" AdType="AdDuplex" AppID="2859"/>
+      <Probabilities AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAd.xaml"/>
+    </AdCultureDescriptor>
+		<AdCultureDescriptor CultureName="default">
+      <Probabilities Probability="16" AdType="AdMob" AppID="a14e5b8669ef367"/>
+      <Probabilities Probability="16" AdType="InnerActive" AppID="ZenithMoon_Studios_StarterSeriesGames_WP" />
+      <Probabilities Probability="16" AdType="MobFox" AppID="1d59fb0a677336d8cd4cbd5c7c117f9d" IsTest="false"/>
+      <Probabilities Probability="16" AdType="PubCenter" AppID="78b9455f-db44-4de8-b0c3-1a91784790cd" SecondaryID="10029821" />
+      <Probabilities Probability="16" AdType="AdDuplex" AppID="2859"/>
+      <Probabilities AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAd.xaml"/>
+    </AdCultureDescriptor>
+	</CultureDescriptors>
+</AdSettings>

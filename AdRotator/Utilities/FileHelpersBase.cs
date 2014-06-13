@@ -22,6 +22,8 @@ namespace AdRotator.Utilities
         public abstract Stream FileOpenRead(Uri Location, string safeName);
 
         public abstract Task<Stream> OpenStreamAsync(string name);
+
+        public abstract Task<Stream> OpenStreamAsyncFromProject(string name);
     
         public abstract string NormalizeFilePathSeperators(string name);
 

@@ -151,9 +151,14 @@ namespace AdRotator
             try
             {
                 PropertyInfo propertyInfo = instance.GetType().GetProperty(PropertyName);
-                if (propertyInfo.PropertyType.BaseType.FullName == "System.Enum")
+                if (propertyInfo.PropertyType.IsEnum)
                 {
                     propertyInfo.SetValue(instance, StringToEnum(propertyInfo.PropertyType, PropertyValue), null);
+                }
+                else if (propertyInfo.PropertyType.IsNullableEnum())
+                {
+                    Type nullableType = propertyInfo.PropertyType.GetGenericArguments()[0];
+                    propertyInfo.SetValue(instance, StringToEnum(nullableType, PropertyValue), null);
                 }
                 else
                 {
@@ -244,5 +249,14 @@ namespace AdRotator
 
 
 
+    }
+
+    public static class TypeExtensions
+    {
+        public static bool IsNullableEnum(this Type t)
+        {
+            Type u = Nullable.GetUnderlyingType(t);
+            return (u != null) && u.IsEnum;
+        }
     }
 }

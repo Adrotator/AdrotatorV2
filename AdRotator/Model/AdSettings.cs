@@ -103,7 +103,7 @@ namespace AdRotator.Model
             }
             catch (Exception Ex)
             {
-                throw new XmlException("Unable to save AdSettings", Ex.InnerException);
+                throw new XmlException("Unable to unpack AdSettings", Ex.InnerException);
             }
             return adsettings;
         }

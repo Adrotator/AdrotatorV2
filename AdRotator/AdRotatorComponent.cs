@@ -36,7 +36,7 @@ namespace AdRotator
 
         public event AdAvailableHandler AdAvailable;
 
-        protected void OnAdAvailable(AdProvider adProvider)
+        internal void OnAdAvailable(AdProvider adProvider)
         {
             if (AdAvailable != null)
             {
@@ -54,7 +54,7 @@ namespace AdRotator
         /// <summary>
         /// The ad settings based on which the ad descriptor for the current UI culture can be selected
         /// </summary>
-        private static AdSettings _settings;
+        private AdSettings _settings;
 
         private string culture;
 
@@ -71,9 +71,9 @@ namespace AdRotator
         private IFileHelpers fileHelper;
         private ReflectionHelpers reflectionHelper = new ReflectionHelpers();
 
-        private static Timer adRotatorTimer;
+        private Timer adRotatorTimer;
 
-        private static TimerCallback timerDelegate;
+        private TimerCallback timerDelegate;
 
         private int _adRotatorRefreshInterval;
 
@@ -135,7 +135,7 @@ namespace AdRotator
         {
             try
             {
-                await LoadAdSettings();
+                if(_settings == null) await LoadAdSettings();
             }
             catch { }
 
@@ -199,7 +199,15 @@ namespace AdRotator
 
                 if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdType))
                 {
-                    reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "IaAdType_Banner");
+                    switch (adProvider.AdProviderType)
+                    {
+                        case AdType.InnerActive:
+                            reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "IaAdType_Banner");
+                            break;
+                        case AdType.AdMob:
+                            reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "Banner");
+                            break;
+                    }
                 }
 
                 if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.IsTest))
@@ -358,7 +366,7 @@ namespace AdRotator
         public async Task LoadSettingsFileRemote(string RemoteSettingsLocation)
         {
             var settings = await Networking.Network.GetStringFromURLAsync(RemoteSettingsLocation);
-            if (settings != null) _settings = _settings.Deserialise(settings);
+            if (!String.IsNullOrEmpty(settings)) _settings = _settings.Deserialise(settings);
         }
 
         //Not Finished (SJ)
@@ -369,7 +377,7 @@ namespace AdRotator
             {
                 try
                 {
-                    using (Stream stream = await fileHelper.OpenStreamAsync(LocalSettingsLocation))
+                    using (Stream stream = await fileHelper.OpenStreamAsyncFromProject(LocalSettingsLocation))
                     {
                         try
                         {

@@ -49,13 +49,39 @@ namespace AdRotator.Examples.WinPhone8
 
         void InitialiseAdRotatorProgramatically()
         {
-            myAdControl = new AdRotatorControl();
-            //myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
-            myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
-            myAdControl.AdWidth = 728;
-            myAdControl.AdHeight = 90;
-            myAdControl.AutoStartAds = true;
-            ProgramaticAdRotator.Children.Add(myAdControl);
+            //myAdControl = new AdRotatorControl(1);
+            ////myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
+            //myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
+            //myAdControl.AdWidth = 728;
+            //myAdControl.AdHeight = 90;
+            //myAdControl.AutoStartAds = true;
+            //ProgramaticAdRotator.Children.Add(myAdControl);
+
+            var mymsad = new Microsoft.Advertising.Mobile.UI.AdControl();
+            mymsad.AdUnitId = "";
+            mymsad.ApplicationId = "";
+            mymsad.ErrorOccurred += mymsad_ErrorOccurred;
+            mymsad.AdRefreshed += mymsad_AdRefreshed;
+        }
+
+        void mymsad_AdRefreshed(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        void mymsad_ErrorOccurred(object sender, Microsoft.Advertising.AdErrorEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        void googlead_ReceivedAd(object sender, GoogleAds.AdEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        void googlead_FailedToReceiveAd(object sender, GoogleAds.AdErrorEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         // Sample code for building a localized ApplicationBar
