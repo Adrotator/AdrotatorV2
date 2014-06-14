@@ -59,6 +59,7 @@ namespace AdRotator.Examples.Windows8
         {
             AdRotatorHidden = !AdRotatorHidden;
             AdRotatorControl.Visibility = AdRotatorHidden ? Visibility.Collapsed : Visibility.Visible;
+            if(myAdControl != null) myAdControl.Visibility = AdRotatorHidden ? Visibility.Collapsed : Visibility.Visible;
             HideButton.Content = AdRotatorHidden ? "UnHide AdRotator" : "Hide AdRotator";
 
         }
@@ -73,7 +74,10 @@ namespace AdRotator.Examples.Windows8
             myAdControl.AdWidth = 150;
             myAdControl.AdHeight = 150;
             myAdControl.AutoStartAds = true;
+            myAdControl.BorderBrush = new SolidColorBrush(Windows.UI.Colors.AntiqueWhite);
+            myAdControl.BorderThickness = new Thickness(20);
             ProgramaticAdRotator.Children.Add(myAdControl);
+
         }
     }
 }

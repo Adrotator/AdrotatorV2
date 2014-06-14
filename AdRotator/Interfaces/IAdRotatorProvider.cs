@@ -30,6 +30,10 @@ namespace AdRotator
 
         int AdRefreshInterval { get; set; }
 
+        string GoogleAnalyticsId { get; set; }
+
+        string FlurryAnalyticsId { get; set; }
+
         //DISCUSS: should we return strings here? Maybe raising events when stuff is loaded would be more sensible (GO)
         Task<string> Invalidate(AdRotator.Model.AdProvider adProvider);
     }

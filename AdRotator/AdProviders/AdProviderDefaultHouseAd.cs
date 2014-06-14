@@ -1,6 +1,4 @@
-﻿using AdRotator.AdProviderConfig;
-using AdRotator.Model;
-using System.Collections.Generic;
+﻿using AdRotator.Model;
 
 
 namespace AdRotator.AdProviders

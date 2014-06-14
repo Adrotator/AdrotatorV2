@@ -105,6 +105,12 @@
     <Reference Include="Google.AdMob.Ads.WindowsPhone7">
       <HintPath>..\..\AdProviderControls\WindowsPhone7\Google.AdMob.Ads.WindowsPhone7.dll</HintPath>
     </Reference>
+    <Reference Include="GoogleAnalytics">
+      <HintPath>..\..\packages\GoogleAnalyticsSDK.1.2.08\lib\windowsphone8\GoogleAnalytics.dll</HintPath>
+    </Reference>
+    <Reference Include="GoogleAnalytics.Core">
+      <HintPath>..\..\packages\GoogleAnalyticsSDK.1.2.08\lib\windowsphone8\GoogleAnalytics.Core.dll</HintPath>
+    </Reference>
     <Reference Include="InMobiWP7SDK">
       <HintPath>..\..\AdProviderControls\WindowsPhone7\InMobiWP7SDK.dll</HintPath>
     </Reference>
@@ -125,6 +131,15 @@
     </Reference>
     <Reference Include="SOMAWP7">
       <HintPath>..\..\AdProviderControls\WindowsPhone7\SOMAWP7.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\sl4-windowsphone71\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\sl4-windowsphone71\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.1.10\lib\sl4-windowsphone71\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +173,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="analytics.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
@@ -169,6 +187,7 @@
     <Content Include="..\AdRotator.Examples.WinPhone8\DefaultAd\AdRotatorImage.png">
       <Link>DefaultAd\AdRotatorImage.png</Link>
     </Content>
+    <Content Include="analytics.xml" />
     <Content Include="ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

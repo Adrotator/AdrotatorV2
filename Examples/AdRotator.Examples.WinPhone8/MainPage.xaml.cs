@@ -21,8 +21,6 @@ namespace AdRotator.Examples.WinPhone8
         {
             InitializeComponent();
 
-            // Sample code to localize the ApplicationBar
-            //BuildLocalizedApplicationBar();
             AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
             Loaded += MainPage_Loaded;
             InitialiseAdRotatorProgramatically();
@@ -49,49 +47,13 @@ namespace AdRotator.Examples.WinPhone8
 
         void InitialiseAdRotatorProgramatically()
         {
-            //myAdControl = new AdRotatorControl(1);
-            ////myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
-            //myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
-            //myAdControl.AdWidth = 728;
-            //myAdControl.AdHeight = 90;
-            //myAdControl.AutoStartAds = true;
-            //ProgramaticAdRotator.Children.Add(myAdControl);
+            myAdControl = new AdRotatorControl(1);
+            //myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
+            myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
+            myAdControl.AdWidth = 728;
+            myAdControl.AdHeight = 90;
+            myAdControl.AutoStartAds = true;
+            ProgramaticAdRotator.Children.Add(myAdControl);
         }
-
-        void mymsad_AdRefreshed(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        void mymsad_ErrorOccurred(object sender, Microsoft.Advertising.AdErrorEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        void googlead_ReceivedAd(object sender, GoogleAds.AdEventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        void googlead_FailedToReceiveAd(object sender, GoogleAds.AdErrorEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        // Sample code for building a localized ApplicationBar
-        //private void BuildLocalizedApplicationBar()
-        //{
-        //    // Set the page's ApplicationBar to a new instance of ApplicationBar.
-        //    ApplicationBar = new ApplicationBar();
-
-        //    // Create a new button and set the text value to the localized string from AppResources.
-        //    ApplicationBarIconButton appBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/appbar.add.rest.png", UriKind.Relative));
-        //    appBarButton.Text = AppResources.AppBarButtonText;
-        //    ApplicationBar.Buttons.Add(appBarButton);
-
-        //    // Create a new menu item with the localized string from AppResources.
-        //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
-        //    ApplicationBar.MenuItems.Add(appBarMenuItem);
-        //}
     }
 }

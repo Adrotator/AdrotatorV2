@@ -7,8 +7,7 @@ using System.Xml.Serialization;
 #if NETFX_CORE
 using Windows.Storage;
 using Windows.Storage.Search;
-using Windows.Storage.Streams;
-using Windows.UI.Xaml;
+
 #endif
 #if WINDOWS_PHONE
 using System.IO.IsolatedStorage;

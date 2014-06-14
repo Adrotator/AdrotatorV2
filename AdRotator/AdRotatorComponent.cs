@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace AdRotator
 {
@@ -76,8 +75,7 @@ namespace AdRotator
         private TimerCallback timerDelegate;
 
         private int _adRotatorRefreshInterval;
-
-
+        
         internal int AdWidth { get; set; }
 
         internal int AdHeight { get; set; }
@@ -109,6 +107,11 @@ namespace AdRotator
         /// </summary>
         internal int adRotatorRefreshInterval { get { return _adRotatorRefreshInterval; } set { _adRotatorRefreshInterval = value == 0 ? 0 : Math.Max(AdRotatorMinRefreshRate, value); } }
         internal bool adRotatorRefreshIntervalSet = false;
+
+        internal string GoogleAnalyticsId;
+        internal object GoogleAnalyticsProvider = null;
+        internal string FlurryAnalyticsId;
+        internal object FlurryAnalyticsProvider = null;
         #endregion
 
 
@@ -144,10 +147,8 @@ namespace AdRotator
                 //Set Current culture based on Culture Value
                _settings.GetAdDescriptorBasedOnUICulture(culture);
             }
-            if (adRotatorRefreshInterval == 0)
-            {
-                OnAdAvailable(_settings.GetAd());
-            } 
+
+            OnAdAvailable(_settings.GetAd());
         }
 
         internal void GetAd(Object stateInfo)
@@ -156,7 +157,10 @@ namespace AdRotator
             {
                 GetConfig();
             }
-            OnAdAvailable(_settings.GetAd());
+            else
+            {
+                OnAdAvailable(_settings.GetAd());
+            }
         }
 
         internal object GetProviderFrameworkElement(AdRotator.AdProviderConfig.SupportedPlatforms platform, AdProvider adProvider)
@@ -284,7 +288,7 @@ namespace AdRotator
         public void StartAdTimer()
         {
             TimeSpan delayTime = new TimeSpan(0, 0, 0);
-            TimeSpan intervalTime = new TimeSpan(0, 0, 0, 0, adRotatorRefreshInterval * 1000);
+            TimeSpan intervalTime = new TimeSpan(0, 0, 0, adRotatorRefreshInterval);
             if (adRotatorTimer != null)
             {
                 StopAdTimer();
@@ -483,6 +487,19 @@ namespace AdRotator
             ClearFailedAds();
             OnLog(string.Format("Initialising AdRotator"));
         }
+        #endregion
+
+        #region AnalyticsFunctions
+        internal void InitialiseGoogleAnalytics(string GoogleAnalyticsId)
+        {
+            this.GoogleAnalyticsId = GoogleAnalyticsId;
+        }
+
+        internal void InitialiseFlurryAnalytics(string FlurryAnalyticsId)
+        {
+            this.FlurryAnalyticsId = FlurryAnalyticsId;
+        }
+
         #endregion
     }
 }

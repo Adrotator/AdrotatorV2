@@ -134,6 +134,11 @@ namespace AdRotator
             {
                 return adRotatorControl.AdsFailed();
             }
+            if (!IsAdRotatorEnabled)
+            {
+                OnLog(AdRotatorControlID, "Control is not enabled");
+                return "Control Disabled";
+            }
 
             if (SlidingAdDirection != AdSlideDirection.None && !_slidingAdTimerStarted)
             {
@@ -257,7 +262,7 @@ namespace AdRotator
             var sender = d as AdRotatorControl;
             if (sender != null)
             {
-                sender.AdWidthChanged(e);
+                sender.IsTestChanged(e);
             }
         }
 
@@ -463,7 +468,7 @@ namespace AdRotator
         public int AdRefreshInterval
         {
             get { return (int)adRotatorControl.adRotatorRefreshInterval; }
-            set { SetValue(AutoStartAdsProperty, value); }
+            set { SetValue(AdRefreshIntervalProperty, value); }
         }
 
         /// <summary>
@@ -488,6 +493,35 @@ namespace AdRotator
             adRotatorControl.adRotatorRefreshIntervalSet = true;
             adRotatorControl.StartAdTimer();
         }
+        #endregion
+
+        #region GoogleAnalyticsId
+
+        public string GoogleAnalyticsId
+        {
+            get { return (string)GetValue(GoogleAnalyticsIdProperty); }
+            set { SetValue(GoogleAnalyticsIdProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for GoogleAnalyticsId.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty GoogleAnalyticsIdProperty =
+            DependencyProperty.Register("GoogleAnalyticsId", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(string.Empty));
+
+        #endregion
+
+        #region FlurryAnalyticsId
+
+        public string FlurryAnalyticsId
+        {
+            get { return (string)GetValue(FlurryAnalyticsIdProperty); }
+            set { SetValue(FlurryAnalyticsIdProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for FlurryAnalyticsId.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty FlurryAnalyticsIdProperty =
+            DependencyProperty.Register("FlurryAnalyticsId", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(string.Empty));
+
+
         #endregion
 
         #endregion
@@ -680,7 +714,7 @@ namespace AdRotator
             Storyboard.SetTarget(SlideInLRAdStoryboardAnimation, AdRotatorRoot);
 #if WINDOWS_PHONE
             Storyboard.SetTargetProperty(SlideInLRAdStoryboardAnimation, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateX)"));
- #else
+#else
             Storyboard.SetTargetProperty(SlideInLRAdStoryboardAnimation, "(UIElement.RenderTransform).(CompositeTransform.TranslateX)");
 #endif
             SlideInLRAdStoryboardAnimation.Completed += SlideInAdStoryboard_Completed;
@@ -692,7 +726,7 @@ namespace AdRotator
             Storyboard.SetTarget(SlideOutUDAdStoryboardAnimation, AdRotatorRoot);
 #if WINDOWS_PHONE
             Storyboard.SetTargetProperty(SlideOutUDAdStoryboardAnimation, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateY)"));
- #else
+#else
             Storyboard.SetTargetProperty(SlideOutUDAdStoryboardAnimation, "(UIElement.RenderTransform).(CompositeTransform.TranslateY)");
 #endif
             SlideOutUDAdStoryboardAnimation.Completed += SlideOutAdStoryboard_Completed;
@@ -704,7 +738,7 @@ namespace AdRotator
             Storyboard.SetTarget(SlideInUDAdStoryboardAnimation, AdRotatorRoot);
 #if WINDOWS_PHONE
             Storyboard.SetTargetProperty(SlideInUDAdStoryboardAnimation, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateY)"));
- #else
+#else
             Storyboard.SetTargetProperty(SlideInUDAdStoryboardAnimation, "(UIElement.RenderTransform).(CompositeTransform.TranslateY)");
 #endif
             SlideInUDAdStoryboardAnimation.Completed += SlideInAdStoryboard_Completed;
@@ -742,7 +776,7 @@ namespace AdRotator
         {
             var getMethod = instance.GetType().GetProperty(name).GetGetMethod();
             return getMethod.Invoke(instance, null);
-        } 
+        }
 #endif
         #endregion
 
