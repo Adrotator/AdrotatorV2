@@ -54,6 +54,7 @@ namespace AdRotator.Examples.WinPhone8
             myAdControl.AdHeight = 90;
             myAdControl.AutoStartAds = true;
             ProgramaticAdRotator.Children.Add(myAdControl);
+
         }
     }
 }

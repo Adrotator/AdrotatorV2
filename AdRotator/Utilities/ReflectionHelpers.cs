@@ -146,6 +146,27 @@ namespace AdRotator
             }
         }
 
+        public void TryInvokeMethod(Type type, object classInstance, string methodName, params object[] parameters)
+        {
+            try
+            {
+                if (type != null)
+                {
+                    MethodInfo methodInfo = type.GetMethod(methodName, new Type[0]);
+                    if (methodInfo != null)
+                    {
+                        object result = null;
+                            //This works fine
+                        result = methodInfo.Invoke(classInstance, parameters);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(e.ToString());
+            }
+        }
+
         public void TrySetProperty(object instance, string PropertyName, string PropertyValue)
         {
             try

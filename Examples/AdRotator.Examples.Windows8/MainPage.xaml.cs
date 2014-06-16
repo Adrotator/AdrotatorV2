@@ -33,6 +33,8 @@ namespace AdRotator.Examples.Windows8
             AdRotatorControl.Log += (s) => System.Diagnostics.Debug.WriteLine(s);
             Loaded += (s, e) => HideButton_Tapped(null,null);
             //InitialiseAdRotatorProgramatically();
+            var tracker = new GoogleAnalyticsTracker.Tracker("", "");
+
         }
 
         void msadcontrol_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)

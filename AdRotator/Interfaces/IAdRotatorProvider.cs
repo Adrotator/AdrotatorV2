@@ -32,7 +32,11 @@ namespace AdRotator
 
         string GoogleAnalyticsId { get; set; }
 
+        object GoogleAnalyticsControl { get; set; }
+
         string FlurryAnalyticsId { get; set; }
+
+        object FlurryAnalyticsControl { get; set; }
 
         //DISCUSS: should we return strings here? Maybe raising events when stuff is loaded would be more sensible (GO)
         Task<string> Invalidate(AdRotator.Model.AdProvider adProvider);

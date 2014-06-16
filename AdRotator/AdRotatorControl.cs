@@ -80,9 +80,20 @@ namespace AdRotator
             }
         }
 
-        void adRotatorControl_AdAvailable(AdProvider adProvider)
+        async void adRotatorControl_AdAvailable(AdProvider adProvider)
         {
-            Invalidate(adProvider);
+#if WINDOWS_PHONE
+            await Dispatcher.InvokeAsync(() => Invalidate(adProvider));
+#else
+            if (Window.Current != null)
+            {
+                var dispatcher = Window.Current.Dispatcher;
+
+                if (dispatcher.HasThreadAccess)
+                    await Invalidate(adProvider);
+                else await dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => Invalidate(adProvider));
+            }
+#endif
         }
 
         private bool templateApplied;
@@ -138,6 +149,10 @@ namespace AdRotator
             {
                 OnLog(AdRotatorControlID, "Control is not enabled");
                 return "Control Disabled";
+            }
+            if (!adRotatorControl.AnalyticsInitilised)
+            {
+                adRotatorControl.InitialiseAnalytics(CurrentPlatform);
             }
 
             if (SlidingAdDirection != AdSlideDirection.None && !_slidingAdTimerStarted)
@@ -495,32 +510,87 @@ namespace AdRotator
         }
         #endregion
 
-        #region GoogleAnalyticsId
+        #region GoogleAnalytics
 
+        #region GoogleAnalyticsId
         public string GoogleAnalyticsId
         {
-            get { return (string)GetValue(GoogleAnalyticsIdProperty); }
+            get { return (string)adRotatorControl.GoogleAnalyticsId; }
             set { SetValue(GoogleAnalyticsIdProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for GoogleAnalyticsId.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// Sets the Ad Refresh rate in seconds
+        /// *Note minimum is 60 seconds
+        /// </summary>
         public static readonly DependencyProperty GoogleAnalyticsIdProperty =
-            DependencyProperty.Register("GoogleAnalyticsId", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(string.Empty));
+            DependencyProperty.Register("GoogleAnalyticsId", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(string.Empty, GoogleAnalyticsIdChanged));
+
+        private static void GoogleAnalyticsIdChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sender = d as AdRotatorControl;
+            if (sender != null)
+            {
+                sender.GoogleAnalyticsIdPropertyChanged(e);
+            }
+        }
+
+        private void GoogleAnalyticsIdPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            adRotatorControl.GoogleAnalyticsId = (string)e.NewValue;
+        }
+        #endregion
+
+        #region GoogleAnalyticsControl
+        public object GoogleAnalyticsControl
+        {
+            get { return adRotatorControl.GoogleAnalyticsControl; }
+            set { adRotatorControl.GoogleAnalyticsControl = value; }
+        }
 
         #endregion
 
-        #region FlurryAnalyticsId
+        #endregion
 
+        #region FlurryAnalytics
+
+        #region FlurryAnalyticsId
         public string FlurryAnalyticsId
         {
-            get { return (string)GetValue(FlurryAnalyticsIdProperty); }
+            get { return (string)adRotatorControl.FlurryAnalyticsId; }
             set { SetValue(FlurryAnalyticsIdProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for FlurryAnalyticsId.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// Sets the Ad Refresh rate in seconds
+        /// *Note minimum is 60 seconds
+        /// </summary>
         public static readonly DependencyProperty FlurryAnalyticsIdProperty =
-            DependencyProperty.Register("FlurryAnalyticsId", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(string.Empty));
+            DependencyProperty.Register("FlurryAnalyticsId", typeof(string), typeof(AdRotatorControl), new PropertyMetadata(string.Empty, FlurryAnalyticsIdChanged));
 
+        private static void FlurryAnalyticsIdChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var sender = d as AdRotatorControl;
+            if (sender != null)
+            {
+                sender.FlurryAnalyticsIdPropertyChanged(e);
+            }
+        }
+
+        private void FlurryAnalyticsIdPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            adRotatorControl.FlurryAnalyticsId = (string)e.NewValue;
+        }
+        #endregion
+
+        #region FlurryAnalyticsControl
+        public object FlurryAnalyticsControl
+        {
+            get { return adRotatorControl.FlurryAnalyticsControl; }
+            set { adRotatorControl.FlurryAnalyticsControl = value; }
+        }
+
+        #endregion
 
         #endregion
 
@@ -639,10 +709,10 @@ namespace AdRotator
         #endregion
 
         #region Animation Events
-        private void SlideOutAdStoryboard_Completed(object sender, object e)
+        private async void SlideOutAdStoryboard_Completed(object sender, object e)
         {
             _slidingAdHidden = true;
-            Invalidate(null);
+            await Invalidate(null);
             ResetSlidingAdTimer(SlidingAdHiddenSeconds);
         }
 

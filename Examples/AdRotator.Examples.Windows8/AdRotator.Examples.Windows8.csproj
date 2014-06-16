@@ -118,13 +118,9 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="AdRotator.Examples.Windows8_TemporaryKey.pfx" />
-    <None Include="analytics.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="analytics.xml" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
@@ -162,11 +158,9 @@
       <HintPath>..\..\packages\AdDuplexWindows.8.0.5\lib\winrt45\AdDuplex.WinRT.winmd</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="GoogleAnalytics">
-      <HintPath>..\..\packages\GoogleAnalyticsSDK.1.2.08\lib\windows8\GoogleAnalytics.winmd</HintPath>
-    </Reference>
-    <Reference Include="GoogleAnalytics.Core">
-      <HintPath>..\..\packages\GoogleAnalyticsSDK.1.2.08\lib\windows8\GoogleAnalytics.Core.winmd</HintPath>
+    <Reference Include="GoogleAnalyticsTracker.WinRT, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\GoogleAnalyticsTracker.WinRT.1.0.1\lib\winrt45\GoogleAnalyticsTracker.WinRT.dll</HintPath>
     </Reference>
     <Reference Include="InMobiW8AdSDK">
       <HintPath>..\..\AdProviderControls\Windows8\InMobiW8AdSDK.dll</HintPath>

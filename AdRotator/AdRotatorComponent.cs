@@ -40,6 +40,10 @@ namespace AdRotator
             if (AdAvailable != null)
             {
                 OnLog(string.Format("Trying provider {0}", adProvider.AdProviderType));
+                if (TrackAnalytics != null)
+                {
+                    TrackAnalytics(adProvider.AdProviderType, "Displaying ad");
+                }
                 AdAvailable(adProvider);
             }
         }
@@ -100,6 +104,9 @@ namespace AdRotator
 
         internal static Dictionary<AdType,Type> PlatformAdProviderComponents { get; set; }
 
+        internal AdSlideDirection currentAdSlideDirection { get; set; }
+        internal int currentSlidingAdDisplaySeconds { get; set; }
+        internal int currentSlidingAdHiddenSeconds { get; set; }
 
         /// <summary>
         /// RefreshInterval in seconds
@@ -108,10 +115,16 @@ namespace AdRotator
         internal int adRotatorRefreshInterval { get { return _adRotatorRefreshInterval; } set { _adRotatorRefreshInterval = value == 0 ? 0 : Math.Max(AdRotatorMinRefreshRate, value); } }
         internal bool adRotatorRefreshIntervalSet = false;
 
-        internal string GoogleAnalyticsId;
-        internal object GoogleAnalyticsProvider = null;
-        internal string FlurryAnalyticsId;
-        internal object FlurryAnalyticsProvider = null;
+        internal string GoogleAnalyticsId { get; set; }
+        internal object GoogleAnalyticsControl;
+        Type GoogleAnalyticsControlType = null;
+        internal string FlurryAnalyticsId { get; set; }
+        internal object FlurryAnalyticsControl;
+        Type FlurryAnalyticsControlType = null;
+
+        delegate void TrackingAnalytics(AdType adType, string eventDescription);
+        TrackingAnalytics TrackAnalytics = null;
+        internal bool AnalyticsInitilised { get; private set; }
         #endregion
 
 
@@ -147,7 +160,6 @@ namespace AdRotator
                 //Set Current culture based on Culture Value
                _settings.GetAdDescriptorBasedOnUICulture(culture);
             }
-
             OnAdAvailable(_settings.GetAd());
         }
 
@@ -288,7 +300,7 @@ namespace AdRotator
         public void StartAdTimer()
         {
             TimeSpan delayTime = new TimeSpan(0, 0, 0);
-            TimeSpan intervalTime = new TimeSpan(0, 0, 0, adRotatorRefreshInterval);
+            TimeSpan intervalTime = new TimeSpan(0, 0, 0, 0, adRotatorRefreshInterval + 1000);
             if (adRotatorTimer != null)
             {
                 StopAdTimer();
@@ -424,7 +436,10 @@ namespace AdRotator
         public void AdFailed(Model.AdType AdType)
         {
             _settings.AdFailed(AdType);
-            //OnLog(string.Format("Ads failed request for: {0}", AdType.ToString()));
+            if (TrackAnalytics != null)
+            {
+                TrackAnalytics(AdType, "Failed to display ad");
+            }
             GetAd(null);
         }
 
@@ -490,15 +505,89 @@ namespace AdRotator
         #endregion
 
         #region AnalyticsFunctions
-        internal void InitialiseGoogleAnalytics(string GoogleAnalyticsId)
+
+
+        internal void InitialiseAnalytics(AdRotator.AdProviderConfig.SupportedPlatforms platform)
         {
-            this.GoogleAnalyticsId = GoogleAnalyticsId;
+            if (!string.IsNullOrEmpty(GoogleAnalyticsId))
+            {
+                InitialiseGoogleAnalytics(platform);
+            }
+            if (!string.IsNullOrEmpty(FlurryAnalyticsId) && FlurryAnalyticsControl != null)
+            {
+                InitialiseFlurryAnalytics(platform);
+            }
+            AnalyticsInitilised = true;
         }
 
-        internal void InitialiseFlurryAnalytics(string FlurryAnalyticsId)
+        #region GoogleAnalytics
+        private void InitialiseGoogleAnalytics(AdRotator.AdProviderConfig.SupportedPlatforms platform)
         {
-            this.FlurryAnalyticsId = FlurryAnalyticsId;
+            if (!string.IsNullOrEmpty(GoogleAnalyticsId))
+            {
+                if (GoogleAnalyticsControl == null)
+                {
+                    switch (platform)
+                    {
+                        case AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone7:
+                            GoogleAnalyticsControlType = reflectionHelper.TryGetType("GoogleAnalyticsTracker.WP7", "GoogleAnalyticsTracker.Tracker");
+                            break;
+                        case AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone8:
+                            GoogleAnalyticsControlType = reflectionHelper.TryGetType("GoogleAnalyticsTracker.WP8", "GoogleAnalyticsTracker.WP8.Tracker");
+                            break;
+                        case AdRotator.AdProviderConfig.SupportedPlatforms.Windows8:
+                            GoogleAnalyticsControlType = reflectionHelper.TryGetType("GoogleAnalyticsTracker.WinRT", "GoogleAnalyticsTracker.Tracker");
+                            break;
+                    }
+                    if (GoogleAnalyticsControlType != null)
+                    {
+                        GoogleAnalyticsControl = Activator.CreateInstance(GoogleAnalyticsControlType,new object[2] {GoogleAnalyticsId,"AdRotator"});
+
+                    }
+                }
+                TrackAnalytics += TrackGoogleAnalytics;
+            }
         }
+
+        private void TrackGoogleAnalytics(AdType adType, string eventDescription)
+        {
+            if (!string.IsNullOrEmpty(GoogleAnalyticsId))
+            {
+                if (GoogleAnalyticsControl != null)
+                {
+                    reflectionHelper.TryInvokeMethod(GoogleAnalyticsControlType, GoogleAnalyticsControl, "TrackEvent", new object[] { "AdRotator",eventDescription,adType.ToString(),0 });
+                }
+            }
+        }
+        #endregion
+
+        #region FlurryAnalytics
+
+        private void InitialiseFlurryAnalytics(AdRotator.AdProviderConfig.SupportedPlatforms platform)
+        {
+            if (!string.IsNullOrEmpty(FlurryAnalyticsId))
+            {
+                if (FlurryAnalyticsControl != null)
+                {
+                    FlurryAnalyticsControlType = reflectionHelper.TryGetType("FlurryWP8SDK", "FlurryWP8SDK.Api");
+                    reflectionHelper.TryInvokeMethod(FlurryAnalyticsControlType, null, "StartSession", new object[] { FlurryAnalyticsId });
+
+                    TrackAnalytics += TrackFlurryAnalytics;
+                }
+            }
+        }
+
+        private void TrackFlurryAnalytics(AdType adType, string eventDescription)
+        {
+            if (!string.IsNullOrEmpty(FlurryAnalyticsId))
+            {
+                if (FlurryAnalyticsControl != null)
+                {
+                    reflectionHelper.TryInvokeMethod(FlurryAnalyticsControlType, null, "LogEvent", new object[] { String.Format("AdRotator: {0} for AdType: {1}",eventDescription,adType.ToString()) });
+                }
+            }
+        }
+        #endregion
 
         #endregion
     }

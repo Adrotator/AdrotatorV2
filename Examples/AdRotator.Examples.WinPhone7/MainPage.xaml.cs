@@ -19,6 +19,7 @@ namespace AdRotator.Examples.WinPhone7
             AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
             Loaded += MainPage_Loaded;
             //InitialiseAdRotatorProgramatically();
+
         }
 
         void MainPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
