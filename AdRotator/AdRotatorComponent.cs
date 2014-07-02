@@ -471,7 +471,7 @@ namespace AdRotator
                 Delegate eventDel = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
 
                 ei.AddEventHandler(o, eventDel);
-                currentProviderDelegates.Add(new AdProviderDeletage() { instance = o, eventInfo = ei, delegateMethod = eventDel });
+                currentProviderDelegates.Add(new AdProviderDelegate() { instance = o, eventInfo = ei, delegateMethod = eventDel });
             }
             catch (Exception)
             {
@@ -489,7 +489,7 @@ namespace AdRotator
                 }
                 catch { }
             }
-            currentProviderDelegates = new List<AdProviderDeletage>();
+            currentProviderDelegates = new List<AdProviderDelegate>();
         }
 
         private void DelegateEventHandler(string message)
