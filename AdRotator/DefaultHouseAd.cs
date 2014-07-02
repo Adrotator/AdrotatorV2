@@ -62,7 +62,7 @@ namespace AdRotator
                 Type t = asm.GetType(LocalHouseAdBodyName);
                 o = Activator.CreateInstance(t);
             }
-            catch (Exception e) 
+            catch 
             {
                 AdRotatorControl.OnLog(adRotatorControlID, "Failed to resolve DefaultAd Class definition - not found");
             }

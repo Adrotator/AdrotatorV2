@@ -7,7 +7,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:AdRotatorControl">
-                    <Border 
+                    <Border x:Name="AdRotatorRoot" 
                         Width="{TemplateBinding AdWidth}" 
                         Height="{TemplateBinding AdHeight}" 
                         Background="{TemplateBinding Background}" 
@@ -15,19 +15,12 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         Opacity="{TemplateBinding Opacity}"
                         Projection="{TemplateBinding Projection}"
-                        RenderTransform="{TemplateBinding RenderTransform}"
                         Margin="{TemplateBinding Margin}"
                         Padding="{TemplateBinding Padding}"
                         Style="{TemplateBinding Style}">
-                        <Grid x:Name="AdRotatorRoot" 
-                              Width="{TemplateBinding AdWidth}" 
-                              Height="{TemplateBinding AdHeight}" 
-                              Background="{TemplateBinding Background}" 
-                              Style="{TemplateBinding Style}">
-                            <Grid.RenderTransform>
-                                <CompositeTransform/>
-                            </Grid.RenderTransform>
-                        </Grid>
+                        <Border.RenderTransform>
+                            <CompositeTransform/>
+                        </Border.RenderTransform>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

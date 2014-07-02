@@ -23,17 +23,19 @@ namespace AdRotator.Examples.Windows8
     {
         bool AdRotatorHidden = true;
         AdRotator.AdRotatorControl myAdControl;
-        
+        //GoogleAnalyticsTracker.RT.Tracker tracker = null;
 
         public MainPage()
         {
             this.InitializeComponent();
             AdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
             AdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.AdDuplex, typeof(AdDuplex.Controls.AdControl));
-            AdRotatorControl.Log += (s) => System.Diagnostics.Debug.WriteLine(s);
+            //AdRotatorControl.Log += (s) => System.Diagnostics.Debug.WriteLine(s);
             Loaded += (s, e) => HideButton_Tapped(null,null);
-            //InitialiseAdRotatorProgramatically();
-            var tracker = new GoogleAnalyticsTracker.Tracker("", "");
+            InitialiseAdRotatorProgramatically();
+            //tracker = new GoogleAnalyticsTracker.RT.Tracker("UA-51978219-2", "AdRotator");
+            //tracker.TrackPageViewAsync("My API - Create", "api/create");
+
 
         }
 
@@ -71,15 +73,16 @@ namespace AdRotator.Examples.Windows8
             myAdControl = new AdRotatorControl();
             myAdControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
             myAdControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.AdDuplex, typeof(AdDuplex.Controls.AdControl));
-            //myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
-            myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
+            myAdControl.LocalSettingsLocation = "ProgramaticdefaultAdSettings.xml";
+            //myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
             myAdControl.AdWidth = 150;
             myAdControl.AdHeight = 150;
             myAdControl.AutoStartAds = true;
             myAdControl.BorderBrush = new SolidColorBrush(Windows.UI.Colors.AntiqueWhite);
             myAdControl.BorderThickness = new Thickness(20);
             ProgramaticAdRotator.Children.Add(myAdControl);
-
+            //AdRotatorControl.Log += (s) => { tracker.TrackEventAsync("AdRotator", "AdLogEvent", "an Ad", 0); tracker.TrackPageViewAsync("My API - Create", "api/view"); };
+            //<!--GoogleAnalyticsId="UA-51978219-1"-->
         }
     }
 }

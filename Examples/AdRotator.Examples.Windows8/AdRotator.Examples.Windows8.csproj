@@ -125,6 +125,10 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <Content Include="ProgramaticdefaultAdSettings.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="defaultAdSettings.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -157,10 +161,6 @@
     <Reference Include="AdDuplex.WinRT">
       <HintPath>..\..\packages\AdDuplexWindows.8.0.5\lib\winrt45\AdDuplex.WinRT.winmd</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="GoogleAnalyticsTracker.WinRT, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\GoogleAnalyticsTracker.WinRT.1.0.1\lib\winrt45\GoogleAnalyticsTracker.WinRT.dll</HintPath>
     </Reference>
     <Reference Include="InMobiW8AdSDK">
       <HintPath>..\..\AdProviderControls\Windows8\InMobiW8AdSDK.dll</HintPath>

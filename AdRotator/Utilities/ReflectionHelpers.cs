@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 
@@ -115,7 +116,7 @@ namespace AdRotator
             }
             catch
             {
-                throw new PlatformNotSupportedException("Provider not located in this solution");
+                throw new PlatformNotSupportedException(String.Format("Provider dll not located in this solution ({0})", assemblyName));
             }
 
             return null;
@@ -266,10 +267,6 @@ namespace AdRotator
 
             return invoke.ReturnType;
         }
-
-
-
-
     }
 
     public static class TypeExtensions

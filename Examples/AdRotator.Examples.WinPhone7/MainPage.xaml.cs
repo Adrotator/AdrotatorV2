@@ -8,6 +8,7 @@ namespace AdRotator.Examples.WinPhone7
         // Constructor
         bool _adRotatorHidden = true;
         AdRotator.AdRotatorControl _myAdControl;
+        //GoogleAnalyticsTracker.Tracker tracker = null;
 
         // Constructor
         public MainPage()
@@ -18,7 +19,8 @@ namespace AdRotator.Examples.WinPhone7
             //BuildLocalizedApplicationBar();
             AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
             Loaded += MainPage_Loaded;
-            //InitialiseAdRotatorProgramatically();
+            InitialiseAdRotatorProgramatically();
+            //tracker.TrackPageView("My API - Create", "api/create");
 
         }
 
@@ -26,6 +28,7 @@ namespace AdRotator.Examples.WinPhone7
         {
             AdRotatorControl_Log("Page Loaded");
             HideButton_Tap(null, null);
+            if (_myAdControl != null) _myAdControl.Invalidate(null);
         }
 
         void AdRotatorControl_Log(string message)
@@ -44,13 +47,13 @@ namespace AdRotator.Examples.WinPhone7
         void InitialiseAdRotatorProgramatically()
         {
             _myAdControl = new AdRotatorControl(1);
-            AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
             //_myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
             _myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
             _myAdControl.AdWidth = 728;
             _myAdControl.AdHeight = 90;
-            _myAdControl.AutoStartAds = true;
+            //_myAdControl.AutoStartAds = true;
             ProgramaticAdRotator.Children.Add(_myAdControl);
+           // AdRotatorControl.Log += (s) => { tracker.TrackEvent("AdRotator", "AdLogEvent", "an Ad", 0); tracker.TrackPageView("My API - Create", "api/view"); };
         }
 
         // Sample code for building a localized ApplicationBar

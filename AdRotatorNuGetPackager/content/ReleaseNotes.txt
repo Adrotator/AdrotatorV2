@@ -1,0 +1,47 @@
+AdRotator V2 Release Notes
+------------------------------
+
+2.0.0
+Initial stable release including a host of fixes from the beta phase.
+Now has feature parity with V1 for the following platforms:
+	* Windows Phone 7 Silverlight
+	* Windows Phone 8 Silverlight
+	* Windows 8 XAML
+	* Windows 8.1 XAML
+
+**Although it hasn't bee tested extensively yet on Universal projects, there should be no reason it shouldn't work
+Feed any issues back to the GitHub page @ https://github.com/Adrotator/AdrotatorV2
+
+Release items
+-------------
+
+	* All V1 providers for each platform are now fully supported (Note AdDuplex and AdMob implementations updated)
+	* Fixed AdMob updated implementation for WP8 (WP7 has now been retired by Google, the control now ceases to function and crashes apps, so we have de-supported it)
+	* Supports the new AdMob AdUnit ID format (make sure you update your AdUnits)
+	* WP7 platform re-introduced following requests
+	* Supports multiple configuration files within projects for multiple ads
+	* All static references now removed to allow for multiple use.  Note if you are sharing ads across pages we recommend using a single UserControl.
+	* Fixed Issues with AdRefreshRate and IsTest properties
+	* AutoStart and Manual start tested thoroughly
+	* Now with 20% even MORE random! :D
+	
+Known Issues
+------------
+
+	* Known issue with AdDuplex miss-reporting failed ads.  Ads still display but reported as failures.  We've raised it with AdDuplex.
+	* InMobi seems to function normally but their control keeps throwing errors on all platforms???
+	
+	
+Any bugs, issues or questions, please log them on the GitHub Site - https://github.com/Adrotator/AdrotatorV2
+Contributors welcome.
+
+
+Final Note
+----------
+If you are using AdRotator and it is helping you to be more profitable, please consider donating to help support further development and support.
+http://getadrotator.com/
+
+
+The AdRotator Team
+Simon Jackson @SimonDarksideJ (http://darkgenesis.zenithmoon.com)
+Gergely Orosz @GergelyOrosz (http://gregdoesit.com)

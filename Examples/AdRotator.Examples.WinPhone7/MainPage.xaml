@@ -59,8 +59,8 @@
             <adRotator:AdRotatorControl x:Name="AdRotatorControl"
                 LocalSettingsLocation="defaultAdSettings.xml"
                                         AutoStartAds="True"
-                                        GoogleAnalyticsId="UA-51978219-1"
-                                        AdRefreshInterval="10"/>
+                                        AdRefreshInterval="10"
+                                        />
             <Grid Grid.Row="1" x:Name="ProgramaticAdRotator"/>
             <Button Grid.Row="2" x:Name="HideButton" Content="Hide/unhide AdRotator" Tap="HideButton_Tap"/>
             <ScrollViewer Grid.Row="4">
@@ -73,7 +73,8 @@
             account for the System Tray. Set this to 0 (or remove the margin altogether)
             if the System Tray is hidden.
 
-            Before shipping remove this XAML and the image itself.-->
+            Before shipping remove this XAML and the image itself.
+        GoogleAnalyticsId="UA-51978219-1"-->
         <!--<Image Source="/Assets/AlignmentGrid.png" VerticalAlignment="Top" Height="800" Width="480" Margin="0,-32,0,0" Grid.Row="0" Grid.RowSpan="2" IsHitTestVisible="False" />-->
     </Grid>
  

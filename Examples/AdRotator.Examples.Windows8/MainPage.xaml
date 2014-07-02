@@ -28,7 +28,8 @@
             SlidingAdDirection="Left"
             IsTest="True"
             AutoStartAds="True"
-            GoogleAnalyticsId="UA-51978219-1">
+            
+            >
         </adRotator:AdRotatorControl>
         <Grid Grid.Row="1" x:Name="ProgramaticAdRotator"/>
         <Button Grid.Row="2" x:Name="HideButton" Content="Hide/unhide AdRotator" Tapped="HideButton_Tapped"/>

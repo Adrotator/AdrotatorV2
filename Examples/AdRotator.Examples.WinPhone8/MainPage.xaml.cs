@@ -15,19 +15,22 @@ namespace AdRotator.Examples.WinPhone8
     {
         bool AdRotatorHidden = true;
         AdRotator.AdRotatorControl myAdControl;
+        //GoogleAnalyticsTracker.WP8.Tracker tracker = null;
 
         // Constructor
         public MainPage()
         {
             InitializeComponent();
 
-            AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
             Loaded += MainPage_Loaded;
-            InitialiseAdRotatorProgramatically();
+            //InitialiseAdRotatorProgramatically();
+            //tracker = new GoogleAnalyticsTracker.WP8.Tracker("UA-51978219-2", "AdRotator");
+            //tracker.TrackPageViewAsync("My API - Create", "api/create");
         }
 
         void MainPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            AdRotatorControl.Log += (s) => AdRotatorControl_Log(s);
             AdRotatorControl_Log("Page Loaded");
             HideButton_Tap(null, null);
         }
@@ -48,12 +51,13 @@ namespace AdRotator.Examples.WinPhone8
         void InitialiseAdRotatorProgramatically()
         {
             myAdControl = new AdRotatorControl(1);
-            //myAdControl.LocalSettingsLocation = "defaultAdSettings.xml";
-            myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
+            myAdControl.LocalSettingsLocation = "ProgramaticdefaultAdSettings.xml";
+            //myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
             myAdControl.AdWidth = 728;
             myAdControl.AdHeight = 90;
             myAdControl.AutoStartAds = true;
             ProgramaticAdRotator.Children.Add(myAdControl);
+            //AdRotatorControl.Log += (s) => { tracker.TrackEventAsync("AdRotator", "AdLogEvent", "an Ad", 0); tracker.TrackPageViewAsync("My API - Create", "api/view"); };
 
         }
     }

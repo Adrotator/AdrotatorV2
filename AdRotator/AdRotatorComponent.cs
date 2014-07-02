@@ -40,10 +40,7 @@ namespace AdRotator
             if (AdAvailable != null)
             {
                 OnLog(string.Format("Trying provider {0}", adProvider.AdProviderType));
-                if (TrackAnalytics != null)
-                {
-                    TrackAnalytics(adProvider.AdProviderType, "Displaying ad");
-                }
+                TryTrackAnaltics(adProvider.AdProviderType);
                 AdAvailable(adProvider);
             }
         }
@@ -78,7 +75,7 @@ namespace AdRotator
 
         private TimerCallback timerDelegate;
 
-        private int _adRotatorRefreshInterval;
+        private int _adRotatorRefreshInterval = 60;
         
         internal int AdWidth { get; set; }
 
@@ -115,16 +112,7 @@ namespace AdRotator
         internal int adRotatorRefreshInterval { get { return _adRotatorRefreshInterval; } set { _adRotatorRefreshInterval = value == 0 ? 0 : Math.Max(AdRotatorMinRefreshRate, value); } }
         internal bool adRotatorRefreshIntervalSet = false;
 
-        internal string GoogleAnalyticsId { get; set; }
-        internal object GoogleAnalyticsControl;
-        Type GoogleAnalyticsControlType = null;
-        internal string FlurryAnalyticsId { get; set; }
-        internal object FlurryAnalyticsControl;
-        Type FlurryAnalyticsControlType = null;
 
-        delegate void TrackingAnalytics(AdType adType, string eventDescription);
-        TrackingAnalytics TrackAnalytics = null;
-        internal bool AnalyticsInitilised { get; private set; }
         #endregion
 
 
@@ -193,7 +181,7 @@ namespace AdRotator
             }
             catch (PlatformNotSupportedException)
             {
-                AdFailed(adProvider.AdProviderType);
+                OnLog(String.Format("Provider {0} DLL not found or not supported on the {1} platform", adProvider.AdProviderType, platform));
             }
             if (providerType == null)
             {
@@ -276,19 +264,16 @@ namespace AdRotator
             catch (PlatformNotSupportedException)
             {
                 OnLog(string.Format("Configured provider {0} not found in this installation", adProvider.AdProviderType.ToString()));
-                AdFailed(adProvider.AdProviderType);
                 return null;
             }
             catch (NotImplementedException)
             {
                 OnLog(string.Format("Configured provider {0} is not fully implemented yet", adProvider.AdProviderType.ToString()));
-                AdFailed(adProvider.AdProviderType);
                 return null;
             }
             catch (Exception e)
             {
                 OnLog(string.Format("General exception [{0}] occured, continuing", e.InnerException.ToString()));
-                AdFailed(adProvider.AdProviderType);
                 return null;
             }
 
@@ -300,7 +285,7 @@ namespace AdRotator
         public void StartAdTimer()
         {
             TimeSpan delayTime = new TimeSpan(0, 0, 0);
-            TimeSpan intervalTime = new TimeSpan(0, 0, 0, 0, adRotatorRefreshInterval + 1000);
+            TimeSpan intervalTime = new TimeSpan(0, 0, 0, 0, adRotatorRefreshInterval * 1000);
             if (adRotatorTimer != null)
             {
                 StopAdTimer();
@@ -308,6 +293,10 @@ namespace AdRotator
             if (adRotatorRefreshInterval > 0)
             {
                 adRotatorTimer = new Timer(timerDelegate, null, delayTime, intervalTime);
+            }
+            else
+            {
+                GetAd(null);
             }
         }
 
@@ -433,13 +422,11 @@ namespace AdRotator
 
         #region internal Functions
 
-        public void AdFailed(Model.AdType AdType)
+        public void AdFailed(Model.AdType adType)
         {
-            _settings.AdFailed(AdType);
-            if (TrackAnalytics != null)
-            {
-                TrackAnalytics(AdType, "Failed to display ad");
-            }
+            _settings.AdFailed(adType);
+            RemoveEventDelegatesFromActiveControl();
+            TryTrackAnaltics(adType);
             GetAd(null);
         }
 
@@ -452,9 +439,15 @@ namespace AdRotator
         private void RemoveAdFromFailedAds(AdType AdType)
         {
             _settings.RemoveAdFromFailedAds(AdType);
-            //OnLog(string.Format("Ads failed request for: {0}", AdType.ToString()));
         }
 
+        struct AdProviderDelegate
+        {
+            public object instance;
+            public EventInfo eventInfo;
+            public Delegate delegateMethod;
+        }
+        private List<AdProviderDelegate> currentProviderDelegates = new List<AdProviderDelegate>();
 
         private void WireUpDelegateEvent(object o, string eventName, string message)
         {
@@ -475,14 +468,28 @@ namespace AdRotator
                         handler = new Action<object>((o1) => DelegateEventHandler(message));
                         break;
                 }
-                Delegate del = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
+                Delegate eventDel = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
 
-                ei.AddEventHandler(o, del);
+                ei.AddEventHandler(o, eventDel);
+                currentProviderDelegates.Add(new AdProviderDeletage() { instance = o, eventInfo = ei, delegateMethod = eventDel });
             }
             catch (Exception)
             {
                 throw new Exception("Failed to bind events, general failure");
             }
+        }
+
+        private void RemoveEventDelegatesFromActiveControl()
+        {
+            foreach (var adDelegate in currentProviderDelegates)
+            {
+                try
+                {
+                    adDelegate.eventInfo.RemoveEventHandler(adDelegate.instance, adDelegate.delegateMethod);
+                }
+                catch { }
+            }
+            currentProviderDelegates = new List<AdProviderDeletage>();
         }
 
         private void DelegateEventHandler(string message)
@@ -504,90 +511,12 @@ namespace AdRotator
         }
         #endregion
 
-        #region AnalyticsFunctions
+        #region AnalyticsFunctions - tbc
 
-
-        internal void InitialiseAnalytics(AdRotator.AdProviderConfig.SupportedPlatforms platform)
+        void TryTrackAnaltics(AdType adType)
         {
-            if (!string.IsNullOrEmpty(GoogleAnalyticsId))
-            {
-                InitialiseGoogleAnalytics(platform);
-            }
-            if (!string.IsNullOrEmpty(FlurryAnalyticsId) && FlurryAnalyticsControl != null)
-            {
-                InitialiseFlurryAnalytics(platform);
-            }
-            AnalyticsInitilised = true;
+            //tbc
         }
-
-        #region GoogleAnalytics
-        private void InitialiseGoogleAnalytics(AdRotator.AdProviderConfig.SupportedPlatforms platform)
-        {
-            if (!string.IsNullOrEmpty(GoogleAnalyticsId))
-            {
-                if (GoogleAnalyticsControl == null)
-                {
-                    switch (platform)
-                    {
-                        case AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone7:
-                            GoogleAnalyticsControlType = reflectionHelper.TryGetType("GoogleAnalyticsTracker.WP7", "GoogleAnalyticsTracker.Tracker");
-                            break;
-                        case AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone8:
-                            GoogleAnalyticsControlType = reflectionHelper.TryGetType("GoogleAnalyticsTracker.WP8", "GoogleAnalyticsTracker.WP8.Tracker");
-                            break;
-                        case AdRotator.AdProviderConfig.SupportedPlatforms.Windows8:
-                            GoogleAnalyticsControlType = reflectionHelper.TryGetType("GoogleAnalyticsTracker.WinRT", "GoogleAnalyticsTracker.Tracker");
-                            break;
-                    }
-                    if (GoogleAnalyticsControlType != null)
-                    {
-                        GoogleAnalyticsControl = Activator.CreateInstance(GoogleAnalyticsControlType,new object[2] {GoogleAnalyticsId,"AdRotator"});
-
-                    }
-                }
-                TrackAnalytics += TrackGoogleAnalytics;
-            }
-        }
-
-        private void TrackGoogleAnalytics(AdType adType, string eventDescription)
-        {
-            if (!string.IsNullOrEmpty(GoogleAnalyticsId))
-            {
-                if (GoogleAnalyticsControl != null)
-                {
-                    reflectionHelper.TryInvokeMethod(GoogleAnalyticsControlType, GoogleAnalyticsControl, "TrackEvent", new object[] { "AdRotator",eventDescription,adType.ToString(),0 });
-                }
-            }
-        }
-        #endregion
-
-        #region FlurryAnalytics
-
-        private void InitialiseFlurryAnalytics(AdRotator.AdProviderConfig.SupportedPlatforms platform)
-        {
-            if (!string.IsNullOrEmpty(FlurryAnalyticsId))
-            {
-                if (FlurryAnalyticsControl != null)
-                {
-                    FlurryAnalyticsControlType = reflectionHelper.TryGetType("FlurryWP8SDK", "FlurryWP8SDK.Api");
-                    reflectionHelper.TryInvokeMethod(FlurryAnalyticsControlType, null, "StartSession", new object[] { FlurryAnalyticsId });
-
-                    TrackAnalytics += TrackFlurryAnalytics;
-                }
-            }
-        }
-
-        private void TrackFlurryAnalytics(AdType adType, string eventDescription)
-        {
-            if (!string.IsNullOrEmpty(FlurryAnalyticsId))
-            {
-                if (FlurryAnalyticsControl != null)
-                {
-                    reflectionHelper.TryInvokeMethod(FlurryAnalyticsControlType, null, "LogEvent", new object[] { String.Format("AdRotator: {0} for AdType: {1}",eventDescription,adType.ToString()) });
-                }
-            }
-        }
-        #endregion
 
         #endregion
     }
