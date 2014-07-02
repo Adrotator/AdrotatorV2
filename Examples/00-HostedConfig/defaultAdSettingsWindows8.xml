@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AdSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<CultureDescriptors>
+		<AdCultureDescriptor CultureName="en-US">
+		  <Probabilities Probability="50" AdType="PubCenter" AppID="test_client" SecondaryID="Image_728x90" />
+		  <Probabilities Probability="50" AdType="AdDuplex" AppID="7687"/>
+		  <Probabilities AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAdWin8.xaml"/>
+		</AdCultureDescriptor>
+		<AdCultureDescriptor CultureName="en-GB">
+		  <Probabilities Probability="50" AdType="AdDuplex" AppID="7687"/>
+		  <Probabilities Probability="50" AdType="PubCenter" AppID="test_client" SecondaryID="Image_728x90" />
+		  <Probabilities AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAdWin8.xaml"/>
+		</AdCultureDescriptor>
+		<AdCultureDescriptor CultureName="de-DE">
+		  <Probabilities Probability="50" AdType="PubCenter" AppID="test_client" SecondaryID="Image_728x90" />
+		  <Probabilities Probability="50" AdType="AdDuplex" AppID="7687"/>
+		  <Probabilities AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAdWin8.xaml"/>
+		</AdCultureDescriptor>
+			<AdCultureDescriptor CultureName="default">
+		  <Probabilities Probability="50" AdType="PubCenter" AppID="test_client" SecondaryID="Image_728x90" />
+		  <Probabilities Probability="50" AdType="AdDuplex" AppID="7687"/>
+		  <Probabilities AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAdWin8.xaml"/>
+		</AdCultureDescriptor>
+	</CultureDescriptors>
+</AdSettings>

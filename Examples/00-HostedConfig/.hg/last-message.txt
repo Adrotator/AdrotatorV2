@@ -1,0 +1,1 @@
+Updated V2 config to use a global supported provider

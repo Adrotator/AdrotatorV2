@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 
@@ -115,7 +116,7 @@ namespace AdRotator
             }
             catch
             {
-                throw new PlatformNotSupportedException("Provider not located in this solution");
+                throw new PlatformNotSupportedException(String.Format("Provider dll not located in this solution ({0})", assemblyName));
             }
 
             return null;
@@ -146,14 +147,40 @@ namespace AdRotator
             }
         }
 
+        public void TryInvokeMethod(Type type, object classInstance, string methodName, params object[] parameters)
+        {
+            try
+            {
+                if (type != null)
+                {
+                    MethodInfo methodInfo = type.GetMethod(methodName, new Type[0]);
+                    if (methodInfo != null)
+                    {
+                        object result = null;
+                            //This works fine
+                        result = methodInfo.Invoke(classInstance, parameters);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(e.ToString());
+            }
+        }
+
         public void TrySetProperty(object instance, string PropertyName, string PropertyValue)
         {
             try
             {
                 PropertyInfo propertyInfo = instance.GetType().GetProperty(PropertyName);
-                if (propertyInfo.PropertyType.BaseType.FullName == "System.Enum")
+                if (propertyInfo.PropertyType.IsEnum)
                 {
                     propertyInfo.SetValue(instance, StringToEnum(propertyInfo.PropertyType, PropertyValue), null);
+                }
+                else if (propertyInfo.PropertyType.IsNullableEnum())
+                {
+                    Type nullableType = propertyInfo.PropertyType.GetGenericArguments()[0];
+                    propertyInfo.SetValue(instance, StringToEnum(nullableType, PropertyValue), null);
                 }
                 else
                 {
@@ -240,9 +267,14 @@ namespace AdRotator
 
             return invoke.ReturnType;
         }
+    }
 
-
-
-
+    public static class TypeExtensions
+    {
+        public static bool IsNullableEnum(this Type t)
+        {
+            Type u = Nullable.GetUnderlyingType(t);
+            return (u != null) && u.IsEnum;
+        }
     }
 }

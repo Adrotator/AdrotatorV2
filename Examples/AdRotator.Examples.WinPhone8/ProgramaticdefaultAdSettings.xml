@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AdSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CultureDescriptors CultureName="">
+    <AdDuplex AppId="1379" Probability="5"/>
+    <Smaato AppId="0" SecondaryId="0" Probability="10"/>
+    <PubCenter AppId="test_client" SecondaryId="Image480_80" Probability="20"/>
+    <Inmobi AppId="ec9ea8fdfcc3436e94df0f5bcac3a227" Probability="10"/>
+    <MobFox AppId="474b65a3575dcbc261090efb2b996301=" IsTest="false" Probability="10"/>
+    <AdMob AppId="ca-app-pub-2213751212440288/6666168142" Probability="20"/>
+    <InnerActive AppId="ZenithMoon_Studios_StarterSeriesGames_WP"  Probability="10"/>
+    <DefaultHouseAd AppId="http://adrotator.apphb.com/SampleRemoteHouseAd.xaml" SecondaryId="AdRotator.Examples.WinPhone8.DefaultAd.MyDefaultAd"/>
+    <None Probability="0"/>
+    <AdGroup Probability="0">
+      <AdDuplex AppId="1379" Probability="100"/>
+    </AdGroup>
+  </CultureDescriptors>
+</AdSettings>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 #if WINDOWS_PHONE
 using System.Windows.Controls;
 using System.Windows;
@@ -20,7 +21,8 @@ namespace AdRotator
     public sealed class AdRotatorControl : Control, IAdRotatorProvider, IDisposable
     {
         private int AdRotatorControlID;
-        private AdRotatorComponent adRotatorControl = new AdRotatorComponent(CultureInfo.CurrentUICulture.ToString(), new FileHelpers());
+        private static FileHelpers fileHelper = new FileHelpers();
+        private AdRotatorComponent adRotatorControl = new AdRotatorComponent(CultureInfo.CurrentUICulture.ToString(), fileHelper);
 #if WINDOWS_PHONE
 #if WP7
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone7;
@@ -32,12 +34,12 @@ namespace AdRotator
 #endif
         #region LoggingEventCode
         public delegate void LogHandler(string message);
-        public event LogHandler Log;
-        internal void OnLog(string message)
+        public static event LogHandler Log;
+        internal static void OnLog(int adRotatorControlID, string message)
         {
             if (Log != null)
             {
-                Log("Control {" + AdRotatorControlID + "} - " + message);
+                Log("Control {" + adRotatorControlID + "} - " + message);
             }
         }
         #endregion
@@ -59,27 +61,35 @@ namespace AdRotator
                     AdType.AdDuplex, 
                     AdType.PubCenter, 
                     AdType.Inmobi,
+                    AdType.DefaultHouseAd,
+                    AdType.None,
 #if WINDOWS_PHONE
+#if !WP7
+                    AdType.AdMob,
+#endif
                     AdType.Smaato,
                     AdType.MobFox,
-                    AdType.AdMob,
                     AdType.InnerActive,
 #endif
                 };
-            adRotatorControl.Log += (s) => OnLog(s);
+            adRotatorControl.Log += (s) => OnLog(AdRotatorControlID,s);
         }
 
-        private Grid AdRotatorRoot
+        private Border AdRotatorRoot
         {
             get
             {
-                return GetTemplateChild("AdRotatorRoot") as Grid;
+                return GetTemplateChild("AdRotatorRoot") as Border;
             }
         }
 
-        void adRotatorControl_AdAvailable(AdProvider adProvider)
+        async void adRotatorControl_AdAvailable(AdProvider adProvider)
         {
-            Invalidate(adProvider);
+#if WINDOWS_PHONE
+            await Dispatcher.InvokeAsync(() => Invalidate(adProvider));
+#else
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => Invalidate(adProvider));
+#endif
         }
 
         private bool templateApplied;
@@ -92,41 +102,40 @@ namespace AdRotator
 #endif
         {
             base.OnApplyTemplate();
-            if (IsInDesignMode)
-            {
-                AdRotatorRoot.Children.Add(new TextBlock() { Text = "AdRotator in design mode, No ads will be displayed", VerticalAlignment = VerticalAlignment.Center });
-            }
-            else
-            {
-                adRotatorControl.AdAvailable += adRotatorControl_AdAvailable;
-                adRotatorControl.AdAvailable += adRotatorControl_AdAvailable;
-                if (AutoStartAds)
-                {
-                    adRotatorControl.GetConfig();
-                    if (!adRotatorControl.adRotatorRefreshIntervalSet)
-                    {
-                        adRotatorControl.StartAdTimer();
-                    }
-                }
-                InitialiseSlidingAnimations();
-            }
             templateApplied = true;
-            OnAdRotatorReady();
-            if (adRotatorControl.isLoaded)
-            {
-                Invalidate(null);
-            }
-
         }
         void AdRotatorControl_Loaded(object sender, RoutedEventArgs e)
         {
             // This call needs to happen when the control is loaded 
             // b/c dependency properties are propagated to their values at this point
+            if (IsInDesignMode)
+            {
+                AdRotatorRoot.Child = new TextBlock() { Text = "AdRotator in design mode, No ads will be displayed", VerticalAlignment = VerticalAlignment.Center };
+            }
+            else if (templateApplied)
+            {
+                InitialiseSlidingAnimations();
+                adRotatorControl.AdAvailable += adRotatorControl_AdAvailable;
+                if (AutoStartAds)
+                {
+                    if (!adRotatorControl.adRotatorRefreshIntervalSet)
+                    {
+                        adRotatorControl.StartAdTimer();
+                    }
+                }
+            }
+            OnAdRotatorReady();
+
             adRotatorControl.isLoaded = true;
         }
 
-        public string Invalidate(AdProvider adProvider)
+        public async Task<string> Invalidate(AdProvider adProvider)
         {
+            if (!IsAdRotatorEnabled)
+            {
+                OnLog(AdRotatorControlID, "Control is not enabled");
+                return "Control Disabled";
+            } 
             if (adProvider == null)
             {
                 adRotatorControl.GetAd(null);
@@ -135,6 +144,7 @@ namespace AdRotator
             if (adProvider.AdProviderType == AdType.None)
             {
                 return adRotatorControl.AdsFailed();
+
             }
 
             if (SlidingAdDirection != AdSlideDirection.None && !_slidingAdTimerStarted)
@@ -148,7 +158,20 @@ namespace AdRotator
             object providerElement = null;
             try
             {
-                providerElement = adRotatorControl.GetProviderFrameworkElement(CurrentPlatform, adProvider);
+                if (adProvider.AdProviderType == AdType.DefaultHouseAd)
+                {
+                    var defaultHouseAd = new DefaultHouseAd(AdRotatorControlID,fileHelper);
+                    //houseAd.AdLoaded += (s, e) => adRotatorControl.OnAdAvailable(AdType.DefaultHouseAd);
+                    defaultHouseAd.AdLoadingFailed += (s, e) => adRotatorControl.AdFailed(AdType.DefaultHouseAd);
+                    defaultHouseAd.AdClicked += (s, e) => OnDefaultHouseAdClicked();
+                    var defaultHouseAdBody = string.IsNullOrEmpty(adProvider.SecondaryId) ? DefaultHouseAdBody : adProvider.SecondaryId;
+                    var defaultHouseAdURI = string.IsNullOrEmpty(adProvider.AppId) ? DefaultHouseAdURI : adProvider.AppId;
+                    providerElement = await defaultHouseAd.Initialise(defaultHouseAdBody, defaultHouseAdURI);
+                }
+                else
+                {
+                    providerElement = adRotatorControl.GetProviderFrameworkElement(CurrentPlatform, adProvider);
+                }
             }
             catch
             {
@@ -161,8 +184,8 @@ namespace AdRotator
                 return "No Ad Returned";
             }
 
-            AdRotatorRoot.Children.Clear();
-            AdRotatorRoot.Children.Add((FrameworkElement)providerElement);
+            AdRotatorRoot.Child = null;
+            AdRotatorRoot.Child = (FrameworkElement)providerElement;
             return adProvider.AdProviderType.ToString();
         }
 
@@ -246,7 +269,7 @@ namespace AdRotator
             var sender = d as AdRotatorControl;
             if (sender != null)
             {
-                sender.AdWidthChanged(e);
+                sender.IsTestChanged(e);
             }
         }
 
@@ -378,7 +401,15 @@ namespace AdRotator
 
         public delegate void DefaultHouseAdClickEventHandler();
 
-        public event DefaultHouseAdClickEventHandler DefaultHouseAdClick;
+        public event DefaultHouseAdClickEventHandler DefaultHouseAdClicked;
+
+        internal void OnDefaultHouseAdClicked()
+        {
+            if (DefaultHouseAdClicked != null)
+            {
+                DefaultHouseAdClicked();
+            }
+        }
         #endregion
 
         #region IsLoaded
@@ -444,7 +475,7 @@ namespace AdRotator
         public int AdRefreshInterval
         {
             get { return (int)adRotatorControl.adRotatorRefreshInterval; }
-            set { SetValue(AutoStartAdsProperty, value); }
+            set { SetValue(AdRefreshIntervalProperty, value); }
         }
 
         /// <summary>
@@ -586,10 +617,10 @@ namespace AdRotator
         #endregion
 
         #region Animation Events
-        private void SlideOutAdStoryboard_Completed(object sender, object e)
+        private async void SlideOutAdStoryboard_Completed(object sender, object e)
         {
             _slidingAdHidden = true;
-            Invalidate(null);
+            await Invalidate(null);
             ResetSlidingAdTimer(SlidingAdHiddenSeconds);
         }
 
@@ -601,7 +632,7 @@ namespace AdRotator
 
         private void ResetSlidingAdTimer(int durationInSeconds)
         {
-            if (IsAdRotatorEnabled)
+            if (IsAdRotatorEnabled && templateApplied)
             {
                 SlidingAdTimer.Duration = new Duration(new TimeSpan(0, 0, durationInSeconds));
                 SlidingAdTimer.Begin();
@@ -661,7 +692,7 @@ namespace AdRotator
             Storyboard.SetTarget(SlideInLRAdStoryboardAnimation, AdRotatorRoot);
 #if WINDOWS_PHONE
             Storyboard.SetTargetProperty(SlideInLRAdStoryboardAnimation, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateX)"));
- #else
+#else
             Storyboard.SetTargetProperty(SlideInLRAdStoryboardAnimation, "(UIElement.RenderTransform).(CompositeTransform.TranslateX)");
 #endif
             SlideInLRAdStoryboardAnimation.Completed += SlideInAdStoryboard_Completed;
@@ -673,7 +704,7 @@ namespace AdRotator
             Storyboard.SetTarget(SlideOutUDAdStoryboardAnimation, AdRotatorRoot);
 #if WINDOWS_PHONE
             Storyboard.SetTargetProperty(SlideOutUDAdStoryboardAnimation, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateY)"));
- #else
+#else
             Storyboard.SetTargetProperty(SlideOutUDAdStoryboardAnimation, "(UIElement.RenderTransform).(CompositeTransform.TranslateY)");
 #endif
             SlideOutUDAdStoryboardAnimation.Completed += SlideOutAdStoryboard_Completed;
@@ -685,7 +716,7 @@ namespace AdRotator
             Storyboard.SetTarget(SlideInUDAdStoryboardAnimation, AdRotatorRoot);
 #if WINDOWS_PHONE
             Storyboard.SetTargetProperty(SlideInUDAdStoryboardAnimation, new PropertyPath("(UIElement.RenderTransform).(CompositeTransform.TranslateY)"));
- #else
+#else
             Storyboard.SetTargetProperty(SlideInUDAdStoryboardAnimation, "(UIElement.RenderTransform).(CompositeTransform.TranslateY)");
 #endif
             SlideInUDAdStoryboardAnimation.Completed += SlideInAdStoryboard_Completed;
@@ -723,7 +754,7 @@ namespace AdRotator
         {
             var getMethod = instance.GetType().GetProperty(name).GetGetMethod();
             return getMethod.Invoke(instance, null);
-        } 
+        }
 #endif
         #endregion
 
@@ -744,7 +775,7 @@ namespace AdRotator
 
         public void Dispose()
         {
-            AdRotatorRoot.Children.Clear();
+            AdRotatorRoot.Child = null;
             //providerElement = null;
             DefaultHouseAdBody = null;
         }

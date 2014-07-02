@@ -17,15 +17,22 @@
         </Grid.RowDefinitions>
         <adRotator:AdRotatorControl
             x:Name="AdRotatorControl"
+            BorderBrush="AliceBlue"
+            BorderThickness="20"
+            AdRefreshInterval="10"
             AdHeight="90"
             AdWidth="728"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             LocalSettingsLocation="defaultAdSettings.xml"
             SlidingAdDirection="Left"
-            AutoStartAds="True">
+            IsTest="True"
+            AutoStartAds="True"
+            
+            >
         </adRotator:AdRotatorControl>
         <Grid Grid.Row="1" x:Name="ProgramaticAdRotator"/>
         <Button Grid.Row="2" x:Name="HideButton" Content="Hide/unhide AdRotator" Tapped="HideButton_Tapped"/>
+        <Grid HorizontalAlignment="Left" Height="100" Margin="619,584,0,0" VerticalAlignment="Top" Width="100"/>
     </Grid>
 </Page>

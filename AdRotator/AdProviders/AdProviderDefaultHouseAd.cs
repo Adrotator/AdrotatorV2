@@ -1,5 +1,6 @@
 ﻿using AdRotator.Model;
 
+
 namespace AdRotator.AdProviders
 {
     public class AdProviderDefaultHouseAd : AdProvider

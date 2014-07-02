@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace AdRotator
 {
@@ -36,11 +35,12 @@ namespace AdRotator
 
         public event AdAvailableHandler AdAvailable;
 
-        protected void OnAdAvailable(AdProvider adProvider)
+        internal void OnAdAvailable(AdProvider adProvider)
         {
             if (AdAvailable != null)
             {
                 OnLog(string.Format("Trying provider {0}", adProvider.AdProviderType));
+                TryTrackAnaltics(adProvider.AdProviderType);
                 AdAvailable(adProvider);
             }
         }
@@ -54,7 +54,7 @@ namespace AdRotator
         /// <summary>
         /// The ad settings based on which the ad descriptor for the current UI culture can be selected
         /// </summary>
-        private static AdSettings _settings;
+        private AdSettings _settings;
 
         private string culture;
 
@@ -71,13 +71,12 @@ namespace AdRotator
         private IFileHelpers fileHelper;
         private ReflectionHelpers reflectionHelper = new ReflectionHelpers();
 
-        private static Timer adRotatorTimer;
+        private Timer adRotatorTimer;
 
-        private static TimerCallback timerDelegate;
+        private TimerCallback timerDelegate;
 
-        private int _adRotatorRefreshInterval;
-
-
+        private int _adRotatorRefreshInterval = 60;
+        
         internal int AdWidth { get; set; }
 
         internal int AdHeight { get; set; }
@@ -102,6 +101,9 @@ namespace AdRotator
 
         internal static Dictionary<AdType,Type> PlatformAdProviderComponents { get; set; }
 
+        internal AdSlideDirection currentAdSlideDirection { get; set; }
+        internal int currentSlidingAdDisplaySeconds { get; set; }
+        internal int currentSlidingAdHiddenSeconds { get; set; }
 
         /// <summary>
         /// RefreshInterval in seconds
@@ -109,6 +111,8 @@ namespace AdRotator
         /// </summary>
         internal int adRotatorRefreshInterval { get { return _adRotatorRefreshInterval; } set { _adRotatorRefreshInterval = value == 0 ? 0 : Math.Max(AdRotatorMinRefreshRate, value); } }
         internal bool adRotatorRefreshIntervalSet = false;
+
+
         #endregion
 
 
@@ -135,7 +139,7 @@ namespace AdRotator
         {
             try
             {
-                await LoadAdSettings();
+                if(_settings == null) await LoadAdSettings();
             }
             catch { }
 
@@ -144,10 +148,7 @@ namespace AdRotator
                 //Set Current culture based on Culture Value
                _settings.GetAdDescriptorBasedOnUICulture(culture);
             }
-            if (adRotatorRefreshInterval == 0)
-            {
-                OnAdAvailable(_settings.GetAd());
-            } 
+            OnAdAvailable(_settings.GetAd());
         }
 
         internal void GetAd(Object stateInfo)
@@ -156,7 +157,10 @@ namespace AdRotator
             {
                 GetConfig();
             }
-            OnAdAvailable(_settings.GetAd());
+            else
+            {
+                OnAdAvailable(_settings.GetAd());
+            }
         }
 
         internal object GetProviderFrameworkElement(AdRotator.AdProviderConfig.SupportedPlatforms platform, AdProvider adProvider)
@@ -177,7 +181,7 @@ namespace AdRotator
             }
             catch (PlatformNotSupportedException)
             {
-                AdFailed(adProvider.AdProviderType);
+                OnLog(String.Format("Provider {0} DLL not found or not supported on the {1} platform", adProvider.AdProviderType, platform));
             }
             if (providerType == null)
             {
@@ -199,7 +203,15 @@ namespace AdRotator
 
                 if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.AdType))
                 {
-                    reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "IaAdType_Banner");
+                    switch (adProvider.AdProviderType)
+                    {
+                        case AdType.InnerActive:
+                            reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "IaAdType_Banner");
+                            break;
+                        case AdType.AdMob:
+                            reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "Banner");
+                            break;
+                    }
                 }
 
                 if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.IsTest))
@@ -252,19 +264,16 @@ namespace AdRotator
             catch (PlatformNotSupportedException)
             {
                 OnLog(string.Format("Configured provider {0} not found in this installation", adProvider.AdProviderType.ToString()));
-                AdFailed(adProvider.AdProviderType);
                 return null;
             }
             catch (NotImplementedException)
             {
                 OnLog(string.Format("Configured provider {0} is not fully implemented yet", adProvider.AdProviderType.ToString()));
-                AdFailed(adProvider.AdProviderType);
                 return null;
             }
             catch (Exception e)
             {
                 OnLog(string.Format("General exception [{0}] occured, continuing", e.InnerException.ToString()));
-                AdFailed(adProvider.AdProviderType);
                 return null;
             }
 
@@ -284,6 +293,10 @@ namespace AdRotator
             if (adRotatorRefreshInterval > 0)
             {
                 adRotatorTimer = new Timer(timerDelegate, null, delayTime, intervalTime);
+            }
+            else
+            {
+                GetAd(null);
             }
         }
 
@@ -346,20 +359,8 @@ namespace AdRotator
             var SETTINGS_FILE_NAME = string.IsNullOrEmpty(LocalSettingsLocation) ? GlobalConfig.DEFAULT_SETTINGS_FILE_NAME : LocalSettingsLocation;
             try
             {
-                await Task.Factory.StartNew(() =>
-                    {
-                        if (fileHelper.FileExists(SETTINGS_FILE_NAME))
-                        {
-                            using (var stream = fileHelper.FileOpenRead("", SETTINGS_FILE_NAME))
-                            {
-                                try
-                                {
-                                    if(stream != null) _settings = _settings.Deserialise(stream);
-                                }
-                                catch { }
-                            }
-                        }
-                    });
+                var stream = await fileHelper.OpenStreamAsync(SETTINGS_FILE_NAME);
+                if (stream != null) _settings = _settings.Deserialise(stream);
             }
             catch
             {
@@ -370,7 +371,7 @@ namespace AdRotator
         public async Task LoadSettingsFileRemote(string RemoteSettingsLocation)
         {
             var settings = await Networking.Network.GetStringFromURLAsync(RemoteSettingsLocation);
-            if (settings != null) _settings = _settings.Deserialise(settings);
+            if (!String.IsNullOrEmpty(settings)) _settings = _settings.Deserialise(settings);
         }
 
         //Not Finished (SJ)
@@ -381,17 +382,14 @@ namespace AdRotator
             {
                 try
                 {
-                    await Task.Factory.StartNew(() =>
+                    using (Stream stream = await fileHelper.OpenStreamAsyncFromProject(LocalSettingsLocation))
+                    {
+                        try
                         {
-                            using (var stream = fileHelper.FileOpenRead(new Uri(LocalSettingsLocation, UriKind.Relative), LocalSettingsLocation))
-                            {
-                                try
-                                {
-                                    if(stream != null) _settings = _settings.Deserialise(stream);
-                                }
-                                catch { }
-                            }
-                        });
+                            if (stream != null) _settings = _settings.Deserialise(stream);
+                        }
+                        catch { }
+                    }
                 }
                 catch
                 {
@@ -404,15 +402,14 @@ namespace AdRotator
         /// Saves the passed settings file to isolated storage
         /// </summary>
         /// <param name="settings"></param>
-        private void SaveAdSettings(AdSettings settings)
+        private async void SaveAdSettings(AdSettings settings)
         {
             var SETTINGS_FILE_NAME = string.IsNullOrEmpty(LocalSettingsLocation) ? GlobalConfig.DEFAULT_SETTINGS_FILE_NAME : LocalSettingsLocation;
             try
             {
-                XmlSerializer xs = new XmlSerializer(typeof(AdSettings));
-                using (var stream = fileHelper.OpenStream("", SETTINGS_FILE_NAME, ""))
+                using (Stream stream = await fileHelper.OpenStreamAsync(SETTINGS_FILE_NAME))
                 {
-                    xs.Serialize(stream, settings);
+                    settings.Serialise(stream);
                 }
             }
             catch
@@ -425,10 +422,11 @@ namespace AdRotator
 
         #region internal Functions
 
-        public void AdFailed(Model.AdType AdType)
+        public void AdFailed(Model.AdType adType)
         {
-            _settings.AdFailed(AdType);
-            //OnLog(string.Format("Ads failed request for: {0}", AdType.ToString()));
+            _settings.AdFailed(adType);
+            RemoveEventDelegatesFromActiveControl();
+            TryTrackAnaltics(adType);
             GetAd(null);
         }
 
@@ -441,9 +439,15 @@ namespace AdRotator
         private void RemoveAdFromFailedAds(AdType AdType)
         {
             _settings.RemoveAdFromFailedAds(AdType);
-            //OnLog(string.Format("Ads failed request for: {0}", AdType.ToString()));
         }
 
+        struct AdProviderDelegate
+        {
+            public object instance;
+            public EventInfo eventInfo;
+            public Delegate delegateMethod;
+        }
+        private List<AdProviderDelegate> currentProviderDelegates = new List<AdProviderDelegate>();
 
         private void WireUpDelegateEvent(object o, string eventName, string message)
         {
@@ -464,14 +468,28 @@ namespace AdRotator
                         handler = new Action<object>((o1) => DelegateEventHandler(message));
                         break;
                 }
-                Delegate del = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
+                Delegate eventDel = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
 
-                ei.AddEventHandler(o, del);
+                ei.AddEventHandler(o, eventDel);
+                currentProviderDelegates.Add(new AdProviderDeletage() { instance = o, eventInfo = ei, delegateMethod = eventDel });
             }
             catch (Exception)
             {
                 throw new Exception("Failed to bind events, general failure");
             }
+        }
+
+        private void RemoveEventDelegatesFromActiveControl()
+        {
+            foreach (var adDelegate in currentProviderDelegates)
+            {
+                try
+                {
+                    adDelegate.eventInfo.RemoveEventHandler(adDelegate.instance, adDelegate.delegateMethod);
+                }
+                catch { }
+            }
+            currentProviderDelegates = new List<AdProviderDeletage>();
         }
 
         private void DelegateEventHandler(string message)
@@ -491,6 +509,15 @@ namespace AdRotator
             ClearFailedAds();
             OnLog(string.Format("Initialising AdRotator"));
         }
+        #endregion
+
+        #region AnalyticsFunctions - tbc
+
+        void TryTrackAnaltics(AdType adType)
+        {
+            //tbc
+        }
+
         #endregion
     }
 }

@@ -45,6 +45,38 @@ namespace AdRotator.Model
 
     internal static class AdSettingsExtensions
     {
+        internal static void Serialise(this AdSettings adsettings, Stream output)
+        {
+            XmlSerializer xs = new XmlSerializer(typeof(AdSettings));
+            try
+            {
+                xs.Serialize(output, adsettings);
+            }
+            catch
+            {
+                throw new XmlException("Config file was not in the expected format or not found");
+            }
+        }
+
+        //internal static void Serialise(this AdSettings adsettings)
+        //{
+        //    string output;
+        //    XmlSerializer xs = new XmlSerializer(typeof(AdSettings));
+        //    try
+        //    {
+        //        using (TextWriter stringWriter = new StringWriter())
+        //        {
+        //            xs.Serialize(stringWriter,adsettings);
+        //            output = stringWriter.
+        //        }
+        //    }
+        //    catch (Exception Ex)
+        //    {
+        //        throw new XmlException("Unable to save AdSettings", Ex.InnerException);
+        //    }
+        //    return adsettings;
+        //}
+
         internal static AdSettings Deserialise(this AdSettings adsettings, Stream input)
         {
             XmlSerializer xs = new XmlSerializer(typeof(AdSettings));
@@ -71,7 +103,7 @@ namespace AdRotator.Model
             }
             catch (Exception Ex)
             {
-                throw new XmlException("Unable to save AdSettings", Ex.InnerException);
+                throw new XmlException("Unable to unpack AdSettings", Ex.InnerException);
             }
             return adsettings;
         }
@@ -115,13 +147,13 @@ namespace AdRotator.Model
             var validDescriptors = adsettings.CurrentCulture.Items
             .Where(x => !adsettings._failedAdTypes.Contains(((AdProvider)x).AdProviderType)
                         && AdRotatorComponent.PlatformSupportedAdProviders.Contains(((AdProvider)x).AdProviderType)
-                        && ((AdProvider)x).Probability > 0);
+                        && ((AdProvider)x).Probability > 0).Cast<AdProvider>().ToArray();
 
             var defaultHouseAd = (AdProvider)adsettings.CurrentCulture.Items.FirstOrDefault(x => ((AdProvider)x).AdProviderType == AdType.DefaultHouseAd && !adsettings._failedAdTypes.Contains(AdType.DefaultHouseAd));
 
             if (validDescriptors != null)
             {
-                validDescriptors = validDescriptors.ToList();
+                validDescriptors = RandomPermutation<AdProvider>(validDescriptors);
 
                 var totalValueBetweenValidAds = validDescriptors.Sum(x => ((AdProvider)x).Probability);
                 var randomValue = AdRotator.AdRotatorComponent._rnd.NextDouble() * totalValueBetweenValidAds;
@@ -166,6 +198,45 @@ namespace AdRotator.Model
             {
                 adsettings._failedAdTypes.Remove(adType);
             }
+        }
+
+        internal static IEnumerable<T> RandomPermutation<T>(IEnumerable<T> array)
+        {
+
+            T[] retArray = array.ToArray();
+
+            for (int i = 0; i < array.Count(); i += 1)
+            {
+                int swapIndex = AdRotator.AdRotatorComponent._rnd.Next(i, array.Count());
+                if (swapIndex != i)
+                {
+                    T temp = retArray[i];
+                    retArray[i] = retArray[swapIndex];
+                    retArray[swapIndex] = temp;
+                }
+            }
+
+            return retArray;
+        }
+
+        public static T[] RandomPermutation<T>(T[] array)
+        {
+
+            T[] retArray = new T[array.Length];
+            array.CopyTo(retArray, 0);
+
+            for (int i = 0; i < array.Length; i += 1)
+            {
+                int swapIndex = AdRotator.AdRotatorComponent._rnd.Next(i, array.Length);
+                if (swapIndex != i)
+                {
+                    T temp = retArray[i];
+                    retArray[i] = retArray[swapIndex];
+                    retArray[swapIndex] = temp;
+                }
+            }
+
+            return retArray;
         }
         
     }

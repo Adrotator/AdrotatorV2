@@ -100,17 +100,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AdDuplex.WindowsPhone">
-      <HintPath>..\..\packages\AdDuplexWP8.2.8.0.8\lib\sl4-wp71\AdDuplex.WindowsPhone.dll</HintPath>
+      <HintPath>..\..\packages\AdDuplexWP8.2.8.0.8\lib\wp8\AdDuplex.WindowsPhone.dll</HintPath>
     </Reference>
-    <Reference Include="AdRotator.Core">
-      <HintPath>..\..\AdRotator\bin\WindowsPhone7\AdRotator.Core.dll</HintPath>
+    <Reference Include="GoogleAnalyticsTracker.WP7">
+      <HintPath>..\..\packages\GoogleAnalyticsTracker.WP7.1.8.5\lib\wp71\GoogleAnalyticsTracker.WP7.dll</HintPath>
     </Reference>
-    <Reference Include="InMobiWP7SDK">
-      <HintPath>..\..\AdProviderControls\WindowsPhone7\InMobiWP7SDK.dll</HintPath>
-    </Reference>
-    <Reference Include="Inneractive.Ad">
-      <HintPath>..\..\AdProviderControls\WindowsPhone7\Inneractive.Ad.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.Advertising.Mobile, Version=6.2.960.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Advertising.Mobile.UI, Version=6.2.960.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\wp8\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -120,16 +116,13 @@
     <Reference Include="Microsoft.Threading.Tasks.Extensions.Phone">
       <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\wp8\Microsoft.Threading.Tasks.Extensions.Phone.dll</HintPath>
     </Reference>
-    <Reference Include="MobFox.Ads">
-      <HintPath>..\..\AdProviderControls\WindowsPhone7\MobFox.Ads.dll</HintPath>
-    </Reference>
-    <Reference Include="SOMAWP7">
-      <HintPath>..\..\AdProviderControls\WindowsPhone7\SOMAWP7.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DefaultAd\MyDefaultAd.xaml.cs">
+      <DependentUpon>MyDefaultAd.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -143,6 +136,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="DefaultAd\MyDefaultAd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -159,6 +156,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\AdRotator.Examples.WinPhone8\DefaultAd\AdRotatorImage.png">
+      <Link>DefaultAd\AdRotatorImage.png</Link>
+    </Content>
     <Content Include="ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -171,6 +171,10 @@
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AdRotator\AdRotator.csproj">
+      <Project>{170B13CC-30B9-405C-A032-CF1A6B5F8277}</Project>
+      <Name>AdRotator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\AdRotator\Clients\WinPhone7\AdRotator.WinPhone7.csproj">
       <Project>{0804BD51-07FF-407B-8CDA-A92039509D1C}</Project>
       <Name>AdRotator.WinPhone7</Name>

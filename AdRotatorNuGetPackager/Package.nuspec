@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>AdRotator</id>
-        <version>2.2.0-Beta1</version>
+        <version>2.0.0</version>
         <title>AdRotator</title>
         <authors>Simon-Darkside / Gergely Orosz</authors>
         <owners>Simon-Darkside / Gergely Orosz</owners>
@@ -15,6 +15,7 @@
 Supports:
 * Windows Phone 7/8
 * Windows 8 / 8.1
+* Unity V4+ (WP8 + Win8)
 
 Includes the ability to configure supported ad providers from within the solution or remotely to allow re-configuration without re-libing.
 
@@ -22,9 +23,11 @@ Be sure to read the included readme for installation instructions
 
 Full documentation available at http://getadrotaor.com</description>
         <summary>the ultimate Ad Rotating solution to manage all your Ad Providers</summary>
-        <releaseNotes>Re-instalted Windows Phone 7 Platform and fixed Dependancy versions</releaseNotes>
+        <releaseNotes>First stable release for AdRotator V2, now feature compatible with V1.
+		See the releaseNotes.txt or GetAdRotator.com for more details of improvements</releaseNotes>
         <copyright>Copyright  2013</copyright>
         <language>en-GB</language>
+        <tags>AdDuplex,PubCenter,AdRotator,Smaato,Innerative,MobFox,AdMob,advertising,wp,wp7,wp8,windows phone, windows 8</tags>
         <dependencies>
           <dependency id="Microsoft.Bcl.Async" />
         </dependencies>
@@ -32,6 +35,7 @@ Full documentation available at http://getadrotaor.com</description>
     <files>
         <file src="content\defaultAdSettings.xml" target="content\defaultAdSettings.xml" />
         <file src="content\ReadMe-AdRotator-XAML.txt" target="content\ReadMe-AdRotator-XAML.txt" />
+        <file src="content\ReleaseNotes.txt" target="content\ReleaseNotes.txt" />
         <file src="..\AdRotator\bin\Windows8\AnyCPU\Themes\Generic.xaml" target="lib\netcore\AdRotator\Themes\Generic.xaml" />
         <file src="..\AdRotator\bin\Windows8\AnyCPU\AdRotator.Core.dll" target="lib\netcore\AdRotator.Core.dll" />
         <file src="..\AdRotator\bin\Windows8\AnyCPU\AdRotator.dll" target="lib\netcore\AdRotator.dll" />
@@ -41,6 +45,6 @@ Full documentation available at http://getadrotaor.com</description>
         <file src="..\AdRotator\bin\WindowsPhone8\AnyCPU\AdRotator.Core.dll" target="lib\wp8\AdRotator.Core.dll" />
         <file src="..\AdRotator\bin\WindowsPhone8\AnyCPU\AdRotator.dll" target="lib\wp8\AdRotator.dll" />
         <file src="tools\install.ps1" target="tools\install.ps1" />
-        <file src="readme.txt" target="readme.txt" />
+        <file src="content\ReadMe-AdRotator-XAML.txt" target="readme.txt" />
     </files>
 </package>

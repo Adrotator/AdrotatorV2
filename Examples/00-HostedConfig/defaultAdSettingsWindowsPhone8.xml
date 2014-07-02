@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AdSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<CultureDescriptors>
+    <AdCultureDescriptor CultureName="en-US">
+      <Probabilities Probability="15" AdType="Smaato" AppID="65754722" SecondaryID="923855310"/>
+      <Probabilities Probability="15" AdType="InnerActive" AppID="ZenithMoon_Studios_StarterSeriesGames_WP" />
+      <Probabilities Probability="60" AdType="PubCenter" AppID="test_client" SecondaryID="Image480_80" />
+      <Probabilities Probability="10" AdType="AdDuplex" AppID="2859"/>
+      <Probabilities AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAd.xaml"/>
+    </AdCultureDescriptor>
+    <AdCultureDescriptor CultureName="en-GB">
+      <Probabilities Probability="40" AdType="Smaato" AppID="65754722" SecondaryID="923855310"/>
+      <Probabilities Probability="10" AdType="InnerActive" AppID="ZenithMoon_Studios_StarterSeriesGames_WP" />
+      <Probabilities Probability="10" AdType="AdDuplex" AppID="2859"/>
+      <Probabilities Probability="40" AdType="PubCenter" AppID="test_client" SecondaryID="Image480_80" />
+      <Probabilities AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAd.xaml"/>
+    </AdCultureDescriptor>
+    <AdCultureDescriptor CultureName="de-DE">
+      <Probabilities Probability="25" AdType="Smaato" AppID="65754722" SecondaryID="923855310"/>
+      <Probabilities Probability="25" AdType="PubCenter" AppID="test_client" SecondaryID="Image480_80" />
+      <Probabilities Probability="25" AdType="AdDuplex" AppID="2859"/>
+      <Probabilities Probability="25" AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAd.xaml"/>
+    </AdCultureDescriptor>
+		<AdCultureDescriptor CultureName="default">
+      <Probabilities Probability="25" AdType="Smaato" AppID="65754722" SecondaryID="923855310"/>
+      <Probabilities Probability="25" AdType="InnerActive" AppID="ZenithMoon_Studios_StarterSeriesGames_WP" />
+      <Probabilities Probability="25" AdType="PubCenter" AppID="test_client" SecondaryID="Image480_80" />
+      <Probabilities Probability="25" AdType="AdDuplex" AppID="2859"/>
+      <Probabilities AdType="DefaultHouseAd" AppID="http://adrotator.apphb.com/SampleRemoteHouseAd.xaml"/>
+    </AdCultureDescriptor>
+	</CultureDescriptors>
+</AdSettings>
