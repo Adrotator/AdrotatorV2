@@ -52,11 +52,7 @@ namespace AdRotatorUnitySDK.Demo.Assets.Editor
 					adMgt.AdSettings.SlidingAdDisplaySeconds = 5;
 					adMgt.AdSettings.SlidingAdHiddenSeconds = 1;
 
-					adMgt.AppSettings.DefaultAdType = AdProvider.None;
 					adMgt.AppSettings.SettingsUrl = "";
-//					adMgt.AppSettings.DefaultSettingsFileUri = "defaultAdSettingsDemo.xml";
-					adMgt.AppSettings.DefaultHouseAdBody = "Template.HouseAdDemo";
-					adMgt.AppSettings.DefaultHouseAdUri = "http://adrotator.apphb.com/SampleRemoteHouseAdWin8.xaml";
 					Selection.activeGameObject = ads;
 				}
 				else

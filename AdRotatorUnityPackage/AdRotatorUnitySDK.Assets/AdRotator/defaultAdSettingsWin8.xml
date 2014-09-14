@@ -4,5 +4,6 @@
     <AdDuplex AppId="1379" Probability="33"/>
     <PubCenter AppId="d25517cb-12d4-4699-8bdc-52040c712cab" SecondaryId="10043105" Probability="33"/>
     <Inmobi AppId="ec9ea8fdfcc3436e94df0f5bcac3a227" Probability="33"/>
+    <DefaultHouseAd AppId="http://adrotator.apphb.com/SampleRemoteHouseAdWin8.xaml" SecondaryId="Template.HouseAdDemo"/>
   </CultureDescriptors>
 </AdSettings>

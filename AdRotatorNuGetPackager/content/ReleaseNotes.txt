@@ -1,5 +1,15 @@
 AdRotator V2 Release Notes
 ------------------------------
+2.0.1
+Updated release to resolve Unity plug-in issues
+Additionally the following fixes / requests have been included with this release:
+	* AdOrder functionality added - Ads can now be ordered instead of randomly selected, including the ability for an ordered fall back
+	* Sliding Ads now start off screen (by user request) - static / non-sliding ads are unaffected
+	* Fixed issue on WP where if Ads did not autostart and initialze was used, Ads did not show
+
+For more detailed information on this release check out the latest post on http://getadrotator.com/
+-------------------------------
+
 
 2.0.0
 Initial stable release including a host of fixes from the beta phase.

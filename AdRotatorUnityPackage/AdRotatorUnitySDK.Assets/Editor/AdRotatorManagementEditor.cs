@@ -1,69 +1,114 @@
-﻿// Version 1.0.0.0
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// Version 2.0.0.0
+using AdRotatorUnitySDK.Assets.Plugins;
 using UnityEditor;
 using UnityEngine;
-using AdRotatorUnitySDK.Assets.Plugins;
 
 namespace AdRotatorUnitySDK.Assets.Editor
 {
-	using System.Collections;
 
-	/// <summary>
-	/// Ad Rotator settings editor.
-	/// Store in "Assets\Editor".
-	/// </summary>
-	[CustomEditor(typeof(AdRotatorManagement))]
-	public class AdRotatorManagementEditor : UnityEditor.Editor
-	{
-		/// <summary>
-		/// Ad Rotator inspector GUI layout and behavior.
-		/// </summary>
-		public override void OnInspectorGUI()
-		{
-			var customTarget = (AdRotatorManagement)base.target;
+    /// <summary>
+    /// Ad Rotator settings editor.
+    /// Store in "Assets\Editor".
+    /// </summary>
+    [CustomEditor(typeof(AdRotatorManagement))]
+    public class AdRotatorManagementEditor : UnityEditor.Editor
+    {
+        Vector3 adRotatorPosition = Vector3.zero;
+        Vector2 adRotatorPositionOffset = new Vector2(0, 1);
 
-			GUILayout.BeginVertical();
-			customTarget.AdSettings.IsEnabled = EditorGUILayout.Toggle(new GUIContent("Enabled?", "Check to enable Ad Rotator. Ad will not be displayed if disabled."), customTarget.AdSettings.IsEnabled);
-			if (!customTarget.AdSettings.IsEnabled)
-			{
-				GUI.contentColor = Color.gray;
-			}
+        private float ScreenHeight;
+        private float ScreenWidth;
 
-			GUILayout.Label("Layout", EditorStyles.boldLabel);
-			customTarget.AdSettings.Position = (AdPosition)EditorGUILayout.EnumPopup(new GUIContent("  Ad Position", "Screen position of the Ad banner."), customTarget.AdSettings.Position);
-			customTarget.AdSettings.Size = (AdSize)EditorGUILayout.EnumPopup(new GUIContent("  Ad Size", "Size of the Ad Banner. Only supported sizes are listed."), customTarget.AdSettings.Size);
-			GUILayout.Label("");
-			GUILayout.Label("Sliding Ads", EditorStyles.boldLabel);
-			customTarget.AdSettings.SlidingAdDirection = (SlidingAdDirection)EditorGUILayout.EnumPopup(new GUIContent("  Direction", "Set SlidingAdDirection to Left, Right, Bottom or Top to have the ad slide in, stay for SlidingAdDisplaySeconds, slide out and stay hidden for SlidingAdHiddenSeconds. If SlidingAdDirection is set to None (this is the default), this behaviour does not take place, the ad remains static."), customTarget.AdSettings.SlidingAdDirection);
 
-			if (customTarget.AdSettings.SlidingAdDirection == SlidingAdDirection.None && customTarget.AdSettings.IsEnabled)
-			{
-				GUI.contentColor = Color.gray;
-			}
+        /// <summary>
+        /// Ad Rotator inspector GUI layout and behavior.
+        /// </summary>
+        public override void OnInspectorGUI()
+        {
+            var customTarget = (AdRotatorManagement)base.target;
 
-			customTarget.AdSettings.SlidingAdDisplaySeconds = EditorGUILayout.IntSlider(new GUIContent("  Ad Display in seconds", "When Sliding Ad is enabled, ad stays for SlidingAdDisplaySeconds, slide out and stay hidden for SlidingAdHiddenSeconds."), customTarget.AdSettings.SlidingAdDisplaySeconds, 0, 1800);
-			customTarget.AdSettings.SlidingAdHiddenSeconds = EditorGUILayout.IntSlider(new GUIContent("  Ad Hidden in seconds", "When Sliding Ad is enabled, ad stays for SlidingAdDisplaySeconds, slide out and stay hidden for SlidingAdHiddenSeconds."), customTarget.AdSettings.SlidingAdHiddenSeconds, 0, 1800);	
+            GUILayout.BeginVertical();
+            customTarget.AdSettings.IsEnabled = EditorGUILayout.Toggle(new GUIContent("Enabled?", "Check to enable Ad Rotator. Ad will not be displayed if disabled."), customTarget.AdSettings.IsEnabled);
+            if (!customTarget.AdSettings.IsEnabled)
+            {
+                GUI.contentColor = Color.gray;
+            }
 
-			GUI.contentColor = Color.white;
-			GUILayout.Label("");
-			GUILayout.Label("Ad Providers Settings", EditorStyles.boldLabel);
-			customTarget.AppSettings.DefaultAdType = (AdProvider)EditorGUILayout.EnumPopup(new GUIContent("  Default Ad Type", "What ad type should be shown if either the ad settings file could not be loaded or other ad providers have failed to load."), customTarget.AppSettings.DefaultAdType);
-			//customTarget.AppSettings.DefaultSettingsFileUri = EditorGUILayout.TextField(new GUIContent("  Default Ad Settings URL", "URI to a local XML file that will be used if the remote file specified with Ad Settings Url could not be loaded. Example: defaultAdSettings.xml"), customTarget.AppSettings.DefaultSettingsFileUri);
-			customTarget.AppSettings.SettingsUrl = EditorGUILayout.TextField(new GUIContent("  Ad Settings URL", "URL to the remote XML file that controls the probability of ad providers shown. Strongly advised to set this property. Example: http://mydomain.com/myAdSettings.xml"), customTarget.AppSettings.SettingsUrl);
+            GUILayout.Label("Layout", EditorStyles.boldLabel);
+            customTarget.AdSettings.Position = (AdPosition)EditorGUILayout.EnumPopup(new GUIContent("  Ad Position", "Screen position of the Ad banner."), customTarget.AdSettings.Position);
+            customTarget.AdSettings.Size = (AdSize)EditorGUILayout.EnumPopup(new GUIContent("  Ad Size", "Size of the Ad Banner. Only supported sizes are listed."), customTarget.AdSettings.Size);
+            GUILayout.Label("");
+            GUILayout.Label("Sliding Ads", EditorStyles.boldLabel);
+            customTarget.AdSettings.SlidingAdDirection = (SlidingAdDirection)EditorGUILayout.EnumPopup(new GUIContent("  Direction", "Set SlidingAdDirection to Left, Right, Bottom or Top to have the ad slide in, stay for SlidingAdDisplaySeconds, slide out and stay hidden for SlidingAdHiddenSeconds. If SlidingAdDirection is set to None (this is the default), this behaviour does not take place, the ad remains static."), customTarget.AdSettings.SlidingAdDirection);
 
-			GUILayout.Label("  House Ad");
-			customTarget.AppSettings.DefaultHouseAdBody = EditorGUILayout.TextField(new GUIContent("    Default House Ad Body", "Name of the XAML control to use (format: <namespace>.<object name>), need to be inside your application assembly or referenced by your project. See AdRotator documentation for more information. Example: AdRotatorExample.MyDefaultAd"), customTarget.AppSettings.DefaultHouseAdBody);
-			customTarget.AppSettings.DefaultHouseAdUri = EditorGUILayout.TextField(new GUIContent("    Default House Ad URL", "URL to the remote XAML file to use as the House Ad. See AdRotator documentation for more information. Example: http://mydomain.com/myHouseAd.xaml"), customTarget.AppSettings.DefaultHouseAdUri);
-			
-			GUILayout.EndVertical();
-			
-			if (GUI.changed)
-			{
-				EditorUtility.SetDirty(customTarget);
-			}			
-		}
-	}
+            if (customTarget.AdSettings.SlidingAdDirection == SlidingAdDirection.None && customTarget.AdSettings.IsEnabled)
+            {
+                GUI.contentColor = Color.gray;
+            }
+
+            customTarget.AdSettings.SlidingAdDisplaySeconds = EditorGUILayout.IntSlider(new GUIContent("  Ad Display in seconds", "When Sliding Ad is enabled, ad stays for SlidingAdDisplaySeconds, slide out and stay hidden for SlidingAdHiddenSeconds."), customTarget.AdSettings.SlidingAdDisplaySeconds, 0, 1800);
+            customTarget.AdSettings.SlidingAdHiddenSeconds = EditorGUILayout.IntSlider(new GUIContent("  Ad Hidden in seconds", "When Sliding Ad is enabled, ad stays for SlidingAdDisplaySeconds, slide out and stay hidden for SlidingAdHiddenSeconds."), customTarget.AdSettings.SlidingAdHiddenSeconds, 0, 1800);
+
+            GUI.contentColor = Color.white;
+            GUILayout.Label("");
+            GUILayout.Label("Ad Providers Settings", EditorStyles.boldLabel);
+            customTarget.AppSettings.SettingsUrl = EditorGUILayout.TextField(new GUIContent("  Ad Settings URL", "URL to the remote XML file that controls the probability of ad providers shown. Strongly advised to set this property. Example: http://mydomain.com/myAdSettings.xml"), customTarget.AppSettings.SettingsUrl);
+            GUILayout.Label("");
+            customTarget.AppSettings.AdMode = (AdMode)EditorGUILayout.EnumPopup(new GUIContent("  Ad Retrieval Mode", "Mode in which Ads will be selected."), customTarget.AppSettings.AdMode);
+
+            GUILayout.EndVertical();
+
+            if (GUI.changed)
+            {
+                EditorUtility.SetDirty(customTarget);
+            }
+        }
+
+        void OnSceneGUI()
+        {
+            GetAdRotatorPosition();
+            Handles.RectangleCap(0, adRotatorPosition, Quaternion.identity, 1);
+            if (GUI.changed)
+            {
+                EditorUtility.SetDirty(target);
+            }
+        }
+
+        private void GetAdRotatorPosition()
+        {
+            AdRotatorManagement managementScript = (AdRotatorManagement)target;
+            ScreenHeight = Camera.main.orthographicSize * 2;
+            ScreenWidth = ScreenHeight * Screen.width / Screen.height;
+            switch (managementScript.AdSettings.Position)
+            {
+                case AdPosition.TopLeftCorner:
+                    adRotatorPosition = new Vector3(-(ScreenWidth / 2) - adRotatorPositionOffset.x, (ScreenHeight / 2) - adRotatorPositionOffset.y, 0);
+                    break;
+                case AdPosition.TopRightCorner:
+                    adRotatorPosition = new Vector3((ScreenWidth / 2) - adRotatorPositionOffset.x, (ScreenHeight / 2) - adRotatorPositionOffset.y, 0);
+                    break;
+                case AdPosition.BottomLeftCorner:
+                    adRotatorPosition = new Vector3(-(ScreenWidth / 2) + adRotatorPositionOffset.x, -(ScreenHeight / 2) + adRotatorPositionOffset.y, 0);
+                    break;
+                case AdPosition.BottomRightCorner:
+                    adRotatorPosition = new Vector3((ScreenWidth / 2) - adRotatorPositionOffset.x, -(ScreenHeight / 2) + adRotatorPositionOffset.y, 0);
+                    break;
+                case AdPosition.TopCenter:
+                    adRotatorPosition = new Vector3(0, (ScreenHeight / 2) - adRotatorPositionOffset.y, 0);
+                    break;
+                case AdPosition.BottomCenter:
+                    adRotatorPosition = new Vector3(0, -(ScreenHeight / 2) + adRotatorPositionOffset.y, 0);
+                    break;
+                case AdPosition.LeftCenter:
+                    adRotatorPosition = new Vector3(-(ScreenWidth / 2) + adRotatorPositionOffset.x, 0, 0);
+                    break;
+                case AdPosition.RightCenter:
+                    adRotatorPosition = new Vector3((ScreenWidth / 2) - adRotatorPositionOffset.x, 0, 0);
+                    break;
+                case AdPosition.Center:
+                    adRotatorPosition = Vector3.zero;
+                    break;
+            }
+        }
+    }
 }

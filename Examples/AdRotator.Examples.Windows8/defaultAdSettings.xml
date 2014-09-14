@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <AdSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <CultureDescriptors CultureName="">
-    <AdDuplex AppId="1379" Probability="10"/>
-    <PubCenter AppId="d25517cb-12d4-4699-8bdc-52040c712cab" SecondaryId="10043105" Probability="10"/>
-    <Inmobi AppId="ec9ea8fdfcc3436e94df0f5bcac3a227" Probability="10"/>
-    <DefaultHouseAd AppId="http://adrotator.apphb.com/SampleRemoteHouseAdWin8.xaml" SecondaryId="AdRotator.Examples.Windows8.DefaultAd.MyDefaultAd" Probability="10"/>
+    <AdDuplex AppId="1379" Probability="10" AdOrder="1"/>
+    <PubCenter AppId="d25517cb-12d4-4699-8bdc-52040c712cab" SecondaryId="10043105" Probability="10" AdOrder="2"/>
+    <Inmobi AppId="ec9ea8fdfcc3436e94df0f5bcac3a227" Probability="10" AdOrder="3"/>
+    <DefaultHouseAd AppId="http://adrotator.apphb.com/SampleRemoteHouseAdWin8.xaml" SecondaryId="AdRotator.Examples.Windows8.DefaultAd.MyDefaultAd" Probability="10" AdOrder="4"/>
     <None Probability="0"/>
     <AdGroup Probability="0">
       <AdDuplex AppId="1379" Probability="100"/>

@@ -43,7 +43,7 @@ namespace AdRotator.Examples.WinPhone8
         private void HideButton_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             AdRotatorHidden = !AdRotatorHidden;
-            AdRotatorControl.Visibility = AdRotatorHidden ? Visibility.Collapsed : Visibility.Visible;
+            MyAdRotatorControl.Visibility = AdRotatorHidden ? Visibility.Collapsed : Visibility.Visible;
             HideButton.Content = AdRotatorHidden ? "UnHide AdRotator" : "Hide AdRotator";
 
         }
