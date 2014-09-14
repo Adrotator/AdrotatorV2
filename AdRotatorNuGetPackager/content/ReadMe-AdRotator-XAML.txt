@@ -35,7 +35,7 @@ Then add the control to your page:
 (We recommend using a UserControl in your project for implementation especially if you intend to use it on several pages)
 
 	<adRotator:AdRotatorControl 
-		x:Name="AdRotator"
+		x:Name="MyAdRotatorControl"
 		AdHeight="90"
 		AdWidth="728"
 		LocalSettingsLocation="defaultAdSettings.xml"
@@ -57,20 +57,27 @@ For more instructions on how to implement this control and all the other configu
 http://getadrotator.com
 
 ** PubCenter and AdDuplex support for Windows 8
-In order to support PubCenter due to the way the control is implemented in Windows 8/8.1, you need to pass the reference to the assembly in your project.
+In order to support WinRT controls on Windows 8, like those now used by PubCenter and AdDuplex, you need to pass a reference to the assembly in your project.
 
-Add a using statement to the top of your code behind:
-	using AdRotator.Model;
-	
 For Pubcenter, install the Windows 8/8.1 SDK as normal and reference the "Microsoft Advertising SDK", then include the following in the page code behind constructor.
-	//Note - name of your control, this uses your XAML or programmatic instance
-	AdRotatorControl.PlatformAdProviderComponents.Add(AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
+Note - name of your control, this uses your XAML or programmatic instance
+
+	MyAdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
 	
 For AdDuplex, add the control via NuGet using the AdDuplex SDK for Windows8 (Xaml edition) NuGet package, then include the following in the page code behind constructor.
-	//Note - name of your control, this uses your XAML or programmatic instance
-	AdRotatorControl.PlatformAdProviderComponents.Add(AdType.AdDuplex, typeof(AdDuplex.Controls.AdControl));
+Note - name of your control, this uses your XAML or programmatic instance
+
+	MyAdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.AdDuplex, typeof(AdDuplex.Controls.AdControl));
 
 This enables AdRotator to access the local WinMD components for each control.
+
+***For Unity, these references need to go in your App.XAML.cs constructor and look as follows:
+	//PubCenter
+	AdRotatorUnitySDK.Integration.AdRotatorBridge.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
+	//AdDuplex
+	AdRotatorUnitySDK.Integration.AdRotatorBridge.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.AdDuplex, typeof(AdDuplex.Controls.AdControl));
+
+
 For further examples check the example projects in the GitHub source @ https://github.com/Adrotator/AdrotatorV2
 
 ***Note

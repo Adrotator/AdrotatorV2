@@ -28,11 +28,11 @@ namespace AdRotator.Examples.Windows8
         public MainPage()
         {
             this.InitializeComponent();
-            AdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
-            AdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.AdDuplex, typeof(AdDuplex.Controls.AdControl));
+            MyAdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
+            MyAdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.AdDuplex, typeof(AdDuplex.Controls.AdControl));
             //AdRotatorControl.Log += (s) => System.Diagnostics.Debug.WriteLine(s);
             Loaded += (s, e) => HideButton_Tapped(null,null);
-            InitialiseAdRotatorProgramatically();
+            //InitialiseAdRotatorProgramatically();
             //tracker = new GoogleAnalyticsTracker.RT.Tracker("UA-51978219-2", "AdRotator");
             //tracker.TrackPageViewAsync("My API - Create", "api/create");
 
@@ -62,7 +62,7 @@ namespace AdRotator.Examples.Windows8
         private void HideButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
             AdRotatorHidden = !AdRotatorHidden;
-            AdRotatorControl.Visibility = AdRotatorHidden ? Visibility.Collapsed : Visibility.Visible;
+            MyAdRotatorControl.Visibility = AdRotatorHidden ? Visibility.Collapsed : Visibility.Visible;
             if(myAdControl != null) myAdControl.Visibility = AdRotatorHidden ? Visibility.Collapsed : Visibility.Visible;
             HideButton.Content = AdRotatorHidden ? "UnHide AdRotator" : "Hide AdRotator";
 

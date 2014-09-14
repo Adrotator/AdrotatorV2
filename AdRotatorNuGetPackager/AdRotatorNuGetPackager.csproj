@@ -51,6 +51,7 @@
   <ItemGroup>
     <Content Include="content\defaultAdSettings.xml" />
     <Content Include="content\ReadMe-AdRotator-XAML.txt" />
+    <Content Include="content\ReleaseNotes.txt" />
     <Content Include="readme.txt" />
     <None Include="NuGetPackage.ps1" />
     <None Include="NuGetSetup.ps1" />
