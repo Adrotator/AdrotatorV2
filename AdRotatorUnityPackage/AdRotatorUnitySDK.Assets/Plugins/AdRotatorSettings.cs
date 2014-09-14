@@ -1,10 +1,5 @@
-﻿// Version 1.0.0.0
+﻿// Version 2.0.0.0
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using System.Collections;
 
 namespace AdRotatorUnitySDK.Assets.Plugins
 {
@@ -16,10 +11,10 @@ namespace AdRotatorUnitySDK.Assets.Plugins
 		None,
 		PubCenter,
 		AdDuplex,
-        InMobi,
-        AdMob,
-        Smaato,
-        InnerActive,
+		InMobi,
+		AdMob,
+		Smaato,
+		InnerActive,
 		DefaultHouseAd,
 	}
 
@@ -66,6 +61,16 @@ namespace AdRotatorUnitySDK.Assets.Plugins
 	}
 
 	/// <summary>
+	/// Support Ad retrieval operation
+	/// </summary>
+	public enum AdMode
+	{
+		Random,
+		Ordered,
+		Stepped
+	}
+
+	/// <summary>
 	/// Application settings of Ad Rotator, used at initialization only.
 	/// Store in "Assets\Plugins".
 	/// </summary>
@@ -79,11 +84,8 @@ namespace AdRotatorUnitySDK.Assets.Plugins
 		public AppSettings(AppSettings src)
 		{
 			this.SettingsUrl = src.SettingsUrl;
-            //this.DefaultSettingsFileUri = src.DefaultSettingsFileUri;
-			this.DefaultAdType = src.DefaultAdType;
-			this.DefaultHouseAdBody = src.DefaultHouseAdBody;
-			this.DefaultHouseAdUri = src.DefaultHouseAdUri;
 			this.IsTest = src.IsTest;
+			this.AdMode = src.AdMode;
 		}
 
 		/// <summary>
@@ -92,10 +94,6 @@ namespace AdRotatorUnitySDK.Assets.Plugins
 		public AppSettings()
 		{
 			this.SettingsUrl = "";
-            //this.DefaultSettingsFileUri = "defaultAdSettings.xml";
-			this.DefaultAdType = AdProvider.None;
-			this.DefaultHouseAdBody = "";
-			this.DefaultHouseAdUri = "";
 			this.IsTest = false;
 		}
 
@@ -111,28 +109,11 @@ namespace AdRotatorUnitySDK.Assets.Plugins
 		//public string DefaultSettingsFileUri;
 
 		/// <summary>
-		/// Ad type that should be shown if either the ad settings file could not be loaded or other ad providers have failed to load.
-		/// </summary>
-		public AdProvider DefaultAdType;
-
-		/// <summary>
-		/// Name of the XAML control to use (format: <namespace>.<object name>), need to be inside your 
-		/// application assembly or referenced by your project. See AdRotator documentation for more 
-		/// information. Example: AdRotatorExample.MyDefaultAd
-		/// </summary>
-		public string DefaultHouseAdBody;
-
-		/// <summary>
-		/// URL to the remote XAML file to use as the House Ad. 
-		/// See AdRotator documentation for more information. 
-		/// Example: http://mydomain.com/myHouseAd.xaml
-		/// </summary>
-		public string DefaultHouseAdUri;
-
-		/// <summary>
 		/// Enable or disable ad Test mode. See AdRotator documentation for more information.
 		/// </summary>
 		public bool IsTest;
+
+		public AdMode AdMode;
 	}
 
 	/// <summary>

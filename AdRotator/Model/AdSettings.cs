@@ -24,6 +24,9 @@ namespace AdRotator.Model
         /// </summary>
         internal List<AdType> _failedAdTypes = new List<AdType>();
 
+        internal int CurrentAdOrderIndex = 0;
+        internal AdProvider CurrentAdProvider;
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("CultureDescriptors", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public AdCultureDescriptor[] CultureDescriptors
@@ -135,7 +138,7 @@ namespace AdRotator.Model
             }
         }
 
-        internal static AdProvider GetAd(this AdSettings adsettings)
+        internal static AdProvider GetAd(this AdSettings adsettings, AdMode mode)
         {
             //Need to handle Groups and Order
 
@@ -147,26 +150,43 @@ namespace AdRotator.Model
             var validDescriptors = adsettings.CurrentCulture.Items
             .Where(x => !adsettings._failedAdTypes.Contains(((AdProvider)x).AdProviderType)
                         && AdRotatorComponent.PlatformSupportedAdProviders.Contains(((AdProvider)x).AdProviderType)
-                        && ((AdProvider)x).Probability > 0).Cast<AdProvider>().ToArray();
+                        && (((AdProvider)x).Probability > 0) || ((AdProvider)x).AdOrder > 0).Cast<AdProvider>().ToArray();
 
             var defaultHouseAd = (AdProvider)adsettings.CurrentCulture.Items.FirstOrDefault(x => ((AdProvider)x).AdProviderType == AdType.DefaultHouseAd && !adsettings._failedAdTypes.Contains(AdType.DefaultHouseAd));
 
-            if (validDescriptors != null)
+            if (validDescriptors != null && validDescriptors.Length > 0)
             {
-                validDescriptors = RandomPermutation<AdProvider>(validDescriptors);
-
-                var totalValueBetweenValidAds = validDescriptors.Sum(x => ((AdProvider)x).Probability);
-                var randomValue = AdRotator.AdRotatorComponent._rnd.NextDouble() * totalValueBetweenValidAds;
-                double totalCounter = 0;
-                foreach (AdProvider probabilityDescriptor in validDescriptors)
+                switch (mode)
                 {
-                    totalCounter += probabilityDescriptor.Probability;
-                    if (randomValue < totalCounter)
-                    {
-                        adsettings.CurrentAdType = probabilityDescriptor.AdProviderType;
-                        return probabilityDescriptor;
-                    }
+                    case AdMode.Random:
+                        validDescriptors = RandomPermutation<AdProvider>(validDescriptors);
+
+                        var totalValueBetweenValidAds = validDescriptors.Sum(x => ((AdProvider)x).Probability);
+                        var randomValue = AdRotator.AdRotatorComponent._rnd.NextDouble() * totalValueBetweenValidAds;
+                        double totalCounter = 0;
+                        foreach (AdProvider probabilityDescriptor in validDescriptors)
+                        {
+                            totalCounter += probabilityDescriptor.Probability;
+                            if (randomValue < totalCounter)
+                            {
+                                adsettings.CurrentAdType = probabilityDescriptor.AdProviderType;
+                                return probabilityDescriptor;
+                            }
+                        }
+                        break;
+                    case AdMode.Stepped:
+                    case AdMode.Ordered:
+                        validDescriptors = validDescriptors.OrderBy(x => x.AdOrder).Cast<AdProvider>().ToArray();
+                        if (mode == AdMode.Ordered) return validDescriptors[0];
+                        adsettings.CurrentAdProvider = validDescriptors[adsettings.CurrentAdOrderIndex];
+                        adsettings.CurrentAdOrderIndex++;
+                        if (adsettings.CurrentAdOrderIndex > validDescriptors.Length - 1)
+                        {
+                            adsettings.CurrentAdOrderIndex = 0;
+                        }
+                        return adsettings.CurrentAdProvider;
                 }
+                
             }
 
             if (defaultHouseAd != null)

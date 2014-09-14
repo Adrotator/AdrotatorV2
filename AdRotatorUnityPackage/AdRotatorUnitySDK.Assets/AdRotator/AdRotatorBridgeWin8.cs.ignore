@@ -1,19 +1,10 @@
-﻿// Version 1.0.0.0
+﻿// Version 2.0.0.0
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using UnityEngine;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using UnityEngine;
 
 namespace AdRotatorUnitySDK.Integration
 {
@@ -30,6 +21,11 @@ namespace AdRotatorUnitySDK.Integration
 		/// Name of the AdRotator control added to the swap panel.
 		/// </summary>
 		private const string AdRotatorManagementIdentifier = "AdRotatorManagement";
+
+		/// <summary>
+		/// Static holder for additional required platform WinRT components
+		/// </summary>
+		public static Dictionary<AdRotator.Model.AdType, Type> PlatformAdProviderComponents = new Dictionary<AdRotator.Model.AdType,Type>();
 
 		/// <summary>
 		/// Initial setup of the Unity to Windows 8 bridge.
@@ -82,7 +78,6 @@ namespace AdRotatorUnitySDK.Integration
 			int adHeight;
 
 			var slidingDirection = GetSlidingAdDirection(ad.SlidingAdDirection);
-			var adType = GetAdType(app.DefaultAdType);
 			GetAdPosition(position, out verticalAlign, out horizontalAlign);
 			GetAdSize(size, out adWidth, out adHeight);			
 
@@ -95,7 +90,7 @@ namespace AdRotatorUnitySDK.Integration
 				if (isEnabled)
 				{
 					// Add new rotator only if it is enabled, otherwise remove control to safe resources.
-					var rotator = InitNewRotator(panel, app, verticalAlign, horizontalAlign, adWidth, adHeight, isEnabled, slidingDisplay, slidingHidden, slidingDirection, adType);
+					var rotator = InitNewRotator(panel, app, verticalAlign, horizontalAlign, adWidth, adHeight, isEnabled, slidingDisplay, slidingHidden, slidingDirection);
 					
 					// Set parameters only once rotator is Loaded, otherwise some internal init is missing.
 					rotator.Loaded += (s, e) =>
@@ -116,7 +111,7 @@ namespace AdRotatorUnitySDK.Integration
 
 			if (rotator != null)
 			{
-				rotator.Log -= Log;
+				AdRotator.AdRotatorControl.Log -= Log;
 				rotator.IsAdRotatorEnabled = false;
 				rotator.Dispose();
 				panel.Children.Remove(rotator);
@@ -138,19 +133,22 @@ namespace AdRotatorUnitySDK.Integration
 		/// <param name="slidingDirection">Sliding Ad Direction.</param>
 		/// <param name="adType">Default Ad Type.</param>
 		/// <returns>Newly created AdRotator.</returns>
-		private static AdRotator.AdRotatorControl InitNewRotator(SwapChainBackgroundPanel panel, AdRotatorUnitySDK.Assets.Plugins.AppSettings appSettings, Windows.UI.Xaml.VerticalAlignment verticalAlign, Windows.UI.Xaml.HorizontalAlignment horizontalAlign, int adWidth, int adHeight, bool isEnabled, int slidingDisplay, int slidingHidden, AdRotator.Model.AdSlideDirection slidingDirection, AdRotator.Model.AdType adType)
+		private static AdRotator.AdRotatorControl InitNewRotator(SwapChainBackgroundPanel panel, AdRotatorUnitySDK.Assets.Plugins.AppSettings appSettings, Windows.UI.Xaml.VerticalAlignment verticalAlign, Windows.UI.Xaml.HorizontalAlignment horizontalAlign, int adWidth, int adHeight, bool isEnabled, int slidingDisplay, int slidingHidden, AdRotator.Model.AdSlideDirection slidingDirection)
 		{
 			AdRotator.AdRotatorControl rotator;
 			rotator = new AdRotator.AdRotatorControl();
 			rotator.Name = AdRotatorManagementIdentifier;
 			rotator.AdWidth = adWidth;
 			rotator.AdHeight = adHeight;
+			rotator.AdRetrievalMode = (AdRotator.Model.AdMode)Enum.Parse(typeof(AdRotator.Model.AdMode),appSettings.AdMode.ToString());
+
+			foreach (var providerWinRTComponent in PlatformAdProviderComponents)
+			{
+				rotator.PlatformAdProviderComponents.Add(providerWinRTComponent.Key, providerWinRTComponent.Value);
+			}
 
 			rotator.RemoteSettingsLocation = appSettings.SettingsUrl;
 			rotator.LocalSettingsLocation = "defaultAdSettings.xml";
-			rotator.DefaultHouseAdBody = appSettings.DefaultHouseAdBody;
-			rotator.DefaultHouseAdURI = appSettings.DefaultHouseAdUri;
-			//rotator.DefaultAdType = adType;
 
 			rotator.VerticalAlignment = verticalAlign;
 			rotator.HorizontalAlignment = horizontalAlign;
@@ -159,7 +157,7 @@ namespace AdRotatorUnitySDK.Integration
 			rotator.SlidingAdDirection = slidingDirection;
 			rotator.IsAdRotatorEnabled = isEnabled;
 			panel.Children.Add(rotator);
-			rotator.Log += Log;
+			AdRotator.AdRotatorControl.Log += Log;
 			return rotator;
 		}
 
@@ -180,29 +178,6 @@ namespace AdRotatorUnitySDK.Integration
 		private static void Log(string msg)
 		{
 			Debug.Log("AdRotator: " + msg);
-		}
-
-		/// <summary>
-		/// Convert Unity domain AdProvider to AdRotator AdType.
-		/// </summary>
-		/// <param name="adProviderType">Unity domain AdProvider</param>
-		/// <returns>AdRotator AdType</returns>
-		private static AdRotator.Model.AdType GetAdType(AdRotatorUnitySDK.Assets.Plugins.AdProvider adProviderType)
-		{
-			AdRotator.Model.AdType adType = AdRotator.Model.AdType.PubCenter;
-			switch (adProviderType)
-			{
-				case AdRotatorUnitySDK.Assets.Plugins.AdProvider.AdDuplex:
-					adType = AdRotator.Model.AdType.AdDuplex;
-					break;
-				case AdRotatorUnitySDK.Assets.Plugins.AdProvider.PubCenter:
-					adType = AdRotator.Model.AdType.PubCenter;
-					break;
-				case AdRotatorUnitySDK.Assets.Plugins.AdProvider.DefaultHouseAd:
-					adType = AdRotator.Model.AdType.DefaultHouseAd;
-					break;
-			}
-			return adType;
 		}
 
 		/// <summary>

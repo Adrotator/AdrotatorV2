@@ -112,6 +112,7 @@ namespace AdRotator
         internal int adRotatorRefreshInterval { get { return _adRotatorRefreshInterval; } set { _adRotatorRefreshInterval = value == 0 ? 0 : Math.Max(AdRotatorMinRefreshRate, value); } }
         internal bool adRotatorRefreshIntervalSet = false;
 
+        internal AdMode adMode { get; set; }
 
         #endregion
 
@@ -148,7 +149,7 @@ namespace AdRotator
                 //Set Current culture based on Culture Value
                _settings.GetAdDescriptorBasedOnUICulture(culture);
             }
-            OnAdAvailable(_settings.GetAd());
+            OnAdAvailable(_settings.GetAd(adMode));
         }
 
         internal void GetAd(Object stateInfo)
@@ -159,7 +160,7 @@ namespace AdRotator
             }
             else
             {
-                OnAdAvailable(_settings.GetAd());
+                OnAdAvailable(_settings.GetAd(adMode));
             }
         }
 

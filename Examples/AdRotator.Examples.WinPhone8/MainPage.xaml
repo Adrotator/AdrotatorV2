@@ -54,9 +54,9 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <adRotator:AdRotatorControl x:Name="AdRotatorControl"
+            <adRotator:AdRotatorControl x:Name="MyAdRotatorControl"
                 LocalSettingsLocation="defaultAdSettings.xml"
-                                        SlidingAdDirection="Left"
+                                        SlidingAdDirection="None"
                                         AutoStartAds="True"/>
             <Grid Grid.Row="1" x:Name="ProgramaticAdRotator"/>
             <Button Grid.Row="2" x:Name="HideButton" Content="Hide/unhide AdRotator" Tap="HideButton_Tap"/>
