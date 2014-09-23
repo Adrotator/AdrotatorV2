@@ -811,7 +811,10 @@ namespace AdRotator
 
         public void Dispose()
         {
-            AdRotatorRoot.Child = null;
+            if (AdRotatorRoot != null && AdRotatorRoot.Child != null)
+            {
+                AdRotatorRoot.Child = null;
+            }
             //providerElement = null;
             DefaultHouseAdBody = null;
         }
