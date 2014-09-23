@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>AdRotator</id>
-        <version>2.0.1</version>
+        <version>2.0.2</version>
         <title>AdRotator</title>
         <authors>Simon-Darkside / Gergely Orosz</authors>
         <owners>Simon-Darkside / Gergely Orosz</owners>
@@ -23,8 +23,7 @@ Be sure to read the included readme for installation instructions
 
 Full documentation available at http://getadrotaor.com</description>
         <summary>the ultimate Ad Rotating solution to manage all your Ad Providers</summary>
-        <releaseNotes>Updated release to resolve Unity Plug-in issues
-        Also now includes the new AdOrdering features and Slide in ads now start off screen.
+        <releaseNotes>Patch release to resolve an unwanted exception from missing or bad provider dll's
 		See the releaseNotes.txt or GetAdRotator.com for more details of improvements</releaseNotes>
         <copyright>Copyright  2013</copyright>
         <language>en-GB</language>

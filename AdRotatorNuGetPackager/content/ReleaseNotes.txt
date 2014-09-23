@@ -1,5 +1,12 @@
 AdRotator V2 Release Notes
 ------------------------------
+2.0.2
+Minor patch fix to resolve an unwanted exception that was raised in the case of a failed or missing provider dll.
+Only occurs on devices.
+
+Note, issue found on GoogleAds control. Ensure you unblock the file in the Windows Explorer file properties (not VS), else it will not work correctly.
+
+------------------------------
 2.0.1
 Updated release to resolve Unity plug-in issues
 Additionally the following fixes / requests have been included with this release:
