@@ -213,7 +213,7 @@ namespace AdRotatorUnitySDK.Assets.Editor
                     // File is already modified.						
                     break;
                 }
-                if (line.Contains("private void Unity_Loaded()"))
+                if (line.Contains("private void Unity_Loaded()") && !appCsFileAllLines[i + 2].Contains("ExecuteOnUIThread(toCall)"))
                 {
                     appCsFileAllLines[i] = "void ExecuteOnUIThread(Delegate todo)" + Environment.NewLine + "{" + Environment.NewLine + "Dispatcher.BeginInvoke(todo);" + Environment.NewLine + "}" + Environment.NewLine + Environment.NewLine + line;
                     appCsFileAllLines[i + 1] = "{" + Environment.NewLine + "UnityApp.BeginInvoke(() => AdRotatorUnitySDK.Integration.AdRotatorBridge.Register(this, toCall => ExecuteOnUIThread(toCall)));" + Environment.NewLine;
