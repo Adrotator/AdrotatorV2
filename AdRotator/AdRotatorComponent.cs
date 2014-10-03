@@ -455,8 +455,13 @@ namespace AdRotator
             Delegate handler;
             try
             {
+#if UNIVERSAL
+                EventInfo ei = o.GetType().GetRuntimeEvent(eventName);
+                var parameters = ei.EventHandlerType.GetRuntimeMethod("Invoke", new Type[0]).GetParameters();
+#else
                 EventInfo ei = o.GetType().GetEvent(eventName);
                 var parameters = ei.EventHandlerType.GetMethod("Invoke").GetParameters();
+#endif
                 switch (parameters.Count())
                 {
                     case 2:
@@ -469,7 +474,12 @@ namespace AdRotator
                         handler = new Action<object>((o1) => DelegateEventHandler(message));
                         break;
                 }
+#if UNIVERSAL
+                var methodInfo = handler.GetMethodInfo();
+                Delegate eventDel = methodInfo.CreateDelegate(ei.EventHandlerType, null);
+#else
                 Delegate eventDel = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
+#endif
 
                 ei.AddEventHandler(o, eventDel);
                 currentProviderDelegates.Add(new AdProviderDelegate() { instance = o, eventInfo = ei, delegateMethod = eventDel });

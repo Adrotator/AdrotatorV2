@@ -8,8 +8,13 @@ namespace AdRotator
 {
     internal class ReflectionHelpers
     {
-        public bool IsValueType(Type targetType)
+        public bool IsValueType(Type type)
         {
+#if UNIVERSAL
+            var targetType = type.GetTypeInfo();
+#else
+            var targetType = type;
+#endif
             if (targetType == null)
             {
                 throw new NullReferenceException("Must supply the targetType parameter");
@@ -19,25 +24,34 @@ namespace AdRotator
         }
 
         //GetBase Type
-        public Type GetBaseTpye(Type targetType)
+        public Type GetBaseTpye(Type type)
         {
+#if UNIVERSAL
+            var targetType = type.GetTypeInfo();
+#else
+            var targetType = type;
+#endif
             if (targetType == null)
             {
                 throw new NullReferenceException("Must supply the targetType parameter");
             }
-            var type = targetType.BaseType;
-            return type;
+            return targetType.BaseType;;
         }
 
 //Test isAbstract
-        public bool IsAbstractClass(Type t)
+        public bool IsAbstractClass(Type type)
         {
-            if (t == null)
+#if UNIVERSAL
+            var targetType = type.GetTypeInfo();
+#else
+            var targetType = type;
+#endif
+            if (type == null)
             {
                 throw new NullReferenceException("Must supply the t (type) parameter");
             }
 
-            if (t.IsClass && !t.IsAbstract)
+            if (targetType.IsClass && !targetType.IsAbstract)
                 return true;
 
             return false;
@@ -54,9 +68,17 @@ namespace AdRotator
             MethodInfo methodInfo;
 
             if(method == "get")
+#if UNIVERSAL
+                methodInfo = property.GetMethod;
+#else
                 methodInfo = property.GetGetMethod();
+#endif
             else
+#if UNIVERSAL
+                methodInfo = property.SetMethod;
+#else
                 methodInfo = property.GetSetMethod();
+#endif
             return methodInfo;
 
         }
@@ -72,47 +94,59 @@ namespace AdRotator
             {
                 throw new NullReferenceException("Must supply the memberType parameter");
             }
-
-            Attribute attr = Attribute.GetCustomAttribute(member, memberType);
+#if UNIVERSAL
+            Attribute attr = member.GetCustomAttribute(memberType);
+#else
+             Attribute attr = Attribute.GetCustomAttribute(member, memberType);
+#endif
             return attr;
         }
 
 //Check for public methods
-        public bool HasPublicProperties(PropertyInfo property)
-        {
-            if (property == null)
-            {
-                throw new NullReferenceException("Must supply the property parameter");
-            }
+        //public bool HasPublicProperties(PropertyInfo property)
+        //{
+        //    if (property == null)
+        //    {
+        //        throw new NullReferenceException("Must supply the property parameter");
+        //    }
 
-            foreach (MethodInfo info in property.GetAccessors(true))
-            {
-                if (info.IsPublic == false)
-                    return true;
-            }
-            return false;
-        }
+        //    foreach (MethodInfo info in property..GetAccessors(true))
+        //    {
+        //        if (info.IsPublic == false)
+        //            return true;
+        //    }
+        //    return false;
+        //}
 		
-        public bool IsAssignableFrom(Type type, object provider)
-        {
-			if (type == null)
-                throw new ArgumentNullException("type");
-            if (provider == null)
-                throw new ArgumentNullException("provider");
+        //public bool IsAssignableFrom(Type type, object provider)
+        //{
+        //    if (type == null)
+        //        throw new ArgumentNullException("type");
+        //    if (provider == null)
+        //        throw new ArgumentNullException("provider");
 
-            if (type.IsAssignableFrom(provider.GetType()))
-				return true;
-            return false;
-        }
+        //    if (type.IsAssignableFrom(provider.GetType()))
+        //        return true;
+        //    return false;
+        //}
 
 
         public Type TryGetType(string assemblyName, string typeName)
         {
+#if UNIVERSAL
+            var assembly = new AssemblyName(assemblyName);
+#else
+            var assembly = assemblyName;
+#endif
             try
             {
-                var assem = Assembly.Load(assemblyName);
+                var assem = Assembly.Load(assembly);
+#if UNIVERSAL
+                Type t = assem.GetType(typeName);
+#else
                 Type t = assem.GetType(typeName, false);
-                if (t != null) { return t; }
+#endif
+            if (t != null) { return t; }
             }
             catch
             {
@@ -124,12 +158,21 @@ namespace AdRotator
 
         public void TryInvokeMethod(Type type, object classInstance, string methodName)
         {
+#if UNIVERSAL
+            var targetType = type.GetTypeInfo();
+#else
+            var targetType = type;
+#endif
             try
             {
                 if (type != null)
                 {
+#if UNIVERSAL
+                    MethodInfo methodInfo = type.GetRuntimeMethod(methodName, new Type[0]);
+#else
                     MethodInfo methodInfo = type.GetMethod(methodName,new Type[0]);
-                    if (methodInfo != null)
+#endif
+            if (methodInfo != null)
                     {
                         object result = null;
                         ParameterInfo[] parameters = methodInfo.GetParameters();
@@ -153,7 +196,11 @@ namespace AdRotator
             {
                 if (type != null)
                 {
-                    MethodInfo methodInfo = type.GetMethod(methodName, new Type[0]);
+#if UNIVERSAL
+                    MethodInfo methodInfo = type.GetRuntimeMethod(methodName, new Type[0]);
+#else
+                    MethodInfo methodInfo = type.GetMethod(methodName,new Type[0]);
+#endif
                     if (methodInfo != null)
                     {
                         object result = null;
@@ -172,14 +219,23 @@ namespace AdRotator
         {
             try
             {
+#if UNIVERSAL
+                PropertyInfo propertyInfo = instance.GetType().GetRuntimeProperty(PropertyName);
+                if (propertyInfo.GetType().GetTypeInfo().IsEnum)
+#else
                 PropertyInfo propertyInfo = instance.GetType().GetProperty(PropertyName);
                 if (propertyInfo.PropertyType.IsEnum)
+#endif
                 {
                     propertyInfo.SetValue(instance, StringToEnum(propertyInfo.PropertyType, PropertyValue), null);
                 }
                 else if (propertyInfo.PropertyType.IsNullableEnum())
                 {
+ #if UNIVERSAL
+                    Type nullableType = propertyInfo.PropertyType.GenericTypeArguments[0];
+#else
                     Type nullableType = propertyInfo.PropertyType.GetGenericArguments()[0];
+#endif
                     propertyInfo.SetValue(instance, StringToEnum(nullableType, PropertyValue), null);
                 }
                 else
@@ -190,16 +246,21 @@ namespace AdRotator
             catch { }
         }
 
-        static object StringToEnum(Type t, string Value)
+        static object StringToEnum(Type type, string Value)
         {
-            foreach (FieldInfo fi in t.GetFields())
+#if UNIVERSAL
+            var targetType = type.GetTypeInfo();
+            foreach (FieldInfo fi in targetType.DeclaredFields)
+#else
+            foreach (FieldInfo fi in type.GetFields())
+#endif
                 if (fi.Name == Value)
                     return fi.GetValue(null);    
             // We use null because
             // enumeration values
             // are static
 
-            throw new Exception(string.Format("Can't convert {0} to {1}", Value, t.ToString()));
+            throw new Exception(string.Format("Can't convert {0} to {1}", Value, type.ToString()));
         }
 
         public MethodInfo GetMethodInfo(object targetObject, string methodname)
@@ -211,62 +272,68 @@ namespace AdRotator
                 throw new ArgumentNullException("methodname");
             try
             {
+#if UNIVERSAL
+                mi = targetObject.GetType().GetRuntimeMethod(methodname, new Type[0]);
+#else
                 mi = targetObject.GetType().GetMethod(methodname, BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+#endif
             }
             catch { }
 
             return mi;
         }
 
-        public void WireUpEvent(object o, string eventname, Delegate handler)
-        {
-            if (o == null)
-                throw new ArgumentNullException("o");
-            if (eventname == null)
-                throw new ArgumentNullException("eventname");
-            if (handler == null)
-                throw new ArgumentNullException("handler");
+        //public void WireUpEvent(object o, string eventname, Delegate handler)
+        //{
+        //    if (o == null)
+        //        throw new ArgumentNullException("o");
+        //    if (eventname == null)
+        //        throw new ArgumentNullException("eventname");
+        //    if (handler == null)
+        //        throw new ArgumentNullException("handler");
 
-            try
-            {
-            EventInfo ei = o.GetType().GetEvent(eventname);
-            Delegate del = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
+        //    try
+        //    {
+        //    EventInfo ei = o.GetType().GetEvent(eventname);
+        //    Delegate del = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
 
-            ei.AddEventHandler(o, del);
-            }
-            catch { }
+        //    ei.AddEventHandler(o, del);
+        //    }
+        //    catch { }
 
-        }
+        //}
 
-        private Type[] GetDelegateParameterTypes(Type d)
-        {
-            if (d.BaseType != typeof(MulticastDelegate))
-                throw new Exception("Not a delegate.");
+        //private Type[] GetDelegateParameterTypes(Type d)
+        //{
+        //    if (d.BaseType != typeof(MulticastDelegate))
+        //        throw new Exception("Not a delegate.");
 
-            MethodInfo invoke = d.GetMethod("Invoke");
-            if (invoke == null)
-                throw new Exception("Not a delegate.");
+        //    MethodInfo invoke = d.GetMethod("Invoke");
+        //    if (invoke == null)
+        //        throw new Exception("Not a delegate.");
 
-            ParameterInfo[] parameters = invoke.GetParameters();
-            Type[] typeParameters = new Type[parameters.Length];
-            for (int i = 0; i < parameters.Length; i++)
-            {
-                typeParameters[i] = parameters[i].ParameterType;
-            }
-            return typeParameters;
-        }
+        //    ParameterInfo[] parameters = invoke.GetParameters();
+        //    Type[] typeParameters = new Type[parameters.Length];
+        //    for (int i = 0; i < parameters.Length; i++)
+        //    {
+        //        typeParameters[i] = parameters[i].ParameterType;
+        //    }
+        //    return typeParameters;
+        //}
 
-        private Type GetDelegateReturnType(Type d)
-        {
-            if (d.BaseType != typeof(MulticastDelegate))
-                throw new Exception("Not a delegate.");
+        //private Type GetDelegateReturnType(Type d)
+        //{
+        //    if (d.BaseType != typeof(MulticastDelegate))
+        //        throw new Exception("Not a delegate.");
 
-            MethodInfo invoke = d.GetMethod("Invoke");
-            if (invoke == null)
-                throw new Exception("Not a delegate.");
+        //    MethodInfo invoke = d.GetMethod("Invoke");
+        //    if (invoke == null)
+        //        throw new Exception("Not a delegate.");
 
-            return invoke.ReturnType;
-        }
+        //    return invoke.ReturnType;
+        //}
+
+
     }
 
     public static class TypeExtensions
@@ -274,7 +341,12 @@ namespace AdRotator
         public static bool IsNullableEnum(this Type t)
         {
             Type u = Nullable.GetUnderlyingType(t);
+#if UNIVERSAL
+            return (u != null) && u.GetTypeInfo().IsEnum;
+#else
             return (u != null) && u.IsEnum;
+#endif
         }
+
     }
 }

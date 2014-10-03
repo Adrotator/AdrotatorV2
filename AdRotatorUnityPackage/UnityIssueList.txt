@@ -1,0 +1,17 @@
+AdRotator Unity issues 
+
+1: defaultAdSettings not added to project (Fixed)
+2: Log is now static - change to AdRotator.AdRotatorControl.Log on lines 119 & 162 (fixed)
+3: Note GetAdType function in Bridge is limited to 3 providers (Fixed)
+3: remove extra adType from bridge InitNewAdRotator and ln 97 (Fixed)
+
+4: Unity 8.1 uses a different drawing grid surface, needs a #if to fix
+
+
+Improvements
+1: Remove default adType, it's useless (fixed)
+2: Update Bridge with an AdsUsed selection. (fixed)
+3: In AdRotatorBridge, add statements to check for AdDuplex / PubCentre and add references. (Fixed)
+*Note, need different refs for Win 8 * WP8 :S (Fixed)
+
+4: Ad Auto

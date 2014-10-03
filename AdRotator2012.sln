@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4ABF1E81
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotatorNuGetPackager", "AdRotatorNuGetPackager\AdRotatorNuGetPackager.csproj", "{0451BAEF-DF2E-4B98-8644-94EE9415E389}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator", "AdRotator\AdRotator.csproj", "{170B13CC-30B9-405C-A032-CF1A6B5F8277}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator", "AdRotator\AdRotator.Core.Legacy.csproj", "{170B13CC-30B9-405C-A032-CF1A6B5F8277}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Windows8", "AdRotator\Clients\Windows8\AdRotator.Windows8.csproj", "{31829403-E429-4753-BF39-4CA00C7061E8}"
 EndProject
