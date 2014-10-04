@@ -267,6 +267,35 @@ namespace AdRotator
 
             return invoke.ReturnType;
         }
+
+        public Assembly GetAssemblyFromClassName(string className)
+        {
+            var classDefinition = className.Split('.');
+            var assemblyLength = classDefinition.Length - 1;
+
+            for (int i = assemblyLength; i >= 1; i--)
+            {
+                try
+                {
+                    var name = className.Substring(0, className.IndexOf(classDefinition[i]) - 1);
+
+                    // try to load the assembly
+                    Assembly resolvedAssembly = Assembly.Load(name);
+
+                    if (resolvedAssembly == null) continue;
+
+                    // confirm that the class exists within the assembly
+                    Type classType = resolvedAssembly.GetType(className);
+
+                    if (classType == null) continue;
+
+                    return resolvedAssembly;
+                }
+                catch (Exception) { }
+            }
+
+            return null;
+        }
     }
 
     public static class TypeExtensions

@@ -58,7 +58,9 @@ namespace AdRotator
             Object o = null;
             try
             {
-                var asm = GetAssemblyFromClass(LocalHouseAdBodyName);
+                ReflectionHelpers reflectionHelpers = new ReflectionHelpers();
+
+                var asm = reflectionHelpers.GetAssemblyFromClassName(LocalHouseAdBodyName);
                 Type t = asm.GetType(LocalHouseAdBodyName);
                 o = Activator.CreateInstance(t);
             }
@@ -83,29 +85,6 @@ namespace AdRotator
             {
                 LoadProjectDefaultAd();
             }
-        }
-
-        private static Assembly GetAssemblyFromClass(string LocalHouseAdBodyName)
-        {
-            Assembly resolvedAssembly = null;
-            var classDefinition = LocalHouseAdBodyName.Split('.');
-            var assemblyLength = classDefinition.Length - 1;
-            for (int i = assemblyLength; i > 1; i--)
-            {
-                try
-                {
-                    var assemblyNameValue = LocalHouseAdBodyName.Substring(0, LocalHouseAdBodyName.IndexOf(classDefinition[i]) - 1);
-                    AssemblyName name = new AssemblyName(assemblyNameValue);
-                    resolvedAssembly = Assembly.Load(name);
-                    if (resolvedAssembly != null)
-                    {
-                        break;
-                    }
-                }
-                catch { }
-            }
-
-            return resolvedAssembly;
         }
 
 #if WINDOWS_PHONE
