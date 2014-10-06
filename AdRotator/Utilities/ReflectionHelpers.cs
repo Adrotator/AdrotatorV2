@@ -268,7 +268,7 @@ namespace AdRotator
             return invoke.ReturnType;
         }
 
-        public Assembly GetAssemblyFromClassName(string className)
+        public static Assembly GetAssemblyFromClassName(string className)
         {
             var classDefinition = className.Split('.');
             var assemblyLength = classDefinition.Length - 1;

@@ -58,9 +58,7 @@ namespace AdRotator
             Object o = null;
             try
             {
-                ReflectionHelpers reflectionHelpers = new ReflectionHelpers();
-
-                var asm = reflectionHelpers.GetAssemblyFromClassName(LocalHouseAdBodyName);
+                var asm = ReflectionHelpers.GetAssemblyFromClassName(LocalHouseAdBodyName);
                 Type t = asm.GetType(LocalHouseAdBodyName);
                 o = Activator.CreateInstance(t);
             }
