@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AdSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CultureDescriptors CultureName="">
+    <AdDuplex AppId="1379" Probability="10"/>
+    <PubCenter AppId="test_client" SecondaryId="Image320_50" Probability="90"/>
+  </CultureDescriptors>
+</AdSettings>
