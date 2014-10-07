@@ -160,13 +160,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AdRotator\AdRotator.csproj">
-      <Project>{170b13cc-30b9-405c-a032-cf1a6b5f8277}</Project>
-      <Name>AdRotator</Name>
+    <ProjectReference Include="..\..\AdRotator\AdRotator.Core.Universal.csproj">
+      <Project>{6ec8d15e-4a48-42fd-acf1-c024c4098870}</Project>
+      <Name>AdRotator.Core.Universal</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\AdRotator\Clients\Windows8\AdRotator.Windows8.csproj">
+    <ProjectReference Include="..\..\AdRotator\Clients\Windows8\AdRotator.Windows8.1.csproj">
       <Project>{31829403-e429-4753-bf39-4ca00c7061e8}</Project>
-      <Name>AdRotator.Windows8</Name>
+      <Name>AdRotator.Windows8.1</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
