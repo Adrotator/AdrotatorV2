@@ -20,6 +20,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Examples.Windows8", "Examples\AdRotator.Examples.Windows8\AdRotator.Examples.Windows8.csproj", "{04C0A865-AB86-419B-9D73-6D8BD8BEA3C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.UnitTests", "Tests\AdRotator.UnitTests\AdRotator.UnitTests.csproj", "{A1432A44-A637-4BA2-89BF-B772F39B17AF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B} = {C1CFC312-6231-40B6-8FF3-17B296DFAB6B}
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F} = {E2CEFE61-6D05-490E-A367-052A0BA4F69F}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Examples.WinPhone7", "Examples\AdRotator.Examples.WinPhone7\AdRotator.Examples.WinPhone7.csproj", "{EAD7641B-EF06-4781-A015-4529EF19DBD7}"
 EndProject
@@ -31,6 +35,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{40AC4A
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestData", "Tests\TestData\TestData.csproj", "{E2CEFE61-6D05-490E-A367-052A0BA4F69F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestData.Nested", "Tests\TestData.Nested\TestData.Nested.csproj", "{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -364,6 +372,54 @@ Global
 		{B3D94F2E-6999-44C3-94E4-172FB8BE301A}.Release|x86.ActiveCfg = Release|x86
 		{B3D94F2E-6999-44C3-94E4-172FB8BE301A}.Release|x86.Build.0 = Release|x86
 		{B3D94F2E-6999-44C3-94E4-172FB8BE301A}.Release|x86.Deploy.0 = Release|x86
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.CI|Any CPU.ActiveCfg = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.CI|Any CPU.Build.0 = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.CI|ARM.ActiveCfg = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.CI|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.CI|Mixed Platforms.Build.0 = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.CI|Windows Phone.ActiveCfg = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.CI|x64.ActiveCfg = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.CI|x86.ActiveCfg = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Debug|Windows Phone.ActiveCfg = Debug|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Release|ARM.ActiveCfg = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Release|Windows Phone.ActiveCfg = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Release|x64.ActiveCfg = Release|Any CPU
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F}.Release|x86.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.CI|Any CPU.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.CI|Any CPU.Build.0 = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.CI|ARM.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.CI|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.CI|Mixed Platforms.Build.0 = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.CI|Windows Phone.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.CI|x64.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.CI|x86.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Debug|Windows Phone.ActiveCfg = Debug|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Release|ARM.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Release|Windows Phone.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Release|x64.ActiveCfg = Release|Any CPU
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -373,5 +429,7 @@ Global
 		{EAD7641B-EF06-4781-A015-4529EF19DBD7} = {E2E6A6A8-5342-4850-A86E-6B1E153EBABC}
 		{B3D94F2E-6999-44C3-94E4-172FB8BE301A} = {E2E6A6A8-5342-4850-A86E-6B1E153EBABC}
 		{A1432A44-A637-4BA2-89BF-B772F39B17AF} = {4ABF1E81-6B70-40B3-AB38-D69597B69192}
+		{E2CEFE61-6D05-490E-A367-052A0BA4F69F} = {4ABF1E81-6B70-40B3-AB38-D69597B69192}
+		{C1CFC312-6231-40B6-8FF3-17B296DFAB6B} = {4ABF1E81-6B70-40B3-AB38-D69597B69192}
 	EndGlobalSection
 EndGlobal

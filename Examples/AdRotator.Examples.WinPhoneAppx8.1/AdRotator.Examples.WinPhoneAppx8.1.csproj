@@ -84,9 +84,9 @@
       <Project>{6ec8d15e-4a48-42fd-acf1-c024c4098870}</Project>
       <Name>AdRotator.Core.Universal</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\AdRotator\Clients\WinPhoneAppx81\AdRotator.WinPhoneAppx81.csproj">
+    <ProjectReference Include="..\..\AdRotator\Clients\WinPhoneAppx81\AdRotator.Universal.csproj">
       <Project>{2696964f-cf04-4b0b-8098-ca2033938235}</Project>
-      <Name>AdRotator.WinPhoneAppx81</Name>
+      <Name>AdRotator.Universal</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

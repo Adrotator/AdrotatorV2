@@ -131,16 +131,16 @@ namespace AdRotator
         //}
 
 
-        public Type TryGetType(string assemblyName, string typeName)
+        public Type TryGetType(string assemblyNameRaw, string typeName)
         {
 #if UNIVERSAL
-            var assembly = new AssemblyName(assemblyName);
+            var assemblyName = new AssemblyName(assemblyNameRaw);
 #else
-            var assembly = assemblyName;
+            var assemblyName = assemblyNameRaw;
 #endif
             try
             {
-                var assem = Assembly.Load(assembly);
+                var assem = Assembly.Load(assemblyName);
 #if UNIVERSAL
                 Type t = assem.GetType(typeName);
 #else
@@ -334,6 +334,39 @@ namespace AdRotator
         //}
 
 
+
+        public static Assembly GetAssemblyFromClassName(string className)
+        {
+            var classDefinition = className.Split('.');
+            var assemblyLength = classDefinition.Length - 1;
+
+            for (int i = assemblyLength; i >= 1; i--)
+            {
+                try
+                {
+                    var assemblyNameRaw = className.Substring(0, className.IndexOf(classDefinition[i]) - 1);
+#if UNIVERSAL
+                    var assemblyName = new AssemblyName(assemblyNameRaw);
+#else
+                    var assemblyName = assemblyNameRaw;
+#endif
+                    // try to load the assembly
+                    Assembly resolvedAssembly = Assembly.Load(assemblyName);
+
+                    if (resolvedAssembly == null) continue;
+
+                    // confirm that the class exists within the assembly
+                    Type classType = resolvedAssembly.GetType(className);
+
+                    if (classType == null) continue;
+
+                    return resolvedAssembly;
+                }
+                catch (Exception) { }
+            }
+
+            return null;
+        }
     }
 
     public static class TypeExtensions
