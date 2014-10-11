@@ -22,7 +22,7 @@ namespace AdRotator
 #if WINDOWS_PHONE
 		//If no storage file supplied, use the default isolated storage folder
 		static IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
-#elif NETFX_CORE
+#elif NETFX_CORE || UNIVERSAL
         static StorageFolder defaultFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 #elif ANDROID
 		// Keep this static so we only call Game.Activity.Assets.List() once
@@ -186,13 +186,13 @@ namespace AdRotator
 
 		public override Stream FileCreate(string filePath)
 		{
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP || UNIVERSAL
 			var folder = ApplicationData.Current.LocalFolder;
 			var awaiter = folder.OpenStreamForWriteAsync(filePath, CreationCollisionOption.ReplaceExisting).GetAwaiter();
 			return awaiter.GetResult();
 #elif WINDOWS_PHONE
 			return storage.CreateFile(filePath);
-#elif NETFX_CORE || UNIVERSAL
+#elif NETFX_CORE
             throw new NotImplementedException();
 #else
 			// return A new file with read/write access.
@@ -201,14 +201,14 @@ namespace AdRotator
 		}
 
 		public override void FileDelete(string filePath)
-		{
-#if WINDOWS_STOREAPP
-			var folder = ApplicationData.Current.LocalFolder;
+        {
+#if WINDOWS_STOREAPP|| UNIVERSAL
+            var folder = ApplicationData.Current.LocalFolder;
 			var deleteFile = folder.GetFileAsync(filePath).AsTask().GetAwaiter().GetResult();
 			deleteFile.DeleteAsync().AsTask().Wait();
 #elif WINDOWS_PHONE
 			storage.DeleteFile(filePath);
-#elif NETFX_CORE || UNIVERSAL
+#elif NETFX_CORE 
             throw new NotImplementedException();
 #else
 			// Now let's try to delete it
@@ -553,7 +553,7 @@ namespace AdRotator
 
 		public override async Task<Stream> OpenStreamAsync(string name)
 		{
-#if NETFX_CORE
+#if NETFX_CORE || UNIVERSAL
 			var package = Windows.ApplicationModel.Package.Current;
 
 			try
@@ -679,7 +679,7 @@ namespace AdRotator
             catch { return null; }
         }
 
-#if NETFX_CORE
+#if NETFX_CORE || UNIVERSAL
         public static void SafeDeleteFile(string filename)
         {
             SafeDeleteFile(defaultFolder, filename);
