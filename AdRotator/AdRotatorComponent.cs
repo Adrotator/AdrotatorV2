@@ -176,7 +176,7 @@ namespace AdRotator
                 {
                     providerType = PlatformAdProviderComponents[adProvider.AdProviderType];
                 }
-                else
+                else if (!String.IsNullOrEmpty(provider.AssemblyName) && !String.IsNullOrEmpty(provider.ElementName))
                 {
                     providerType = reflectionHelper.TryGetType(provider.AssemblyName, provider.ElementName);
                 }
@@ -482,10 +482,11 @@ namespace AdRotator
 #if UNIVERSAL
                 var methodInfo = handler.GetMethodInfo();
                 Delegate eventDel = methodInfo.CreateDelegate(ei.EventHandlerType, null);
-                //Testing getting WinRT events working ;-(
-                //Func<invokeMethod.DeclaringType, System.Runtime.InteropServices.WindowsRuntime.EventRegistrationToken> add = a => (System.Runtime.InteropServices.WindowsRuntime.EventRegistrationToken)ei.AddMethod.Invoke(o, new object[] { a });
+                //Testing getting WinRT events working ;-( - Help me obi wan kenobi, you're my only hope
+                //Seems this only works with determined types, so needs perfroming within the app boundary, won't reflect fully.
+                //Func<EventHandler<typeof(handlerType)>, System.Runtime.InteropServices.WindowsRuntime.EventRegistrationToken> add = a => (System.Runtime.InteropServices.WindowsRuntime.EventRegistrationToken)ei.AddMethod.Invoke(o, new object[] { a });
                 //Action<System.Runtime.InteropServices.WindowsRuntime.EventRegistrationToken> remove = a => ei.RemoveMethod.Invoke(o, new object[] { a });
-                //System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeMarshal.AddEventHandler(add, remove, handler);   
+                //System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeMarshal.AddEventHandler<Delegate>(add, remove, handler);   
 
 #else
                 Delegate eventDel = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);

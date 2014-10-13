@@ -1,5 +1,15 @@
 AdRotator V2 Release Notes
 ------------------------------
+2.1.0
+New release that includes support for 8.1 and Universal projects - be sure to check out the updated Readme file
+Includes a new build of the Unity Plugin, so be sure to updated it from the GitHub site releases page
+Fixes include:
+	* Update to House Ad implementation - some class names were not resolved
+	* Fixed saving of Remote Ad, on Win 8 / WP8 it just failed to save and cache remote ad
+	* Ad's with no DLL's are now added to the failed ads collection, won't retry
+	* Fixed bug where settings/ads were only retrieved from project storage
+
+------------------------------
 2.0.2
 Minor patch fix to resolve an unwanted exception that was raised in the case of a failed or missing provider dll.
 Only occurs on devices.

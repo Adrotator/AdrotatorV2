@@ -145,7 +145,8 @@ namespace AdRotator
 			{
 				try
 				{
-					var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(fileName);
+                    //Try in local storage first
+                    var file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
 					return file == null ? false : true;
 				}
 				catch (FileNotFoundException)
@@ -183,6 +184,52 @@ namespace AdRotator
 #endif
 			return false;
 		}
+        public override bool FileExistsProject(string fileName)
+        {
+#if NETFX_CORE || UNIVERSAL
+            var result = Task.Run(async () =>
+            {
+                try
+                {
+                    //Check in project folder.
+                    var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(fileName);
+                    return file == null ? false : true;
+                }
+                catch (FileNotFoundException)
+                {
+                    return false;
+                }
+            }).Result;
+
+            if (result)
+            {
+                return true;
+            }
+
+#elif ANDROID
+			int index = fileName.LastIndexOf(Path.DirectorySeparatorChar);
+			string path = string.Empty;
+			string file = fileName;
+			if (index >= 0)
+			{
+				file = fileName.Substring(index + 1, fileName.Length - index - 1);
+				path = fileName.Substring(0, index);
+			}
+
+			// Only read the assets file list once
+			string[] files = DirectoryGetFiles(path);
+
+			if (files.Any(s => s.ToLower() == file.ToLower()))
+				return true;
+#elif WINDOWS_PHONE
+			if(storage.FileExists(fileName))
+				return true;
+#else
+			if (File.Exists(fileName))
+				return true;
+#endif
+            return false;
+        }
 
 		public override Stream FileCreate(string filePath)
 		{
@@ -554,11 +601,17 @@ namespace AdRotator
 		public override async Task<Stream> OpenStreamAsync(string name)
 		{
 #if NETFX_CORE || UNIVERSAL
-			var package = Windows.ApplicationModel.Package.Current;
-
+            StorageFile storageFile = null;
 			try
 			{
-				var storageFile = await package.InstalledLocation.GetFileAsync(name);
+                if (!FileExistsProject(name) && !FileExists(name))
+                {
+                    storageFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(name);
+                }
+                else
+                {
+                    storageFile = await ApplicationData.Current.LocalFolder.GetFileAsync(name);
+                }
 				var randomAccessStream = await storageFile.OpenReadAsync();
 				return randomAccessStream.AsStreamForRead();
 			}
@@ -587,7 +640,7 @@ namespace AdRotator
 
         public override async Task<Stream> OpenStreamAsyncFromProject(string name)
         {
-#if NETFX_CORE
+#if NETFX_CORE || UNIVERSAL
 			var package = Windows.ApplicationModel.Package.Current;
 
 			try
@@ -647,7 +700,7 @@ namespace AdRotator
                 }
                 return true;
             }
-            catch { }
+            catch (Exception e) { System.Diagnostics.Debug.WriteLine(e.InnerException); }
 
             return false;
 
@@ -666,6 +719,7 @@ namespace AdRotator
             }
             catch { return null; }
         }
+
 
         public override async Task<string> LoadData(string path)
         {

@@ -29,6 +29,8 @@ namespace AdRotator.Utilities
 
         public abstract bool FileExists(string fileName);
 
+        public abstract bool FileExistsProject(string fileName);
+
         public abstract bool FileExists(object storageFile, string fileName);
 
         public abstract Stream FileCreate(string filePath);
