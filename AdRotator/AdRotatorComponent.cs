@@ -109,6 +109,8 @@ namespace AdRotator
 
         internal AdMode adMode { get; set; }
 
+        internal AdState adState { get; set; }
+
         #endregion
 
 
@@ -128,7 +130,7 @@ namespace AdRotator
             PlatformSupportedAdProviders = new List<AdType>();
             PlatformAdProviderComponents = new Dictionary<AdType, Type>();
 
-            timerDelegate = new TimerCallback(GetAd);
+            timerDelegate = new TimerCallback(GetAdByTimer);
         }
 
         internal async void GetConfig()
@@ -147,7 +149,13 @@ namespace AdRotator
             OnAdAvailable(_settings.GetAd(adMode));
         }
 
-        internal void GetAd(Object stateInfo)
+        internal void GetAdByTimer(Object stateInfo)
+        {
+            if (adState == AdState.Starting || adState == AdState.Displaying)
+                GetAd();
+
+        }
+        internal void GetAd()
         {
             if (_settings == null)
             {
@@ -155,7 +163,8 @@ namespace AdRotator
             }
             else
             {
-                OnAdAvailable(_settings.GetAd(adMode));
+                if (adState != AdState.Disabled)
+                    OnAdAvailable(_settings.GetAd(adMode));
             }
         }
 
@@ -183,7 +192,7 @@ namespace AdRotator
             }
             catch (PlatformNotSupportedException)
             {
-                AdFailed(adProvider.AdProviderType);
+                //AdFailed(adProvider.AdProviderType);
                 OnLog(String.Format("Provider {0} DLL not found or not supported on the {1} platform", adProvider.AdProviderType, platform));
             }
             if (providerType == null)
@@ -299,7 +308,7 @@ namespace AdRotator
             }
             else
             {
-                GetAd(null);
+                    GetAd();
             }
         }
 
@@ -318,6 +327,7 @@ namespace AdRotator
             {
                 OnLog(string.Format("No Ads available"));
                 this.IsAdRotatorEnabled = false;
+                adState = AdState.Disabled;
             }
             return "All attempts failed to get ads, disabling";
         }
@@ -427,10 +437,11 @@ namespace AdRotator
 
         public void AdFailed(Model.AdType adType)
         {
+            adState = AdState.Retrying;
             _settings.AdFailed(adType);
             RemoveEventDelegatesFromActiveControl();
             TryTrackAnaltics(adType);
-            GetAd(null);
+            GetAd();
         }
 
         public void ClearFailedAds()

@@ -5,7 +5,7 @@ AdRotator Unity issues
 3: Note GetAdType function in Bridge is limited to 3 providers (Fixed)
 3: remove extra adType from bridge InitNewAdRotator and ln 97 (Fixed)
 
-4: Unity 8.1 uses a different drawing grid surface, needs a #if to fix
+4: Unity 8.1 uses a different drawing grid surface, needs a #if to fix (Fixed)
 
 
 Improvements

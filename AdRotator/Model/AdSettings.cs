@@ -147,10 +147,9 @@ namespace AdRotator.Model
                 return new AdRotator.AdProviders.AdProviderNone();
             }
 
-            var validDescriptors = adsettings.CurrentCulture.Items
-            .Where(x => !adsettings._failedAdTypes.Contains(((AdProvider)x).AdProviderType)
-                        && AdRotatorComponent.PlatformSupportedAdProviders.Contains(((AdProvider)x).AdProviderType)
-                        && (((AdProvider)x).Probability > 0) || ((AdProvider)x).AdOrder > 0).Cast<AdProvider>().ToArray();
+            var activeDescriptors = adsettings.CurrentCulture.Items.Where(x => !adsettings._failedAdTypes.Contains(((AdProvider)x).AdProviderType));
+            var supportedDescriptors = activeDescriptors.Where(x => AdRotatorComponent.PlatformSupportedAdProviders.Contains(((AdProvider)x).AdProviderType));
+            var validDescriptors = supportedDescriptors.Where(x => (((AdProvider)x).Probability > 0) || ((AdProvider)x).AdOrder > 0).Cast<AdProvider>().ToArray();
 
             var defaultHouseAd = (AdProvider)adsettings.CurrentCulture.Items.FirstOrDefault(x => ((AdProvider)x).AdProviderType == AdType.DefaultHouseAd && !adsettings._failedAdTypes.Contains(AdType.DefaultHouseAd));
 

@@ -154,7 +154,7 @@ namespace AdRotator
             } 
             if (adProvider == null)
             {
-                adRotatorControl.GetAd(null);
+                adRotatorControl.GetAd();
                 return "No Provider set";
             }
             if (adProvider.AdProviderType == AdType.None)
@@ -202,6 +202,7 @@ namespace AdRotator
 
             AdRotatorRoot.Child = null;
             AdRotatorRoot.Child = (FrameworkElement)providerElement;
+            adRotatorControl.adState = AdState.Displaying;
             return adProvider.AdProviderType.ToString();
         }
 

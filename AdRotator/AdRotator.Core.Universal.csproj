@@ -61,6 +61,7 @@
     <Compile Include="Model\AdSettings.cs" />
     <Compile Include="Model\AdSettingsBase.cs" />
     <Compile Include="Model\AdSlideDirection.cs" />
+    <Compile Include="Model\AdState.cs" />
     <Compile Include="Model\AdType.cs" />
     <Compile Include="Networking\AdWebRequest.cs" />
     <Compile Include="Networking\AdWebResponse.cs" />
