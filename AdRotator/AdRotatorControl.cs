@@ -25,12 +25,15 @@ namespace AdRotator
         private int AdRotatorControlID;
         private static FileHelpers fileHelper = new FileHelpers();
         private AdRotatorComponent adRotatorControl = new AdRotatorComponent(CultureInfo.CurrentUICulture.ToString(), fileHelper);
+
 #if WINDOWS_PHONE
 #if WP7
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone7;
 #else
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone8;
 #endif
+#elif WINDOWS_PHONE_APP
+        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone81Appx;
 #else
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.Windows8;
 #endif
@@ -151,7 +154,7 @@ namespace AdRotator
             } 
             if (adProvider == null)
             {
-                adRotatorControl.GetAd(null);
+                adRotatorControl.GetAd();
                 return "No Provider set";
             }
             if (adProvider.AdProviderType == AdType.None)
@@ -199,6 +202,7 @@ namespace AdRotator
 
             AdRotatorRoot.Child = null;
             AdRotatorRoot.Child = (FrameworkElement)providerElement;
+            adRotatorControl.adState = AdState.Displaying;
             return adProvider.AdProviderType.ToString();
         }
 

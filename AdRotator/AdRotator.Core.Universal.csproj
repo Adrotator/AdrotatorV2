@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6EC8D15E-4A48-42FD-ACF1-C024C4098870}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AdRotator</RootNamespace>
+    <AssemblyName>AdRotator.Core</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>9109b6f3</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;UNIVERSAL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;UNIVERSAL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AdProviders\AdProviderAdDuplex.cs" />
+    <Compile Include="AdProviders\AdProviderAdMob.cs" />
+    <Compile Include="AdProviders\AdProviderDefaultHouseAd.cs" />
+    <Compile Include="AdProviders\AdProviderInmobi.cs" />
+    <Compile Include="AdProviders\AdProviderInnerActive.cs" />
+    <Compile Include="AdProviders\AdProviderMobFox.cs" />
+    <Compile Include="AdProviders\AdProviderNone.cs" />
+    <Compile Include="AdProviders\AdProviderPubCenter.cs" />
+    <Compile Include="AdProviders\AdProviderSmaato.cs" />
+    <Compile Include="AdRotatorComponent.cs" />
+    <Compile Include="Config\AdProviderConfig.cs" />
+    <Compile Include="Config\GlobalConfig.cs" />
+    <Compile Include="Extensions\HttpExtensions.cs" />
+    <Compile Include="Interfaces\IAdProvider.cs" />
+    <Compile Include="Interfaces\INetworkWire.cs" />
+    <Compile Include="Interfaces\IAdRotator.cs" />
+    <Compile Include="Interfaces\IAdRotatorProvider.cs" />
+    <Compile Include="Model\AdCultureDescriptor.cs" />
+    <Compile Include="Model\AdGroup.cs" />
+    <Compile Include="Model\AdMode.cs" />
+    <Compile Include="Model\AdProvider.cs" />
+    <Compile Include="Model\AdSettings.cs" />
+    <Compile Include="Model\AdSettingsBase.cs" />
+    <Compile Include="Model\AdSlideDirection.cs" />
+    <Compile Include="Model\AdState.cs" />
+    <Compile Include="Model\AdType.cs" />
+    <Compile Include="Networking\AdWebRequest.cs" />
+    <Compile Include="Networking\AdWebResponse.cs" />
+    <Compile Include="Networking\NetworkExtensions.cs" />
+    <Compile Include="Networking\NetworkWire.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\FileHelpersBase.cs" />
+    <Compile Include="Utilities\IFileHelpers.cs" />
+    <Compile Include="Utilities\ReflectionHelpers.cs" />
+    <Compile Include="Utilities\Timer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AdRotatorAdSettingsV2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SampleXML\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

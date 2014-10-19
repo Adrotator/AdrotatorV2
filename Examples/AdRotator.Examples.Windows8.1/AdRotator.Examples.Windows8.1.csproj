@@ -152,21 +152,15 @@
     <Reference Include="AdDuplex.WinRT">
       <HintPath>..\..\packages\AdDuplexWindows.8.0.5\lib\winrt45\AdDuplex.WinRT.winmd</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Threading.Tasks">
-      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\win8\Microsoft.Threading.Tasks.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions">
-      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\win8\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AdRotator\AdRotator.csproj">
-      <Project>{170b13cc-30b9-405c-a032-cf1a6b5f8277}</Project>
-      <Name>AdRotator</Name>
+    <ProjectReference Include="..\..\AdRotator\AdRotator.Core.Universal.csproj">
+      <Project>{6ec8d15e-4a48-42fd-acf1-c024c4098870}</Project>
+      <Name>AdRotator.Core.Universal</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\AdRotator\Clients\Windows8\AdRotator.Windows8.csproj">
-      <Project>{31829403-e429-4753-bf39-4ca00c7061e8}</Project>
-      <Name>AdRotator.Windows8</Name>
+    <ProjectReference Include="..\..\AdRotator\Clients\WinUniversal\AdRotator.Universal.csproj">
+      <Project>{2696964f-cf04-4b0b-8098-ca2033938235}</Project>
+      <Name>AdRotator.Universal</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
@@ -174,11 +168,6 @@
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
-    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
-    <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

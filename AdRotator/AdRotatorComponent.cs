@@ -63,11 +63,6 @@ namespace AdRotator
         /// </summary>
         internal static Random _rnd = new Random();
 
-        /// <summary>
-        /// State of the current Ad Display order (of provided)
-        /// </summary>
-        private int OrderIndex = 0;
-
         private IFileHelpers fileHelper;
         private ReflectionHelpers reflectionHelper = new ReflectionHelpers();
 
@@ -114,6 +109,8 @@ namespace AdRotator
 
         internal AdMode adMode { get; set; }
 
+        internal AdState adState { get; set; }
+
         #endregion
 
 
@@ -133,7 +130,7 @@ namespace AdRotator
             PlatformSupportedAdProviders = new List<AdType>();
             PlatformAdProviderComponents = new Dictionary<AdType, Type>();
 
-            timerDelegate = new TimerCallback(GetAd);
+            timerDelegate = new TimerCallback(GetAdByTimer);
         }
 
         internal async void GetConfig()
@@ -152,7 +149,13 @@ namespace AdRotator
             OnAdAvailable(_settings.GetAd(adMode));
         }
 
-        internal void GetAd(Object stateInfo)
+        internal void GetAdByTimer(Object stateInfo)
+        {
+            if (adState == AdState.Starting || adState == AdState.Displaying)
+                GetAd();
+
+        }
+        internal void GetAd()
         {
             if (_settings == null)
             {
@@ -160,12 +163,19 @@ namespace AdRotator
             }
             else
             {
-                OnAdAvailable(_settings.GetAd(adMode));
+                if (adState != AdState.Disabled)
+                    OnAdAvailable(_settings.GetAd(adMode));
             }
         }
 
         internal object GetProviderFrameworkElement(AdRotator.AdProviderConfig.SupportedPlatforms platform, AdProvider adProvider)
         {
+            if (!adProvider.AdProviderConfigValues.ContainsKey(platform))
+            {
+                AdFailed(adProvider.AdProviderType);
+                OnLog(String.Format("Provider {0} DLL not found or not supported on the {1} platform", adProvider.AdProviderType, platform));
+                return null;
+            }
             var provider = adProvider.AdProviderConfigValues[platform];
             Type providerType = null;
             object instance;
@@ -175,13 +185,14 @@ namespace AdRotator
                 {
                     providerType = PlatformAdProviderComponents[adProvider.AdProviderType];
                 }
-                else
+                else if (!String.IsNullOrEmpty(provider.AssemblyName) && !String.IsNullOrEmpty(provider.ElementName))
                 {
                     providerType = reflectionHelper.TryGetType(provider.AssemblyName, provider.ElementName);
                 }
             }
             catch (PlatformNotSupportedException)
             {
+                //AdFailed(adProvider.AdProviderType);
                 OnLog(String.Format("Provider {0} DLL not found or not supported on the {1} platform", adProvider.AdProviderType, platform));
             }
             if (providerType == null)
@@ -297,7 +308,7 @@ namespace AdRotator
             }
             else
             {
-                GetAd(null);
+                    GetAd();
             }
         }
 
@@ -316,6 +327,7 @@ namespace AdRotator
             {
                 OnLog(string.Format("No Ads available"));
                 this.IsAdRotatorEnabled = false;
+                adState = AdState.Disabled;
             }
             return "All attempts failed to get ads, disabling";
         }
@@ -425,10 +437,11 @@ namespace AdRotator
 
         public void AdFailed(Model.AdType adType)
         {
+            adState = AdState.Retrying;
             _settings.AdFailed(adType);
             RemoveEventDelegatesFromActiveControl();
             TryTrackAnaltics(adType);
-            GetAd(null);
+            GetAd();
         }
 
         public void ClearFailedAds()
@@ -455,8 +468,16 @@ namespace AdRotator
             Delegate handler;
             try
             {
+#if UNIVERSAL
+                EventInfo ei = o.GetType().GetRuntimeEvent(eventName);
+                Type handlerType = ei.EventHandlerType;
+                var inquiry = handlerType.GetRuntimeMethods();
+                MethodInfo invokeMethod = inquiry.FirstOrDefault(rm => rm.Name == "Invoke"); // handlerType.GetRuntimeMethod("Invoke", new Type[0]);
+                ParameterInfo[] parameters = invokeMethod.GetParameters();
+#else
                 EventInfo ei = o.GetType().GetEvent(eventName);
                 var parameters = ei.EventHandlerType.GetMethod("Invoke").GetParameters();
+#endif
                 switch (parameters.Count())
                 {
                     case 2:
@@ -469,13 +490,24 @@ namespace AdRotator
                         handler = new Action<object>((o1) => DelegateEventHandler(message));
                         break;
                 }
-                Delegate eventDel = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
+#if UNIVERSAL
+                var methodInfo = handler.GetMethodInfo();
+                Delegate eventDel = methodInfo.CreateDelegate(ei.EventHandlerType, null);
+                //Testing getting WinRT events working ;-( - Help me obi wan kenobi, you're my only hope
+                //Seems this only works with determined types, so needs perfroming within the app boundary, won't reflect fully.
+                //Func<EventHandler<typeof(handlerType)>, System.Runtime.InteropServices.WindowsRuntime.EventRegistrationToken> add = a => (System.Runtime.InteropServices.WindowsRuntime.EventRegistrationToken)ei.AddMethod.Invoke(o, new object[] { a });
+                //Action<System.Runtime.InteropServices.WindowsRuntime.EventRegistrationToken> remove = a => ei.RemoveMethod.Invoke(o, new object[] { a });
+                //System.Runtime.InteropServices.WindowsRuntime.WindowsRuntimeMarshal.AddEventHandler<Delegate>(add, remove, handler);   
 
+#else
+                Delegate eventDel = Delegate.CreateDelegate(ei.EventHandlerType, handler.Target, handler.Method);
                 ei.AddEventHandler(o, eventDel);
+#endif
                 currentProviderDelegates.Add(new AdProviderDelegate() { instance = o, eventInfo = ei, delegateMethod = eventDel });
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                System.Diagnostics.Debug.WriteLine(e.InnerException);
                 throw new Exception("Failed to bind events, general failure");
             }
         }

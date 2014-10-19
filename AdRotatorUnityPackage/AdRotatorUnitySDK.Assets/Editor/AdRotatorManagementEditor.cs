@@ -1,4 +1,4 @@
-﻿// Version 2.0.0.0
+﻿// Version 2.1.0.0
 using AdRotatorUnitySDK.Assets.Plugins;
 using UnityEditor;
 using UnityEngine;

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 #if WINDOWS_PHONE
 using System.Windows;
 using System.Windows.Markup;
-#elif NETFX_CORE
+#elif NETFX_CORE || UNIVERSAL
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Markup;
 #endif
@@ -87,7 +87,7 @@ namespace AdRotator
 
 #if WINDOWS_PHONE
         void DefaultHouseAd_Tapped(object sender, System.Windows.Input.GestureEventArgs e)
-#elif NETFX_CORE
+#elif NETFX_CORE || UNIVERSAL
         void DefaultHouseAd_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
 #endif
         {

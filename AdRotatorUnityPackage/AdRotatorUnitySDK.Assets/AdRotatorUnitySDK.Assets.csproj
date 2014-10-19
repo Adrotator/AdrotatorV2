@@ -51,7 +51,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AdRotator\defaultAdSettingsWP8.xml" />
     <Content Include="ReleaseReadme.txt" />
     <None Include="AdRotator\AdRotatorBridgeWin8.cs.ignore" />
     <Compile Include="Demo\Assets\Editor\ConfigureDemoScript.cs" />
@@ -63,7 +62,7 @@
     <Compile Include="Plugins\AdRotatorSettings.cs" />
     <Compile Include="Editor\AdRotatorManagementEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="AdRotator\defaultAdSettingsWin8.xml">
+    <Content Include="AdRotator\defaultAdSettings.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="AdRotator\AdRotatorUnitySDK.AdSettings.targets" />

@@ -80,7 +80,7 @@
     <Compile Include="ReflectionHelpersTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AdRotator\AdRotator.csproj">
+    <ProjectReference Include="..\..\AdRotator\AdRotator.Core.Legacy.csproj">
       <Project>{170b13cc-30b9-405c-a032-cf1a6b5f8277}</Project>
       <Name>AdRotator</Name>
     </ProjectReference>
