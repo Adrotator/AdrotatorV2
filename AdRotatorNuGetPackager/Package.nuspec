@@ -13,8 +13,9 @@
         <description>An AdRotator control for Windows 8 / Windows Phone to support multiple Ad Providers in your apps / games
 
 Supports:
-* Windows Phone 7/8
+* Windows Phone 7 / 8 / 8.1
 * Windows 8 / 8.1
+* Windows Universal Apps
 * Unity V4+ (WP8 + Win8)
 
 Includes the ability to configure supported ad providers from within the solution or remotely to allow re-configuration without re-libing.
@@ -22,8 +23,8 @@ Includes the ability to configure supported ad providers from within the solutio
 Be sure to read the included readme for installation instructions
 
 Full documentation available at http://getadrotaor.com</description>
-        <summary>the ultimate Ad Rotating solution to manage all your Ad Providers</summary>
-        <releaseNotes>Patch release to resolve an unwanted exception from missing or bad provider dll's
+        <summary>The ultimate Ad Rotating solution to manage all your Advertising Providers</summary>
+        <releaseNotes>Updated to fully support Win 8.1 / WP 8.1 and Universal apps
 		See the releaseNotes.txt or GetAdRotator.com for more details of improvements</releaseNotes>
         <copyright>Copyright  2013</copyright>
         <language>en-GB</language>
