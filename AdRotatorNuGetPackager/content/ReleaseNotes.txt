@@ -1,5 +1,10 @@
 AdRotator V2 Release Notes
 ------------------------------
+2.1.1
+Added Smaato support to Windows 8/8.1 / Windows Phone 8.1 and Universal projects
+Smaato also now has a NuGet package!
+
+------------------------------
 2.1.0
 New release that includes support for 8.1 and Universal projects - be sure to check out the updated Readme file
 Includes a new build of the Unity Plugin, so be sure to updated it from the GitHub site releases page

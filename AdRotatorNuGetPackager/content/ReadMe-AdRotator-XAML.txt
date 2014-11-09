@@ -26,10 +26,10 @@ Here is a list of Provider Dev pages:
 ---
 To implement this control add the following XAML to your project:
 Add a custom namespace to the XAML page you want to display AdRotator on, e.g.:
-	<!--Windows Phone -->
+	<!--Windows Phone 7 / 8 -->
 	xmlns:adRotator="clr-namespace:AdRotator;assembly=AdRotator"
 
-	<!--Windows 8, 8.1, WP8.1 and Universal projects -->
+	<!--Windows 8, 8.1, Windows Phone 8.1 and Universal projects -->
 	xmlns:adRotator="using:AdRotator"
 
 Then add the control to your page:

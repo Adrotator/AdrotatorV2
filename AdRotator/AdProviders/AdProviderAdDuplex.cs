@@ -53,6 +53,19 @@ namespace AdRotator.AdProviders
                                                     }
                                             }
                             },
+                            {SupportedPlatforms.Windows81, new AdProviderDetails() 
+                                            { 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"AppId"},
+                                                        {AdProviderConfigOptions.IsTest,"IsTest"},
+                                                        {AdProviderConfigOptions.Size,"Size"},
+                                                        //{AdProviderConfigOptions.AdSuccessEvent,"AdLoaded"},
+                                                        //{AdProviderConfigOptions.AdFailedEvent,"AdLoadingError"},
+                                                        //{AdProviderConfigOptions.AdClickedEvent,"AdClick"}
+                                                    }
+                                            }
+                            },
                             {SupportedPlatforms.WindowsPhone81Appx, new AdProviderDetails() 
                                             { 
                                                 ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 

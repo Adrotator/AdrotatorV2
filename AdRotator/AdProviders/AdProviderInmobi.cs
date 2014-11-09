@@ -59,6 +59,22 @@ namespace AdRotator.AdProviders
                                                     }
                                             }
                             },
+                            {SupportedPlatforms.Windows81, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "InMobiW8AdSDK", 
+                                                ElementName = "InMobi.W8.AdSDK.IMAdView", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"AppId"},
+                                                        {AdProviderConfigOptions.ReloadTime,"RefreshInterval"},
+                                                        {AdProviderConfigOptions.StartMethod,"LoadNewAd"},
+                                                        {AdProviderConfigOptions.AdWidth,"Width"},
+                                                        {AdProviderConfigOptions.AdHeight,"Height"},
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"OnAdRequestLoaded"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"OnAdRequestFailed"}
+                                                    }
+                                            }
+                            },
             };
         }
     }
