@@ -34,6 +34,8 @@ namespace AdRotator
 #endif
 #elif WINDOWS_PHONE_APP
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone81Appx;
+#elif WINDOWS_APP
+        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.Windows81;
 #else
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.Windows8;
 #endif
@@ -68,11 +70,13 @@ namespace AdRotator
                     AdType.Inmobi,
                     AdType.DefaultHouseAd,
                     AdType.None,
+#if !WP7
+                    AdType.Smaato,
+#endif
 #if WINDOWS_PHONE
 #if !WP7
                     AdType.AdMob,
 #endif
-                    AdType.Smaato,
                     AdType.MobFox,
                     AdType.InnerActive,
 #endif
