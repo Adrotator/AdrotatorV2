@@ -8,5 +8,6 @@
     <AdGroup Probability="0">
       <AdDuplex AppId="1379" Probability="100"/>
     </AdGroup>
+    <DefaultHouseAd AppId="" SecondaryId="AdRotator.Examples.Windows8._1.MyHouseAd"/>
   </CultureDescriptors>
 </AdSettings>

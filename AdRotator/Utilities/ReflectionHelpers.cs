@@ -345,25 +345,50 @@ namespace AdRotator
                 try
                 {
                     var assemblyNameRaw = className.Substring(0, className.IndexOf(classDefinition[i]) - 1);
-#if UNIVERSAL
-                    var assemblyName = new AssemblyName(assemblyNameRaw);
-#else
-                    var assemblyName = assemblyNameRaw;
-#endif
-                    // try to load the assembly
-                    Assembly resolvedAssembly = Assembly.Load(assemblyName);
 
-                    if (resolvedAssembly == null) continue;
+                    Assembly resolvedAssembly = GetAssemblyFromAssemblyName(assemblyNameRaw, className);
 
-                    // confirm that the class exists within the assembly
-                    Type classType = resolvedAssembly.GetType(className);
+                    if (assemblyNameRaw.Contains("._") && resolvedAssembly == null)
+                    {
+                        assemblyNameRaw = assemblyNameRaw.Replace("._", ".");
+                        resolvedAssembly = GetAssemblyFromAssemblyName(assemblyNameRaw, className);
+                    }
 
-                    if (classType == null) continue;
+                    if (resolvedAssembly == null)
+                        continue;
 
                     return resolvedAssembly;
                 }
                 catch (Exception) { }
             }
+
+            return null;
+        }
+
+        private static Assembly GetAssemblyFromAssemblyName(string assemblyNameRaw, string className)
+        {
+            try
+            {
+#if UNIVERSAL
+                var assemblyName = new AssemblyName(assemblyNameRaw);
+#else
+                var assemblyName = assemblyNameRaw;
+#endif
+                // try to load the assembly
+                Assembly resolvedAssembly = Assembly.Load(assemblyName);
+
+                if (resolvedAssembly == null)
+                    return null;
+
+                // confirm that the class exists within the assembly
+                Type classType = resolvedAssembly.GetType(className);
+
+                if (classType == null)
+                    return null;
+
+                return resolvedAssembly;
+            }
+            catch (Exception) { }
 
             return null;
         }

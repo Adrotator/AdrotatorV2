@@ -124,7 +124,6 @@ namespace AdRotator
                         }
                         catch 
                         {
-                            LoadCachedAd();
                         }
                     }
                 }
@@ -142,11 +141,10 @@ namespace AdRotator
                         AdLoadingFailed("", new EventArgs());
                     }
                 }
-                else
-                {
-                    LoadCachedAd();
-                }
             }
+
+            if (this.Content == null)
+                await LoadCachedAd();
         }
 
         private async Task LoadCachedAd()
