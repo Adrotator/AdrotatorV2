@@ -33,7 +33,9 @@ namespace AdRotator.AdProviderConfig
         {
             WindowsPhone7 = 0,
             WindowsPhone8 = 1,
-            Windows8 = 2
+            Windows8 = 2,
+            Windows81 = 3,
+            WindowsPhone81Appx = 4
         }
 
 }

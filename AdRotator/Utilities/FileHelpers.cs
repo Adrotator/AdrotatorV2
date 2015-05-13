@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-#if NETFX_CORE
+#if NETFX_CORE || UNIVERSAL
 using Windows.Storage;
 using Windows.Storage.Search;
 
@@ -22,7 +22,7 @@ namespace AdRotator
 #if WINDOWS_PHONE
 		//If no storage file supplied, use the default isolated storage folder
 		static IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
-#elif NETFX_CORE
+#elif NETFX_CORE || UNIVERSAL
         static StorageFolder defaultFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 #elif ANDROID
 		// Keep this static so we only call Game.Activity.Assets.List() once
@@ -34,8 +34,8 @@ namespace AdRotator
 
         #region public properties
 
-#if NETFX_CORE
-		public override char notSeparator { get { return '/'; } }
+#if NETFX_CORE || UNIVERSAL
+        public override char notSeparator { get { return '/'; } }
 		public override char separator { get { return '\\'; } }
 #else
         public override char notSeparator { get { return '\\'; } }
@@ -47,14 +47,14 @@ namespace AdRotator
 
 		public override Stream FileOpen(string filePath, string fileMode, string fileAccess, string fileShare)
 		{
-#if !NETFX_CORE
+#if !NETFX_CORE && !UNIVERSAL
 			return FileOpen(filePath, (FileMode)Enum.Parse(typeof(FileMode), fileMode, true), (FileAccess)Enum.Parse(typeof(FileAccess), fileAccess, false), (FileShare)Enum.Parse(typeof(FileShare), fileShare, false));
 #else
 			throw new NotImplementedException();
 #endif
 		}
 
-#if !NETFX_CORE
+#if !NETFX_CORE && !UNIVERSAL
 		public Stream FileOpen(string filePath, FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
 		{
 #if WINDOWS_STORE_APP
@@ -93,7 +93,7 @@ namespace AdRotator
 #endif
 		public override Stream FileOpenRead(string Location, string safeName)
 		{
-#if NETFX_CORE
+#if NETFX_CORE || UNIVERSAL
 			var stream = Task.Run( () => OpenStreamAsync(safeName).Result ).Result;
 			if (stream == null)
 				throw new FileNotFoundException(safeName);
@@ -126,7 +126,7 @@ namespace AdRotator
 		{
 			//Needs Error Handling
 			Stream stream = null;
-#if !NETFX_CORE
+#if !NETFX_CORE && !UNIVERSAL
 			try
 			{
 				var resourceStream = Application.GetResourceStream(Location);
@@ -140,12 +140,13 @@ namespace AdRotator
 
 		public override bool FileExists(string fileName)
 		{
-#if NETFX_CORE
+#if NETFX_CORE || UNIVERSAL
 			var result = Task.Run(async () =>
 			{
 				try
 				{
-					var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(fileName);
+                    //Try in local storage first
+                    var file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileName);
 					return file == null ? false : true;
 				}
 				catch (FileNotFoundException)
@@ -183,17 +184,63 @@ namespace AdRotator
 #endif
 			return false;
 		}
+        public override bool FileExistsProject(string fileName)
+        {
+#if NETFX_CORE || UNIVERSAL
+            var result = Task.Run(async () =>
+            {
+                try
+                {
+                    //Check in project folder.
+                    var file = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(fileName);
+                    return file == null ? false : true;
+                }
+                catch (FileNotFoundException)
+                {
+                    return false;
+                }
+            }).Result;
+
+            if (result)
+            {
+                return true;
+            }
+
+#elif ANDROID
+			int index = fileName.LastIndexOf(Path.DirectorySeparatorChar);
+			string path = string.Empty;
+			string file = fileName;
+			if (index >= 0)
+			{
+				file = fileName.Substring(index + 1, fileName.Length - index - 1);
+				path = fileName.Substring(0, index);
+			}
+
+			// Only read the assets file list once
+			string[] files = DirectoryGetFiles(path);
+
+			if (files.Any(s => s.ToLower() == file.ToLower()))
+				return true;
+#elif WINDOWS_PHONE
+			if(storage.FileExists(fileName))
+				return true;
+#else
+			if (File.Exists(fileName))
+				return true;
+#endif
+            return false;
+        }
 
 		public override Stream FileCreate(string filePath)
 		{
-#if WINDOWS_STOREAPP
+#if WINDOWS_STOREAPP || UNIVERSAL
 			var folder = ApplicationData.Current.LocalFolder;
 			var awaiter = folder.OpenStreamForWriteAsync(filePath, CreationCollisionOption.ReplaceExisting).GetAwaiter();
 			return awaiter.GetResult();
 #elif WINDOWS_PHONE
 			return storage.CreateFile(filePath);
 #elif NETFX_CORE
-			throw new NotImplementedException();
+            throw new NotImplementedException();
 #else
 			// return A new file with read/write access.
 			return File.Create(filePath);
@@ -201,15 +248,15 @@ namespace AdRotator
 		}
 
 		public override void FileDelete(string filePath)
-		{
-#if WINDOWS_STOREAPP
-			var folder = ApplicationData.Current.LocalFolder;
+        {
+#if WINDOWS_STOREAPP|| UNIVERSAL
+            var folder = ApplicationData.Current.LocalFolder;
 			var deleteFile = folder.GetFileAsync(filePath).AsTask().GetAwaiter().GetResult();
 			deleteFile.DeleteAsync().AsTask().Wait();
 #elif WINDOWS_PHONE
 			storage.DeleteFile(filePath);
-#elif NETFX_CORE
-			throw new NotImplementedException();
+#elif NETFX_CORE 
+            throw new NotImplementedException();
 #else
 			// Now let's try to delete it
 			File.Delete(filePath);
@@ -240,9 +287,9 @@ namespace AdRotator
 
 		// Renamed from - public override string GetFilename(string name)
 		public override string NormalizeFilePathSeperators(string name)
-		{
-#if NETFX_CORE
-			// Replace non-windows seperators.
+        {
+#if NETFX_CORE || UNIVERSAL
+            // Replace non-windows seperators.
 			name = name.Replace('/', '\\');
 #else
 			// Replace Windows path separators with local path separators
@@ -319,9 +366,9 @@ namespace AdRotator
 		#region Directory Handlers
 
 		public override bool DirectoryExists(string dirPath)
-		{
-#if WINDOWS_STOREAPP || NETFX_CORE
-			var folder = ApplicationData.Current.LocalFolder;
+        {
+#if WINDOWS_STOREAPP || NETFX_CORE || UNIVERSAL
+            var folder = ApplicationData.Current.LocalFolder;
 
 			try
 			{
@@ -340,9 +387,9 @@ namespace AdRotator
 		}
 
 		public override string[] DirectoryGetFiles(string storagePath)
-		{
-#if WINDOWS_STOREAPP || NETFX_CORE
-			var folder = ApplicationData.Current.LocalFolder;
+        {
+#if WINDOWS_STOREAPP || NETFX_CORE || UNIVERSAL
+            var folder = ApplicationData.Current.LocalFolder;
 			var results = folder.GetFilesAsync().AsTask().GetAwaiter().GetResult();
 			return results.Select<StorageFile, string>(e => e.Name).ToArray();
 #elif WINDOWS_PHONE
@@ -365,8 +412,8 @@ namespace AdRotator
 			if (string.IsNullOrEmpty(searchPattern))
 				throw new ArgumentNullException("Parameter searchPattern must contain a value.");
 
-#if WINDOWS_STOREAPP || NETFX_CORE
-			var folder = ApplicationData.Current.LocalFolder;
+#if WINDOWS_STOREAPP || NETFX_CORE || UNIVERSAL
+            var folder = ApplicationData.Current.LocalFolder;
 			var options = new QueryOptions( CommonFileQuery.DefaultQuery, new [] { searchPattern } );
 			var query = folder.CreateFileQueryWithOptions(options);
 			var files = query.GetFilesAsync().AsTask().GetAwaiter().GetResult();
@@ -377,9 +424,9 @@ namespace AdRotator
 		}
 
 		public override string[] DirectoryGetDirectories(string storagePath)
-		{
-#if WINDOWS_STOREAPP || NETFX_CORE
-			var folder = ApplicationData.Current.LocalFolder;
+        {
+#if WINDOWS_STOREAPP || NETFX_CORE || UNIVERSAL
+            var folder = ApplicationData.Current.LocalFolder;
 			var results = folder.GetFoldersAsync().AsTask().GetAwaiter().GetResult();
 			return results.Select<StorageFolder, string>(e => e.Name).ToArray();
 #else
@@ -397,9 +444,9 @@ namespace AdRotator
 			if (string.IsNullOrEmpty(directory))
 				throw new ArgumentNullException("Parameter directory must contain a value.");
 
-			// Now let's try to create it
-#if WINDOWS_STOREAPP || NETFX_CORE
-			var folder = ApplicationData.Current.LocalFolder;
+            // Now let's try to create it
+#if WINDOWS_STOREAPP || NETFX_CORE || UNIVERSAL
+            var folder = ApplicationData.Current.LocalFolder;
 			var task = folder.CreateFolderAsync(directory, CreationCollisionOption.OpenIfExists);
 			task.AsTask().Wait();
 #else
@@ -423,9 +470,9 @@ namespace AdRotator
 		}
 
 		public override void DirectoryDelete(string dirPath)
-		{
-#if WINDOWS_STOREAPP || NETFX_CORE
-			var folder = ApplicationData.Current.LocalFolder;
+        {
+#if WINDOWS_STOREAPP || NETFX_CORE || UNIVERSAL
+            var folder = ApplicationData.Current.LocalFolder;
 			var deleteFolder = folder.GetFolderAsync(dirPath).AsTask().GetAwaiter().GetResult();
 			deleteFolder.DeleteAsync().AsTask().Wait();
 #else
@@ -498,7 +545,7 @@ namespace AdRotator
 
 #if WINDOWS_PHONE
 				stream = new IsolatedStorageFileStream(assetPath, FileMode.Create, storage);
-#elif !NETFX_CORE
+#elif !NETFX_CORE && !UNIVERSAL
 				stream = TitleContainer.OpenStream(assetPath);
 #if ANDROID
 				SeekStreamtoStart(stream, 0);
@@ -511,7 +558,7 @@ namespace AdRotator
 			{
 				throw new FileNotFoundException("The content file was not found.", fileNotFound);
 			}
-#if !NETFX_CORE
+#if !NETFX_CORE && !UNIVERSAL
 			catch (DirectoryNotFoundException directoryNotFound)
 			{
 				throw new DirectoryNotFoundException("The directory was not found.", directoryNotFound);
@@ -545,7 +592,7 @@ namespace AdRotator
 
 		public override void StreamClose(Stream stream)
 		{
-#if !NETFX_CORE
+#if !NETFX_CORE && !UNIVERSAL
 			stream.Close();
 #endif
 		}
@@ -553,12 +600,18 @@ namespace AdRotator
 
 		public override async Task<Stream> OpenStreamAsync(string name)
 		{
-#if NETFX_CORE
-			var package = Windows.ApplicationModel.Package.Current;
-
+#if NETFX_CORE || UNIVERSAL
+            StorageFile storageFile = null;
 			try
 			{
-				var storageFile = await package.InstalledLocation.GetFileAsync(name);
+                if (!FileExistsProject(name) && !FileExists(name))
+                {
+                    storageFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(name);
+                }
+                else
+                {
+                    storageFile = await ApplicationData.Current.LocalFolder.GetFileAsync(name);
+                }
 				var randomAccessStream = await storageFile.OpenReadAsync();
 				return randomAccessStream.AsStreamForRead();
 			}
@@ -587,7 +640,7 @@ namespace AdRotator
 
         public override async Task<Stream> OpenStreamAsyncFromProject(string name)
         {
-#if NETFX_CORE
+#if NETFX_CORE || UNIVERSAL
 			var package = Windows.ApplicationModel.Package.Current;
 
 			try
@@ -647,7 +700,7 @@ namespace AdRotator
                 }
                 return true;
             }
-            catch { }
+            catch (Exception e) { System.Diagnostics.Debug.WriteLine(e.InnerException); }
 
             return false;
 
@@ -667,6 +720,7 @@ namespace AdRotator
             catch { return null; }
         }
 
+
         public override async Task<string> LoadData(string path)
         {
             try
@@ -679,7 +733,7 @@ namespace AdRotator
             catch { return null; }
         }
 
-#if NETFX_CORE
+#if NETFX_CORE || UNIVERSAL
         public static void SafeDeleteFile(string filename)
         {
             SafeDeleteFile(defaultFolder, filename);

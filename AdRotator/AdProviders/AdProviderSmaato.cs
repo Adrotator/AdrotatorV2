@@ -47,6 +47,60 @@ namespace AdRotator.AdProviders
                                                     }
                                             }
                             },
+                            {SupportedPlatforms.Windows8, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "SOMAW81", 
+                                                ElementName = "SOMAW81.SomaAdViewer", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"Adspace"},
+                                                        {AdProviderConfigOptions.SecondaryId,"Pub"},
+                                                        {AdProviderConfigOptions.StartMethod,"StartAds"},
+                                                        {AdProviderConfigOptions.AdWidth,"AdSpaceWidth"},
+                                                        {AdProviderConfigOptions.AdHeight,"AdSpaceHeight"},
+                                                        {AdProviderConfigOptions.ShowErrors,"ShowErrors"},
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"NewAdAvailable"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"AdError"},
+                                                        {AdProviderConfigOptions.AdClickedEvent,"AdClick"}
+                                                    }
+                                            }
+                            },
+                            {SupportedPlatforms.Windows81, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "SOMAW81", 
+                                                ElementName = "SOMAW81.SomaAdViewer", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"Adspace"},
+                                                        {AdProviderConfigOptions.SecondaryId,"Pub"},
+                                                        {AdProviderConfigOptions.StartMethod,"StartAds"},
+                                                        {AdProviderConfigOptions.AdWidth,"AdSpaceWidth"},
+                                                        {AdProviderConfigOptions.AdHeight,"AdSpaceHeight"},
+                                                        {AdProviderConfigOptions.ShowErrors,"ShowErrors"},
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"NewAdAvailable"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"AdError"},
+                                                        {AdProviderConfigOptions.AdClickedEvent,"AdClick"}
+                                                    }
+                                            }
+                            },
+                            {SupportedPlatforms.WindowsPhone81Appx, new AdProviderDetails() 
+                                            { 
+                                                AssemblyName = "SOMAWP81", 
+                                                ElementName = "SOMAWP81.SomaAdViewer", 
+                                                ConfigurationOptions = new Dictionary<AdProviderConfigOptions,string>() 
+                                                    { 
+                                                        {AdProviderConfigOptions.AppId,"Adspace"},
+                                                        {AdProviderConfigOptions.SecondaryId,"Pub"},
+                                                        {AdProviderConfigOptions.StartMethod,"StartAds"},
+                                                        {AdProviderConfigOptions.AdWidth,"AdSpaceWidth"},
+                                                        {AdProviderConfigOptions.AdHeight,"AdSpaceHeight"},
+                                                        {AdProviderConfigOptions.ShowErrors,"ShowErrors"},
+                                                        {AdProviderConfigOptions.AdSuccessEvent,"NewAdAvailable"},
+                                                        {AdProviderConfigOptions.AdFailedEvent,"AdError"},
+                                                        {AdProviderConfigOptions.AdClickedEvent,"AdClick"}
+                                                    }
+                                            }
+                            },
             };
         }
     }

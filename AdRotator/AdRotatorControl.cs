@@ -25,12 +25,17 @@ namespace AdRotator
         private int AdRotatorControlID;
         private static FileHelpers fileHelper = new FileHelpers();
         private AdRotatorComponent adRotatorControl = new AdRotatorComponent(CultureInfo.CurrentUICulture.ToString(), fileHelper);
+
 #if WINDOWS_PHONE
 #if WP7
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone7;
 #else
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone8;
 #endif
+#elif WINDOWS_PHONE_APP
+        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.WindowsPhone81Appx;
+#elif WINDOWS_APP
+        AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.Windows81;
 #else
         AdRotator.AdProviderConfig.SupportedPlatforms CurrentPlatform = AdRotator.AdProviderConfig.SupportedPlatforms.Windows8;
 #endif
@@ -65,11 +70,13 @@ namespace AdRotator
                     AdType.Inmobi,
                     AdType.DefaultHouseAd,
                     AdType.None,
+#if !WP7
+                    AdType.Smaato,
+#endif
 #if WINDOWS_PHONE
 #if !WP7
                     AdType.AdMob,
 #endif
-                    AdType.Smaato,
                     AdType.MobFox,
                     AdType.InnerActive,
 #endif
@@ -151,7 +158,7 @@ namespace AdRotator
             } 
             if (adProvider == null)
             {
-                adRotatorControl.GetAd(null);
+                adRotatorControl.GetAd();
                 return "No Provider set";
             }
             if (adProvider.AdProviderType == AdType.None)
@@ -199,6 +206,7 @@ namespace AdRotator
 
             AdRotatorRoot.Child = null;
             AdRotatorRoot.Child = (FrameworkElement)providerElement;
+            adRotatorControl.adState = AdState.Displaying;
             return adProvider.AdProviderType.ToString();
         }
 

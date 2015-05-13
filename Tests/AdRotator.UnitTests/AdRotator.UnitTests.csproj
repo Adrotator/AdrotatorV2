@@ -77,11 +77,20 @@
   <ItemGroup>
     <Compile Include="AdRotatorComponentTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReflectionHelpersTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AdRotator\AdRotator.csproj">
+    <ProjectReference Include="..\..\AdRotator\AdRotator.Core.Legacy.csproj">
       <Project>{170b13cc-30b9-405c-a032-cf1a6b5f8277}</Project>
       <Name>AdRotator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestData.Nested\TestData.Nested.csproj">
+      <Project>{c1cfc312-6231-40b6-8ff3-17b296dfab6b}</Project>
+      <Name>TestData.Nested</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestData\TestData.csproj">
+      <Project>{e2cefe61-6d05-490e-a367-052a0ba4f69f}</Project>
+      <Name>TestData</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

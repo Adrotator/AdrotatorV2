@@ -2,6 +2,9 @@ using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+#if UNIVERSAL
+using AdRotator.Extensions;
+#endif
 
 namespace AdRotator.Networking
 {

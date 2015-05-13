@@ -48,9 +48,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AdRotator\AdRotator.csproj">
-      <Project>{170b13cc-30b9-405c-a032-cf1a6b5f8277}</Project>
-      <Name>AdRotator</Name>
+    <ProjectReference Include="..\AdRotator\AdRotator.Core.Universal.csproj">
+      <Project>{6ec8d15e-4a48-42fd-acf1-c024c4098870}</Project>
+      <Name>AdRotator.Core.Universal</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

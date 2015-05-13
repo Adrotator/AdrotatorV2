@@ -99,7 +99,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AdRotator.csproj">
+    <ProjectReference Include="..\..\AdRotator.Core.Legacy.csproj">
       <Project>{170B13CC-30B9-405C-A032-CF1A6B5F8277}</Project>
       <Name>AdRotator</Name>
     </ProjectReference>

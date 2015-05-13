@@ -1,0 +1,33 @@
+﻿<Page
+    x:Class="AdRotator.Examples.WinPhoneAppx8._1.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AdRotator.Examples.WinPhoneAppx8._1"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:adRotator="using:AdRotator"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <adRotator:AdRotatorControl 
+		    x:Name="MyAdRotatorControl"
+		    AdHeight="80"
+		    AdWidth="400"
+            HorizontalAlignment="Center" 
+		    LocalSettingsLocation="defaultAdSettings.xml"
+		    AutoStartAds="True" />
+        <Grid Grid.Row="1" x:Name="ProgramaticAdRotator"/>
+        <Button Grid.Row="2" x:Name="HideButton" Content="Hide/unhide AdRotator" Tapped="HideButton_Tapped"/>
+        <ScrollViewer Grid.Row="3">
+            <ListBox x:Name="MessagesListBox" Height="Auto"/>
+        </ScrollViewer>
+    </Grid>
+</Page>

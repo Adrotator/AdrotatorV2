@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 #if WINDOWS_PHONE
 using System.Windows;
 using System.Windows.Markup;
-#elif NETFX_CORE
+#elif NETFX_CORE || UNIVERSAL
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Markup;
 #endif
@@ -58,7 +58,7 @@ namespace AdRotator
             Object o = null;
             try
             {
-                var asm = GetAssemblyFromClass(LocalHouseAdBodyName);
+                var asm = ReflectionHelpers.GetAssemblyFromClassName(LocalHouseAdBodyName);
                 Type t = asm.GetType(LocalHouseAdBodyName);
                 o = Activator.CreateInstance(t);
             }
@@ -85,32 +85,9 @@ namespace AdRotator
             }
         }
 
-        private static Assembly GetAssemblyFromClass(string LocalHouseAdBodyName)
-        {
-            Assembly resolvedAssembly = null;
-            var classDefinition = LocalHouseAdBodyName.Split('.');
-            var assemblyLength = classDefinition.Length - 1;
-            for (int i = assemblyLength; i > 1; i--)
-            {
-                try
-                {
-                    var assemblyNameValue = LocalHouseAdBodyName.Substring(0, LocalHouseAdBodyName.IndexOf(classDefinition[i]) - 1);
-                    AssemblyName name = new AssemblyName(assemblyNameValue);
-                    resolvedAssembly = Assembly.Load(name);
-                    if (resolvedAssembly != null)
-                    {
-                        break;
-                    }
-                }
-                catch { }
-            }
-
-            return resolvedAssembly;
-        }
-
 #if WINDOWS_PHONE
         void DefaultHouseAd_Tapped(object sender, System.Windows.Input.GestureEventArgs e)
-#elif NETFX_CORE
+#elif NETFX_CORE || UNIVERSAL
         void DefaultHouseAd_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
 #endif
         {
@@ -147,7 +124,6 @@ namespace AdRotator
                         }
                         catch 
                         {
-                            LoadCachedAd();
                         }
                     }
                 }
@@ -165,11 +141,10 @@ namespace AdRotator
                         AdLoadingFailed("", new EventArgs());
                     }
                 }
-                else
-                {
-                    LoadCachedAd();
-                }
             }
+
+            if (this.Content == null)
+                await LoadCachedAd();
         }
 
         private async Task LoadCachedAd()

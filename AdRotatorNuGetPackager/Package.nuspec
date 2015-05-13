@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>AdRotator</id>
-        <version>2.0.2</version>
+        <version>2.1.1</version>
         <title>AdRotator</title>
-        <authors>Simon-Darkside / Gergely Orosz</authors>
-        <owners>Simon-Darkside / Gergely Orosz</owners>
+        <authors>Simon-Darkside / Gergely Orosz / Rob Irving</authors>
+        <owners>Simon-Darkside / Gergely Orosz / Rob Irving</owners>
         <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
         <projectUrl>http://getadrotator.codeplex.com/</projectUrl>
         <iconUrl>http://i0.wp.com/getadrotator.com/wp-content/uploads/2013/05/Icon_1_purple.png</iconUrl>
@@ -13,8 +13,9 @@
         <description>An AdRotator control for Windows 8 / Windows Phone to support multiple Ad Providers in your apps / games
 
 Supports:
-* Windows Phone 7/8
+* Windows Phone 7 / 8 / 8.1
 * Windows 8 / 8.1
+* Windows Universal Apps
 * Unity V4+ (WP8 + Win8)
 
 Includes the ability to configure supported ad providers from within the solution or remotely to allow re-configuration without re-libing.
@@ -22,30 +23,52 @@ Includes the ability to configure supported ad providers from within the solutio
 Be sure to read the included readme for installation instructions
 
 Full documentation available at http://getadrotaor.com</description>
-        <summary>the ultimate Ad Rotating solution to manage all your Ad Providers</summary>
-        <releaseNotes>Patch release to resolve an unwanted exception from missing or bad provider dll's
-		See the releaseNotes.txt or GetAdRotator.com for more details of improvements</releaseNotes>
+        <summary>The ultimate Ad Rotating solution to manage all your Advertising Providers</summary>
+        <releaseNotes>Added Smaato support to Win8-81 / WP8.1 / Universal apps</releaseNotes>
         <copyright>Copyright  2013</copyright>
         <language>en-GB</language>
-        <tags>AdDuplex,PubCenter,AdRotator,Smaato,inneractive,MobFox,AdMob,advertising,wp,wp7,wp8,windows phone, windows 8</tags>
+        <tags>AdDuplex,PubCenter,AdRotator,Smaato,inneractive,MobFox,AdMob,advertising,wp,wp7,wp8,windows phone, windows 8,wpa81,win81</tags>
         <dependencies>
-            <dependency id="Microsoft.Bcl" version="1.1.9" />
-            <dependency id="Microsoft.Bcl.Build" version="1.0.21" />
-            <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
+            <group targetFramework="WindowsPhone7.0">
+                <dependency id="Microsoft.Bcl" version="1.1.9" />
+                <dependency id="Microsoft.Bcl.Build" version="1.0.21" />
+                <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
+            </group>
+            <group targetFramework=".NETCore4.5">
+                <dependency id="Microsoft.Bcl" version="1.1.9" />
+                <dependency id="Microsoft.Bcl.Build" version="1.0.21" />
+                <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
+            </group>
+            <group targetFramework="WindowsPhone8.0">
+                <dependency id="Microsoft.Bcl" version="1.1.9" />
+                <dependency id="Microsoft.Bcl.Build" version="1.0.21" />
+                <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
+            </group>
+            <group targetFramework=".NETCore4.5.1" />
         </dependencies>
     </metadata>
     <files>
         <file src="content\defaultAdSettings.xml" target="content\defaultAdSettings.xml" />
         <file src="content\ReadMe-AdRotator-XAML.txt" target="content\ReadMe-AdRotator-XAML.txt" />
         <file src="content\ReleaseNotes.txt" target="content\ReleaseNotes.txt" />
-        <file src="..\AdRotator\bin\Windows8\AnyCPU\Themes\Generic.xaml" target="lib\netcore\AdRotator\Themes\Generic.xaml" />
-        <file src="..\AdRotator\bin\Windows8\AnyCPU\AdRotator.Core.dll" target="lib\netcore\AdRotator.Core.dll" />
-        <file src="..\AdRotator\bin\Windows8\AnyCPU\AdRotator.dll" target="lib\netcore\AdRotator.dll" />
-        <file src="..\AdRotator\bin\Windows8\AnyCPU\AdRotator.pri" target="lib\netcore\AdRotator.pri" />
+        <file src="..\AdRotator\bin\Windows8\AnyCPU\Themes\Generic.xaml" target="lib\netcore45\AdRotator\Themes\Generic.xaml" />
+        <file src="..\AdRotator\bin\Windows8\AnyCPU\AdRotator.Core.dll" target="lib\netcore45\AdRotator.Core.dll" />
+        <file src="..\AdRotator\bin\Windows8\AnyCPU\AdRotator.dll" target="lib\netcore45\AdRotator.dll" />
+        <file src="..\AdRotator\bin\Windows8\AnyCPU\AdRotator.pri" target="lib\netcore45\AdRotator.pri" />
+        <file src="..\AdRotator\bin\Windows81\AnyCPU\Themes\Generic.xbf" target="lib\netcore451\AdRotator\Themes\Generic.xbf" />
+        <file src="..\AdRotator\bin\Windows81\AnyCPU\AdRotator.Core.dll" target="lib\netcore451\AdRotator.Core.dll" />
+        <file src="..\AdRotator\bin\Windows81\AnyCPU\AdRotator.dll" target="lib\netcore451\AdRotator.dll" />
+        <file src="..\AdRotator\bin\Windows81\AnyCPU\AdRotator.pri" target="lib\netcore451\AdRotator.pri" />
+        <file src="..\AdRotator\bin\Windows81\AnyCPU\*.xr.xml" target="lib\netcore451\AdRotator" />
         <file src="..\AdRotator\bin\WindowsPhone7\AnyCPU\AdRotator.Core.dll" target="lib\wp7\AdRotator.Core.dll" />
         <file src="..\AdRotator\bin\WindowsPhone7\AnyCPU\AdRotator.dll" target="lib\wp7\AdRotator.dll" />
         <file src="..\AdRotator\bin\WindowsPhone8\AnyCPU\AdRotator.Core.dll" target="lib\wp8\AdRotator.Core.dll" />
         <file src="..\AdRotator\bin\WindowsPhone8\AnyCPU\AdRotator.dll" target="lib\wp8\AdRotator.dll" />
+        <file src="..\AdRotator\bin\WindowsPhone81\AnyCPU\Themes\Generic.xbf" target="lib\wpa81\AdRotator\Themes\Generic.xbf" />
+        <file src="..\AdRotator\bin\WindowsPhone81\AnyCPU\AdRotator.Core.dll" target="lib\wpa81\AdRotator.Core.dll" />
+        <file src="..\AdRotator\bin\WindowsPhone81\AnyCPU\AdRotator.dll" target="lib\wpa81\AdRotator.dll" />
+        <file src="..\AdRotator\bin\WindowsPhone81\AnyCPU\AdRotator.pri" target="lib\wpa81\AdRotator.pri" />
+        <file src="..\AdRotator\bin\WindowsPhone81\AnyCPU\*.xr.xml" target="lib\wpa81\AdRotator" />
         <file src="tools\install.ps1" target="tools\install.ps1" />
         <file src="content\ReadMe-AdRotator-XAML.txt" target="readme.txt" />
     </files>

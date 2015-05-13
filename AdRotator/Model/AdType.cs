@@ -3,6 +3,7 @@ namespace AdRotator.Model
 {
     public enum AdType
     {
+        None,
         PubCenter,
         AdMob,
         AdDuplex,
@@ -11,6 +12,5 @@ namespace AdRotator.Model
         Smaato,
         Inmobi,
         DefaultHouseAd,
-        None
     }
 }
