@@ -186,9 +186,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AdRotator\AdRotator.Core.Legacy.csproj">
-      <Project>{170B13CC-30B9-405C-A032-CF1A6B5F8277}</Project>
-      <Name>AdRotator</Name>
+    <ProjectReference Include="..\..\AdRotator\AdRotator.Core.Universal.csproj">
+      <Project>{6ec8d15e-4a48-42fd-acf1-c024c4098870}</Project>
+      <Name>AdRotator.Core.Universal</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\AdRotator\Clients\WinPhone8\AdRotator.WinPhone8.csproj">
       <Project>{7D456892-7A65-4FE7-AA0A-821982FC2E70}</Project>

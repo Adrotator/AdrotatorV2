@@ -8,6 +8,7 @@ namespace AdRotator.Model
 
          /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("AdDuplex", typeof(AdProviderAdDuplex), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [System.Xml.Serialization.XmlElementAttribute("Vserv", typeof(AdProviderVserv), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("AdMob", typeof(AdProviderAdMob), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("DefaultHouseAd", typeof(AdProviderDefaultHouseAd), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("InnerActive", typeof(AdProviderInnerActive), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]

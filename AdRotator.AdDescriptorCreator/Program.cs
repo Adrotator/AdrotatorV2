@@ -102,6 +102,7 @@ namespace AdRotator.AdDescriptorCreator
                                      new AdProviderAdMob() { Probability=35, AppId = "0" },
                                      new AdProviderSmaato() { Probability=35, AppId = "0" },
                                      new AdProviderPubCenter() { Probability=35, AppId = "test_client", SecondaryId="Image80_80" },
+                                     new AdProviderVserv() { Probability=35, AppId = "20846" }, //vserv test banner id is 20846
                                  }.ToArray()
                              }
                    

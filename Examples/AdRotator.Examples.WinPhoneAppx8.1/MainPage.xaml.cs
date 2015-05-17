@@ -23,7 +23,7 @@ namespace AdRotator.Examples.WinPhoneAppx8._1
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
 
-            MyAdRotatorControl.PlatformAdProviderComponents.Add(Model.AdType.PubCenter, typeof(Microsoft.Advertising.Mobile.UI.AdControl));
+            //MyAdRotatorControl.PlatformAdProviderComponents.Add(Model.AdType.PubCenter, typeof(Microsoft.Advertising.Mobile.UI.AdControl));
             MyAdRotatorControl.PlatformAdProviderComponents.Add(Model.AdType.AdDuplex, typeof(AdDuplex.Universal.Controls.WinPhone.XAML.AdControl));
 
             Loaded += MainPage_Loaded;

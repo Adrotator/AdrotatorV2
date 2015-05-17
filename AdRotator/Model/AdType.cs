@@ -11,6 +11,7 @@ namespace AdRotator.Model
         MobFox,
         Smaato,
         Inmobi,
+        Vserv,
         DefaultHouseAd,
     }
 }

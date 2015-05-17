@@ -127,16 +127,17 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="AdDuplex.WinPhone.Extension, Version=8.5.0.5">
-      <Name>AdDuplex SDK for Windows Phone 8.1 %28XAML%29</Name>
-    </SDKReference>
-    <SDKReference Include="Microsoft.Advertising.Mobile.Display, Version=8.1">
-      <Name>Microsoft Advertising SDK for Windows Phone 8.1 %28XAML%29</Name>
-    </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="SOMAWP81">
-      <HintPath>..\..\packages\SOMAW81_Package.1.1.6\lib\wpa81\SOMAWP81.dll</HintPath>
+    <Reference Include="AdDuplex.Universal.Controls.WinPhone.XAML, Version=9.0.0.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AdDuplexWinPhone81.9.0.0.5\lib\portable-win81+wpa81\AdDuplex.Universal.Controls.WinPhone.XAML.winmd</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AdDuplex.Universal.WinPhone.WinRT, Version=9.0.0.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AdDuplexWinPhone81.9.0.0.5\lib\portable-win81+wpa81\AdDuplex.Universal.WinPhone.WinRT.winmd</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SOMAWP81, Version=1.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SOMAW81_Package.1.1.9\lib\wpa81\SOMAWP81.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

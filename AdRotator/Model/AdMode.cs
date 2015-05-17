@@ -5,6 +5,7 @@ namespace AdRotator.Model
     {
         Random,
         Ordered,
-        Stepped
+        Stepped,
+		Default
     }
 }
