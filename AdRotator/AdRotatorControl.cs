@@ -46,14 +46,24 @@ namespace AdRotator
         {
             if (Log != null)
             {
-                Log("Control {" + adRotatorControlID + "} - " + message);
+                var logMessage = "Control {" + adRotatorControlID + "} - " + message;
+                Log(logMessage);
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine(logMessage);
+#endif
             }
         }
         #endregion
 
         public AdRotatorControl(): this(0)
         {}
- 
+
+        ~AdRotatorControl()
+        {
+            OnLog(AdRotatorControlID, "AdRotator Disposed");
+        }
+
+
         public AdRotatorControl(int id)
         {
             AdRotatorControlID = id;
@@ -135,6 +145,12 @@ namespace AdRotator
             else if (templateApplied)
             {
                 InitialiseSlidingAnimations();
+                // clear all incase this control has been loaded before. Page load or navigation will tigger an "Loaded" event. Not sure i need a try catch, but it was done elsewhere in the code so best be safe.  
+                try
+                {
+                    adRotatorControl.AdAvailable -= adRotatorControl_AdAvailable;
+                }
+                catch { } 
                 adRotatorControl.AdAvailable += adRotatorControl_AdAvailable;
                 if (AutoStartAds)
                 {
@@ -839,6 +855,7 @@ namespace AdRotator
             }
             //providerElement = null;
             DefaultHouseAdBody = null;
+            OnLog(AdRotatorControlID, "AdRotator Disposing");
         }
     }
 }

@@ -5,107 +5,104 @@
 			<xs:element name="CultureDescriptors" type="AdCultureDescriptor" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	
-  <xs:complexType name="AdCultureDescriptor">
-    <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element name="PubCenter" type="AdProviderPubCenter" />
-      <xs:element name="AdMob" type="AdProviderAdMob" />
-      <xs:element name="Vserv" type="AdProviderVserv" />
-      <xs:element name="AdDuplex" type="AdProviderAdDuplex" />
-      <xs:element name="InnerActive" type="AdProviderInnerActive" />
-      <xs:element name="MobFox" type="AdProviderMobFox" />
-      <xs:element name="Smaato" type="AdProviderSmaato" />
-      <xs:element name="Inmobi" type="AdProviderInmobi" />
-      <xs:element name="DefaultHouseAd" type="AdProviderDefaultHouseAd" />
-      <xs:element name="None" type="AdProviderNone" />
-      <xs:element name="AdGroup" type="AdGroup" />
-    </xs:choice>
-    <xs:attribute name="CultureName" type="xs:string" />
-    <xs:attribute name="DefaultAdType" type="AdType" />
-    <xs:attribute name="Width" type="xs:double" />
-    <xs:attribute name="Height" type="xs:double" />
-    <xs:attribute name="Probability" type="xs:int" />
-    <xs:attribute name="AdSlideDirection" type="SlideDirection" />
-    <xs:attribute name="AdRefreshSeconds" type="xs:double" />
-    <xs:attribute name="AdSlideDisplaySeconds" type="xs:double" />
-    <xs:attribute name="AdSlideHiddenSeconds" type="xs:double" />
-    <xs:attribute name="EnabledInTrialOnly" type="xs:boolean" />
-  </xs:complexType>
-	
-    <xs:complexType name="AdProviderPubCenter">
+	<xs:complexType name="AdCultureDescriptor">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="PubCenter" type="AdProviderPubCenter" />
+			<xs:element name="AdMob" type="AdProviderAdMob" />
+			<xs:element name="Vserv" type="AdProviderVserv" />
+			<xs:element name="AdDuplex" type="AdProviderAdDuplex" />
+			<xs:element name="InnerActive" type="AdProviderInnerActive" />
+			<xs:element name="MobFox" type="AdProviderMobFox" />
+			<xs:element name="Smaato" type="AdProviderSmaato" />
+			<xs:element name="Inmobi" type="AdProviderInmobi" />
+			<xs:element name="DefaultHouseAd" type="AdProviderDefaultHouseAd" />
+			<xs:element name="None" type="AdProviderNone" />
+			<xs:element name="AdGroup" type="AdGroup" />
+		</xs:choice>
+		<xs:attribute name="CultureName" type="xs:string" />
+		<xs:attribute name="DefaultAdType" type="AdType" />
+		<xs:attribute name="Width" type="xs:double" />
+		<xs:attribute name="Height" type="xs:double" />
+		<xs:attribute name="Probability" type="xs:int" />
+		<xs:attribute name="AdSlideDirection" type="SlideDirection" />
+		<xs:attribute name="AdRefreshSeconds" type="xs:double" />
+		<xs:attribute name="AdSlideDisplaySeconds" type="xs:double" />
+		<xs:attribute name="AdSlideHiddenSeconds" type="xs:double" />
+		<xs:attribute name="EnabledInTrialOnly" type="xs:boolean" />
+		<xs:attribute name="AdRetrievalMode" type="AdMode" />
+	</xs:complexType>
+	<xs:complexType name="AdProviderPubCenter">
 		<xs:complexContent>
-				<xs:extension base="AdProvider"/>
+			<xs:extension base="AdProvider"/>
 		</xs:complexContent>
-   </xs:complexType>
-    <xs:complexType name="AdProviderAdMob">
+	</xs:complexType>
+	<xs:complexType name="AdProviderAdMob">
 		<xs:complexContent>
-				<xs:extension base="AdProvider"/>
+			<xs:extension base="AdProvider"/>
 		</xs:complexContent>
-   </xs:complexType>
-  <xs:complexType name="AdProviderVserv">
-    <xs:complexContent>
-      <xs:extension base="AdProvider"/>
-    </xs:complexContent>
-  </xs:complexType>
-   <xs:complexType name="AdProviderAdDuplex">
+	</xs:complexType>
+	<xs:complexType name="AdProviderVserv">
 		<xs:complexContent>
-				<xs:extension base="AdProvider"/>
+			<xs:extension base="AdProvider"/>
 		</xs:complexContent>
-   </xs:complexType>
-   <xs:complexType name="AdProviderInnerActive">
+	</xs:complexType>
+	<xs:complexType name="AdProviderAdDuplex">
 		<xs:complexContent>
-				<xs:extension base="AdProvider"/>
+			<xs:extension base="AdProvider"/>
 		</xs:complexContent>
-   </xs:complexType>
-   <xs:complexType name="AdProviderMobFox">
+	</xs:complexType>
+	<xs:complexType name="AdProviderInnerActive">
 		<xs:complexContent>
-				<xs:extension base="AdProvider"/>
+			<xs:extension base="AdProvider"/>
 		</xs:complexContent>
-   </xs:complexType>
-   <xs:complexType name="AdProviderSmaato">
+	</xs:complexType>
+	<xs:complexType name="AdProviderMobFox">
 		<xs:complexContent>
-				<xs:extension base="AdProvider"/>
+			<xs:extension base="AdProvider"/>
 		</xs:complexContent>
-   </xs:complexType>
-  <xs:complexType name="AdProviderInmobi">
-    <xs:complexContent>
-      <xs:extension base="AdProvider"/>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="AdProviderDefaultHouseAd">
+	</xs:complexType>
+	<xs:complexType name="AdProviderSmaato">
 		<xs:complexContent>
-				<xs:extension base="AdProvider"/>
+			<xs:extension base="AdProvider"/>
 		</xs:complexContent>
-   </xs:complexType>
-   <xs:complexType name="AdProviderNone">
+	</xs:complexType>
+	<xs:complexType name="AdProviderInmobi">
 		<xs:complexContent>
-				<xs:extension base="AdProvider"/>
+			<xs:extension base="AdProvider"/>
 		</xs:complexContent>
-   </xs:complexType>
-
-  <xs:complexType name="AdGroup" >
-    <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:element name="Pubcenter" type="AdProviderPubCenter" />
-      <xs:element name="AdMob" type="AdProviderAdMob" />
-      <xs:element name="Vserv" type="AdProviderVserv" />
-      <xs:element name="AdDuplex" type="AdProviderAdDuplex" />
-      <xs:element name="InnerActive" type="AdProviderInnerActive" />
-      <xs:element name="MobFox" type="AdProviderMobFox" />
-      <xs:element name="Smaato" type="AdProviderSmaato" />
-      <xs:element name="DefaultHouseAd" type="AdProviderDefaultHouseAd" />
-      <xs:element name="None" type="AdProviderNone" />
-    </xs:choice>
-    <xs:attribute name="Width" type="xs:double" />
-    <xs:attribute name="Height" type="xs:double" />
-    <xs:attribute name="Probability" type="xs:int" />
-    <xs:attribute name="AdSlideDirection" type="SlideDirection" />
-    <xs:attribute name="AdRefreshSeconds" type="xs:double" />
-    <xs:attribute name="AdSlideDisplaySeconds" type="xs:double" />
-    <xs:attribute name="AdSlideHiddenSeconds" type="xs:double" />
-    <xs:attribute name="EnabledInTrialOnly" type="xs:boolean" />
-    <xs:attribute name="AdOrder" type="xs:int" />
-  </xs:complexType>	
-	
+	</xs:complexType>
+	<xs:complexType name="AdProviderDefaultHouseAd">
+		<xs:complexContent>
+			<xs:extension base="AdProvider"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AdProviderNone">
+		<xs:complexContent>
+			<xs:extension base="AdProvider"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AdGroup" >
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="Pubcenter" type="AdProviderPubCenter" />
+			<xs:element name="AdMob" type="AdProviderAdMob" />
+			<xs:element name="Vserv" type="AdProviderVserv" />
+			<xs:element name="AdDuplex" type="AdProviderAdDuplex" />
+			<xs:element name="InnerActive" type="AdProviderInnerActive" />
+			<xs:element name="MobFox" type="AdProviderMobFox" />
+			<xs:element name="Smaato" type="AdProviderSmaato" />
+			<xs:element name="DefaultHouseAd" type="AdProviderDefaultHouseAd" />
+			<xs:element name="None" type="AdProviderNone" />
+		</xs:choice>
+		<xs:attribute name="Width" type="xs:double" />
+		<xs:attribute name="Height" type="xs:double" />
+		<xs:attribute name="Probability" type="xs:int" />
+		<xs:attribute name="AdSlideDirection" type="SlideDirection" />
+		<xs:attribute name="AdRefreshSeconds" type="xs:double" />
+		<xs:attribute name="AdSlideDisplaySeconds" type="xs:double" />
+		<xs:attribute name="AdSlideHiddenSeconds" type="xs:double" />
+		<xs:attribute name="EnabledInTrialOnly" type="xs:boolean" />
+		<xs:attribute name="AdOrder" type="xs:int" />
+	</xs:complexType>
 	<xs:complexType name="AdProvider" abstract="true">
 		<xs:attribute name="AppId" type="xs:string" />
 		<xs:attribute name="SecondaryID" type="xs:string" />
@@ -118,29 +115,36 @@
 		<xs:attribute name="AdSlideHiddenSeconds" type="xs:double" />
 		<xs:attribute name="IsTest" type="xs:boolean" />
 		<xs:attribute name="AdOrder" type="xs:int" />
-    </xs:complexType>
-	
-  <xs:simpleType name="AdType">
-    <xs:restriction base="xs:string" >
-      <xs:enumeration value="PubCenter"/>
-      <xs:enumeration value="AdMob"/>
-      <xs:enumeration value="Vserv"/>
-      <xs:enumeration value="AdDuplex"/>
-      <xs:enumeration value="InnerActive"/>
-      <xs:enumeration value="MobFox"/>
-      <xs:enumeration value="Smaato"/>
-      <xs:enumeration value="DefaultHouseAd"/>
-      <xs:enumeration value="None"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="SlideDirection">
-    <xs:restriction base="xs:string" >
-      <xs:enumeration value="Top"/>
-      <xs:enumeration value="Bottom"/>
-      <xs:enumeration value="Left"/>
-      <xs:enumeration value="Right"/>
-      <xs:enumeration value="None"/>
-    </xs:restriction>
-  </xs:simpleType>
-<xs:element name="AdSettings" type="AdSettings"/>
+	</xs:complexType>
+	<xs:simpleType name="AdType">
+		<xs:restriction base="xs:string" >
+			<xs:enumeration value="PubCenter"/>
+			<xs:enumeration value="AdMob"/>
+			<xs:enumeration value="Vserv"/>
+			<xs:enumeration value="AdDuplex"/>
+			<xs:enumeration value="InnerActive"/>
+			<xs:enumeration value="MobFox"/>
+			<xs:enumeration value="Smaato"/>
+			<xs:enumeration value="DefaultHouseAd"/>
+			<xs:enumeration value="None"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AdMode">
+		<xs:restriction base="xs:string" >
+			<xs:enumeration value="Random"/>
+			<xs:enumeration value="Ordered"/>
+			<xs:enumeration value="Stepped"/>
+			<xs:enumeration value="Default"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SlideDirection">
+		<xs:restriction base="xs:string" >
+			<xs:enumeration value="Top"/>
+			<xs:enumeration value="Bottom"/>
+			<xs:enumeration value="Left"/>
+			<xs:enumeration value="Right"/>
+			<xs:enumeration value="None"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="AdSettings" type="AdSettings"/>
 </xs:schema>

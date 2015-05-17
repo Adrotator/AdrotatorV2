@@ -8,6 +8,8 @@ namespace AdRotator.Model
 
         private string cultureNameField;
 
+        private AdMode adRetrievalModeField; 
+
         private AdType defaultAdTypeField;
 
         private bool defaultAdTypeFieldSpecified;
@@ -58,6 +60,20 @@ namespace AdRotator.Model
             set
             {
                 this.cultureNameField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public AdMode AdRetrievalMode
+        {
+            get
+            {
+                return this.adRetrievalModeField;
+            }
+            set
+            {
+                this.adRetrievalModeField = value;
             }
         }
 
@@ -116,6 +132,11 @@ namespace AdRotator.Model
                 this.enabledInTrialOnlyFieldSpecified = value;
             }
         }
-
+		
+        public AdCultureDescriptor()
+        {
+            //set default value
+            adRetrievalModeField = AdMode.Default;
+        }
     }
 }

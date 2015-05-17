@@ -25,6 +25,9 @@ namespace AdRotator
             if (Log != null)
             {
                 Log(message);
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine(message);
+#endif
             }
         }
         #endregion 
@@ -232,6 +235,11 @@ namespace AdRotator
                             break;
                         case AdType.Vserv:
                             reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "Banner");
+                            break;
+                        case AdType.Inmobi:
+                            reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "21");
+                            //INMOBI_AD_UNIT_480x75 = 21;
+                            //INMOBI_AD_UNIT_320X50 = 15;
                             break;
                     }
                 }
