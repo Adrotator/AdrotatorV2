@@ -173,10 +173,6 @@
       <Project>{170B13CC-30B9-405C-A032-CF1A6B5F8277}</Project>
       <Name>AdRotator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\AdRotator\Clients\WinPhone7\AdRotator.WinPhone7.csproj">
-      <Project>{0804BD51-07FF-407B-8CDA-A92039509D1C}</Project>
-      <Name>AdRotator.WinPhone7</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

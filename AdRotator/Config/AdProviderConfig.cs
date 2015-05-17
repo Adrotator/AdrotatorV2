@@ -26,7 +26,8 @@ namespace AdRotator.AdProviderConfig
             ShowErrors,
             AdSuccessEvent,
             AdFailedEvent,
-            AdClickedEvent
+            AdClickedEvent,
+            StopMethod
         }
 
         internal enum SupportedPlatforms

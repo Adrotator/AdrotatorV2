@@ -61,6 +61,7 @@ namespace AdRotator
             this.DefaultStyleKey = typeof(AdRotatorControl);
 
             Loaded += AdRotatorControl_Loaded;
+            Unloaded += AdRotatorControl_Unloaded;
 
             // List of AdProviders supportd on this platform
             AdRotatorComponent.PlatformSupportedAdProviders = new List<AdType>()
@@ -69,6 +70,7 @@ namespace AdRotator
                     AdType.PubCenter, 
                     AdType.Inmobi,
                     AdType.DefaultHouseAd,
+                    AdType.Vserv,
                     AdType.None,
 #if !WP7
                     AdType.Smaato,
@@ -149,6 +151,11 @@ namespace AdRotator
             adRotatorControl.isLoaded = true;
         }
 
+        void AdRotatorControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Dispose();
+        }
+        
         public async Task<string> Invalidate(AdProvider adProvider)
         {
             if (!IsAdRotatorEnabled)
@@ -819,6 +826,13 @@ namespace AdRotator
 
         public void Dispose()
         {
+            //remove the timer if still be running. posible timer leak
+            if(adRotatorControl != null)
+            {
+                adRotatorControl.StopAdTimer();
+                adRotatorControl.Dispose();//stop 3rd party ad timer
+            } 
+            
             if (AdRotatorRoot != null && AdRotatorRoot.Child != null)
             {
                 AdRotatorRoot.Child = null;

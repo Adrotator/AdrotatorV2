@@ -34,6 +34,7 @@ namespace AdRotator.Model
         [System.Xml.Serialization.XmlElementAttribute("PubCenter", typeof(AdProviderPubCenter), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("Smaato", typeof(AdProviderSmaato), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         [System.Xml.Serialization.XmlElementAttribute("Inmobi", typeof(AdProviderInmobi), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        [System.Xml.Serialization.XmlElementAttribute("Vserv", typeof(AdProviderVserv), Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public object[] Items
         {
             get

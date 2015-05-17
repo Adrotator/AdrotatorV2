@@ -34,6 +34,7 @@ namespace AdRotator
         public delegate void AdAvailableHandler(AdProvider adProvider);
 
         public event AdAvailableHandler AdAvailable;
+        public event EventHandler DisposeAd;
 
         internal void OnAdAvailable(AdProvider adProvider)
         {
@@ -170,6 +171,12 @@ namespace AdRotator
 
         internal object GetProviderFrameworkElement(AdRotator.AdProviderConfig.SupportedPlatforms platform, AdProvider adProvider)
         {
+            //clean up old provider
+            if (DisposeAd != null) 
+            {
+                DisposeAd(this,new EventArgs());
+            }
+
             if (!adProvider.AdProviderConfigValues.ContainsKey(platform))
             {
                 AdFailed(adProvider.AdProviderType);
@@ -223,6 +230,9 @@ namespace AdRotator
                         case AdType.AdMob:
                             reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "Banner");
                             break;
+                        case AdType.Vserv:
+                            reflectionHelper.TrySetProperty(instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.AdType], "Banner");
+                            break;
                     }
                 }
 
@@ -272,6 +282,14 @@ namespace AdRotator
                     reflectionHelper.TryInvokeMethod(providerType, instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.StartMethod]);
                 }
 
+                if (provider.ConfigurationOptions.ContainsKey(AdProviderConfig.AdProviderConfigOptions.StopMethod))
+                {
+                    DisposeAd = null;
+                    DisposeAd += (s, e) =>
+                    {
+                        reflectionHelper.TryInvokeMethod(providerType, instance, provider.ConfigurationOptions[AdProviderConfig.AdProviderConfigOptions.StopMethod]);
+                    };
+                }
             }
             catch (PlatformNotSupportedException)
             {
@@ -292,6 +310,11 @@ namespace AdRotator
             OnLog(string.Format("Ad created for provider {0}", adProvider.AdProviderType.ToString()));
 
             return instance;
+        }
+        
+        public void Dispose()
+        {
+            if (DisposeAd != null) DisposeAd(this, null);
         }
 
         public void StartAdTimer()
@@ -314,7 +337,10 @@ namespace AdRotator
 
         public void StopAdTimer()
         {
-            adRotatorTimer.Dispose();
+            if (adRotatorTimer != null) 
+            {
+                adRotatorTimer.Dispose();
+            }
             adRotatorTimer = null;
         }
         /// <summary>
