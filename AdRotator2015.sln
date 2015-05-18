@@ -15,13 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Examples.Windows8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Examples.WinPhoneAppx8.1", "Examples\AdRotator.Examples.WinPhoneAppx8.1\AdRotator.Examples.WinPhoneAppx8.1.csproj", "{94A0A941-8C49-462C-B7DA-1EC9F3C87598}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Examples.WinPhone8", "Examples\AdRotator.Examples.WinPhone8\AdRotator.Examples.WinPhone8.csproj", "{B3D94F2E-6999-44C3-94E4-172FB8BE301A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Examples.WinPhone8", "Examples\AdRotator.Examples.WinPhone8\AdRotator.Examples.WinPhone8.Universal.csproj", "{B3D94F2E-6999-44C3-94E4-172FB8BE301A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Windows81", "AdRotator\Clients\Windows81\AdRotator.Windows81.csproj", "{ED0DF492-7001-47FB-A623-7A1757426BDE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.WindowsPhone81", "AdRotator\Clients\WinPhone81\AdRotator.WindowsPhone81.csproj", "{43D11F0A-C577-4B07-B7E9-E1AF99ABC5E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.WinPhone8.2015", "AdRotator\Clients\WinPhone8\AdRotator.WinPhone8.2015.csproj", "{7D456892-7A65-4FE7-AA0A-821982FC2E70}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.WinPhone8", "AdRotator\Clients\WinPhone8\AdRotator.WinPhone8.Universal.csproj", "{7D456892-7A65-4FE7-AA0A-821982FC2E70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

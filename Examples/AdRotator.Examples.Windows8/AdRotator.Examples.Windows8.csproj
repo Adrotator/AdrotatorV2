@@ -175,14 +175,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="MSAdvertisingXaml, Version=6.1">
-      <Name>Microsoft Advertising SDK for Windows 8 %28Xaml%29</Name>
-    </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\AdRotator\AdRotator.Core.Legacy.csproj">
       <Project>{170b13cc-30b9-405c-a032-cf1a6b5f8277}</Project>
-      <Name>AdRotator</Name>
+      <Name>AdRotator.Core.Legacy</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\AdRotator\Clients\Windows8\AdRotator.Windows8.csproj">
       <Project>{31829403-e429-4753-bf39-4ca00c7061e8}</Project>
