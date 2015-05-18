@@ -99,9 +99,9 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AdDuplex.WindowsPhone, Version=2.8.0.9, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\AdDuplexWP8.2.8.0.9\lib\wp8\AdDuplex.WindowsPhone.dll</HintPath>
+    <Reference Include="AdDuplex.WindowsPhone, Version=9.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AdDuplexWP8.9.0.0.6\lib\wp8\AdDuplex.WindowsPhone.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Advertising.Mobile, Version=6.2.960.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Advertising.Mobile.UI, Version=6.2.960.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -169,12 +169,6 @@
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AdRotator\AdRotator.Core.Legacy.csproj">
-      <Project>{170B13CC-30B9-405C-A032-CF1A6B5F8277}</Project>
-      <Name>AdRotator</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -185,6 +179,16 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AdRotator\AdRotator.Core.Legacy.csproj">
+      <Project>{170B13CC-30B9-405C-A032-CF1A6B5F8277}</Project>
+      <Name>AdRotator.Core.Legacy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AdRotator\Clients\WinPhone7\AdRotator.WinPhone7.csproj">
+      <Project>{0804BD51-07FF-407B-8CDA-A92039509D1C}</Project>
+      <Name>AdRotator.WinPhone7</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

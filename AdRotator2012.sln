@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4ABF1E81
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotatorNuGetPackager", "AdRotatorNuGetPackager\AdRotatorNuGetPackager.csproj", "{0451BAEF-DF2E-4B98-8644-94EE9415E389}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator", "AdRotator\AdRotator.Core.Legacy.csproj", "{170B13CC-30B9-405C-A032-CF1A6B5F8277}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Core.Legacy", "AdRotator\AdRotator.Core.Legacy.csproj", "{170B13CC-30B9-405C-A032-CF1A6B5F8277}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdRotator.Windows8", "AdRotator\Clients\Windows8\AdRotator.Windows8.csproj", "{31829403-E429-4753-BF39-4CA00C7061E8}"
 EndProject
@@ -93,6 +93,7 @@ Global
 		{170B13CC-30B9-405C-A032-CF1A6B5F8277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{170B13CC-30B9-405C-A032-CF1A6B5F8277}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{170B13CC-30B9-405C-A032-CF1A6B5F8277}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{170B13CC-30B9-405C-A032-CF1A6B5F8277}.Debug|ARM.Build.0 = Debug|Any CPU
 		{170B13CC-30B9-405C-A032-CF1A6B5F8277}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{170B13CC-30B9-405C-A032-CF1A6B5F8277}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{170B13CC-30B9-405C-A032-CF1A6B5F8277}.Debug|Windows Phone.ActiveCfg = Debug|Any CPU
@@ -156,7 +157,8 @@ Global
 		{0804BD51-07FF-407B-8CDA-A92039509D1C}.CI|x86.Build.0 = Debug|x86
 		{0804BD51-07FF-407B-8CDA-A92039509D1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0804BD51-07FF-407B-8CDA-A92039509D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0804BD51-07FF-407B-8CDA-A92039509D1C}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{0804BD51-07FF-407B-8CDA-A92039509D1C}.Debug|ARM.ActiveCfg = Debug|ARM
+		{0804BD51-07FF-407B-8CDA-A92039509D1C}.Debug|ARM.Build.0 = Debug|ARM
 		{0804BD51-07FF-407B-8CDA-A92039509D1C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{0804BD51-07FF-407B-8CDA-A92039509D1C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{0804BD51-07FF-407B-8CDA-A92039509D1C}.Debug|Windows Phone.ActiveCfg = Debug|Any CPU
@@ -281,6 +283,7 @@ Global
 		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|ARM.Build.0 = Debug|Any CPU
 		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{A1432A44-A637-4BA2-89BF-B772F39B17AF}.Debug|Windows Phone.ActiveCfg = Debug|Any CPU
@@ -311,7 +314,8 @@ Global
 		{EAD7641B-EF06-4781-A015-4529EF19DBD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EAD7641B-EF06-4781-A015-4529EF19DBD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAD7641B-EF06-4781-A015-4529EF19DBD7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{EAD7641B-EF06-4781-A015-4529EF19DBD7}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{EAD7641B-EF06-4781-A015-4529EF19DBD7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{EAD7641B-EF06-4781-A015-4529EF19DBD7}.Debug|ARM.Build.0 = Debug|ARM
 		{EAD7641B-EF06-4781-A015-4529EF19DBD7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{EAD7641B-EF06-4781-A015-4529EF19DBD7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{EAD7641B-EF06-4781-A015-4529EF19DBD7}.Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU

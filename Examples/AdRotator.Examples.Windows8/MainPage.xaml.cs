@@ -28,7 +28,7 @@ namespace AdRotator.Examples.Windows8
         public MainPage()
         {
             this.InitializeComponent();
-            MyAdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
+            //MyAdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
             MyAdRotatorControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.AdDuplex, typeof(AdDuplex.Controls.AdControl));
             //AdRotatorControl.Log += (s) => System.Diagnostics.Debug.WriteLine(s);
             Loaded += (s, e) => HideButton_Tapped(null,null);
@@ -39,10 +39,10 @@ namespace AdRotator.Examples.Windows8
 
         }
 
-        void msadcontrol_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+        //void msadcontrol_ErrorOccurred(object sender, Microsoft.Advertising.WinRT.UI.AdErrorEventArgs e)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         void msadcontrol_AdRefreshed(object sender, RoutedEventArgs e)
         {
@@ -71,7 +71,7 @@ namespace AdRotator.Examples.Windows8
         void InitialiseAdRotatorProgramatically()
         {
             myAdControl = new AdRotatorControl();
-            myAdControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
+            //myAdControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.PubCenter, typeof(Microsoft.Advertising.WinRT.UI.AdControl));
             myAdControl.PlatformAdProviderComponents.Add(AdRotator.Model.AdType.AdDuplex, typeof(AdDuplex.Controls.AdControl));
             myAdControl.LocalSettingsLocation = "ProgramaticdefaultAdSettings.xml";
             //myAdControl.RemoteSettingsLocation = "http://adrotator.apphb.com/V2defaultAdSettings.xml";
